@@ -2,3 +2,4 @@ ipykernel
 openai
 matplotlib
 seaborn
+pypdf

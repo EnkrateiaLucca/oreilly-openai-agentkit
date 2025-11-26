@@ -108,6 +108,8 @@ pygments==2.19.2
     #   ipython-pygments-lexers
 pyparsing==3.2.5
     # via matplotlib
+pypdf==6.4.0
+    # via -r ./requirements/requirements.in
 python-dateutil==2.9.0.post0
     # via
     #   jupyter-client

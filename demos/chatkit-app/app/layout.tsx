@@ -15,6 +15,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Load crypto polyfill before ChatKit to ensure compatibility */}
+        <Script
+          src="/crypto-polyfill.js"
+          strategy="beforeInteractive"
+        />
         <Script
           src="https://cdn.platform.openai.com/deployments/chatkit/chatkit.js"
           strategy="beforeInteractive"

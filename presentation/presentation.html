@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>From Primitive to Product: Agents / Agent Kit / ChatKit</title>
+    <meta charset="utf-8">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+      body {
+        font-family: 'IBM Plex Sans', Arial, sans-serif;
+        color: #2A2825;
+      }
+      h1, h2, h3 {
+        font-family: 'IBM Plex Sans', Arial, sans-serif;
+        font-weight: 700;
+        color: #000000;
+      }
+      .remark-code, .remark-inline-code {
+        font-family: 'JetBrains Mono', Courier, monospace;
+      }
+      .remark-slide-content {
+        background-color: #F5F3EB;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        color: #2A2825;
+      }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+        class: center, middle
+
+        # Building Agents with OpenAI’s AgentKit and Responses API
+
+        ## Lucas Soares
+
+        O'Reilly Live Training 
+
+        ---
+
+        # Table of Contents
+
+        **1. The Problem: Why Layers Matter**
+
+        --
+
+        **2. Layer 1: Responses API** &#8212; the primitive
+
+        --
+
+        **3. Layer 2: Agents SDK** &#8212; the framework
+
+        --
+
+        **4. Layer 3: AgentKit** &#8212; the product platform
+
+        --
+
+        **5. When to Use Each Layer**
+
+        ---
+        class: center, middle
+
+        # The Problem
+
+        ---
+
+        # Building Production Agents Is Hard
+
+        An API call gets you started. But production requires much more:
+
+        --
+
+        - **Orchestration** &#8212; chaining multiple LLM calls + tool executions
+
+        --
+
+        - **Multi-agent routing** &#8212; delegating tasks to specialized agents
+
+        --
+
+        - **Guardrails** &#8212; input/output validation, safety checks
+
+        --
+
+        - **Observability** &#8212; tracing, debugging, cost monitoring
+
+        --
+
+        - **User Interface** &#8212; a chat experience your users actually interact with
+
+        --
+
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 16px; margin-top: 16px;">
+        <strong>OpenAI's answer:</strong> a layered stack &#8212; each layer builds on the previous one.
+        </div>
+
+        ---
+
+        # The Three-Layer Stack
+
+        <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin: 40px 0;">
+        <div style="background: #FBEAE7; border: 2px solid #000000; padding: 16px; border-radius: 0px; text-align: center; width: 140px;">
+        <div style="font-size: 1.8em; margin-bottom: 8px; color: #E86B5A;">1</div>
+        <h4 style="margin: 8px 0; color: #000000; font-weight: 600;">Responses API</h4>
+        <p style="font-size: 12px; color: #5C5750; margin: 0;">The Primitive<br>Direct API calls<br>Built-in tools & state</p>
+        </div>
+        <div style="font-size: 24px; color: #2A2825;">&#8594;</div>
+        <div style="background: #FEF8E6; border: 2px solid #000000; padding: 16px; border-radius: 0px; text-align: center; width: 140px;">
+        <div style="font-size: 1.8em; margin-bottom: 8px; color: #F5C542;">2</div>
+        <h4 style="margin: 8px 0; color: #000000; font-weight: 600;">Agents SDK</h4>
+        <p style="font-size: 12px; color: #5C5750; margin: 0;">The Framework<br>Multi-agent orchestration<br>Guardrails & tracing</p>
+        </div>
+        <div style="font-size: 24px; color: #2A2825;">&#8594;</div>
+        <div style="background: #EEF5EC; border: 2px solid #000000; padding: 16px; border-radius: 0px; text-align: center; width: 140px;">
+        <div style="font-size: 1.8em; margin-bottom: 8px; color: #7CB56B;">3</div>
+        <h4 style="margin: 8px 0; color: #000000; font-weight: 600;">AgentKit</h4>
+        <p style="font-size: 12px; color: #5C5750; margin: 0;">The Product Platform<br>Agent Builder + ChatKit<br>Connectors + Evals</p>
+        </div>
+        </div>
+
+        --
+
+        <div style="text-align: center; margin-top: 8px; color: #5C5750; font-style: italic;">
+        Each layer builds on the previous &#8212; you pick the level of abstraction you need.
+        </div>
+
+        ---
+        class: center, middle
+
+        # Layer 1: Responses API
+        ## The Primitive
+
+        ---
+
+        # Responses API &#8212; What & Why
+
+        Released **March 2025**. Replaces both Chat Completions API and Assistants API.
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="background: #E8F1F9; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Key Innovations</h4>
+        <ul style="font-size: 16px; color: #2A2825;">
+        <li><strong>Items-based I/O</strong> &#8212; polymorphic output (text, tool calls, reasoning)</li>
+        <li><strong>Server-side state</strong> via <code>previous_response_id</code></li>
+        <li><strong>Reasoning preservation</strong> across turns</li>
+        </ul>
+        </div>
+        <div style="background: #EEF5EC; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Built-in Tools</h4>
+        <ul style="font-size: 16px; color: #2A2825;">
+        <li><code>web_search_preview</code></li>
+        <li><code>file_search</code></li>
+        <li><code>code_interpreter</code></li>
+        <li><code>computer_use_preview</code></li>
+        <li><code>mcp</code> (Model Context Protocol)</li>
+        </ul>
+        </div>
+        </div>
+
+        --
+
+        <div style="text-align: center; color: #5C5750; font-style: italic; margin-top: 8px;">
+        This is what we've been using in the notebooks so far.
+        </div>
+
+        <div style="position: absolute; bottom: 30px; width: 100%; left: 0; text-align: left;">
+        <p style="font-size: 14px; margin-bottom: 0px; margin-left: 36px;">
+        <sup>[1]</sup><a href="https://developers.openai.com/blog/responses-api/" style="color: #5C5750;">Why we built the Responses API</a>
+        </p>
+        </div>
+
+        ---
+        class: center, middle
+
+        # Layer 2: Agents SDK
+        ## The Framework
+
+        ---
+
+        # Agents SDK &#8212; Overview
+
+        Open-source framework. **Python + TypeScript**. 
+
+        ```bash
+        pip install openai-agents
+        ```
+
+        --
+
+        ### The 5 Core Primitives
+
+        <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin: 24px 0;">
+        <div style="background: #FBEAE7; border: 2px solid #000000; padding: 16px; border-radius: 0px; text-align: center; width: 140px;">
+        <div style="font-size: 1.8em; margin-bottom: 8px; color: #E86B5A;">1</div>
+        <h4 style="margin: 8px 0; color: #000000; font-weight: 600;">Agents</h4>
+        <p style="font-size: 12px; color: #5C5750; margin: 0;">LLM + tools<br>+ instructions</p>
+        </div>
+        <div style="font-size: 24px; color: #2A2825;">&#8594;</div>
+        <div style="background: #FEF8E6; border: 2px solid #000000; padding: 16px; border-radius: 0px; text-align: center; width: 140px;">
+        <div style="font-size: 1.8em; margin-bottom: 8px; color: #F5C542;">2</div>
+        <h4 style="margin: 8px 0; color: #000000; font-weight: 600;">Runner</h4>
+        <p style="font-size: 12px; color: #5C5750; margin: 0;">Automated<br>agent loop</p>
+        </div>
+        <div style="font-size: 24px; color: #2A2825;">&#8594;</div>
+        <div style="background: #EEF5EC; border: 2px solid #000000; padding: 16px; border-radius: 0px; text-align: center; width: 140px;">
+        <div style="font-size: 1.8em; margin-bottom: 8px; color: #7CB56B;">3</div>
+        <h4 style="margin: 8px 0; color: #000000; font-weight: 600;">Handoffs</h4>
+        <p style="font-size: 12px; color: #5C5750; margin: 0;">Multi-agent<br>delegation</p>
+        </div>
+        <div style="font-size: 24px; color: #2A2825;">&#8594;</div>
+        <div style="background: #E8F1F9; border: 2px solid #000000; padding: 16px; border-radius: 0px; text-align: center; width: 140px;">
+        <div style="font-size: 1.8em; margin-bottom: 8px; color: #5B9BD5;">4</div>
+        <h4 style="margin: 8px 0; color: #000000; font-weight: 600;">Guardrails</h4>
+        <p style="font-size: 12px; color: #5C5750; margin: 0;">Parallel<br>validation</p>
+        </div>
+        <div style="font-size: 24px; color: #2A2825;">&#8594;</div>
+        <div style="background: #FFFFFF; border: 2px solid #000000; padding: 16px; border-radius: 0px; text-align: center; width: 140px;">
+        <div style="font-size: 1.8em; margin-bottom: 8px; color: #2A2825;">5</div>
+        <h4 style="margin: 8px 0; color: #000000; font-weight: 600;">Tracing</h4>
+        <p style="font-size: 12px; color: #5C5750; margin: 0;">Built-in<br>observability</p>
+        </div>
+        </div>
+
+        --
+
+        Works with **100+ LLMs** &#8212; not locked to OpenAI.
+
+        <div style="position: absolute; bottom: 30px; width: 100%; left: 0; text-align: left;">
+        <p style="font-size: 14px; margin-bottom: 0px; margin-left: 36px;">
+        <sup>[1]</sup><a href="https://github.com/openai/openai-agents-python" style="color: #5C5750;">openai-agents-python (GitHub)</a><br>
+        <sup>[2]</sup><a href="https://openai.github.io/openai-agents-python/" style="color: #5C5750;">Agents SDK Documentation</a>
+        </p>
+        </div>
+
+        ---
+        class: center, middle
+
+        # Layer 3: AgentKit
+        ## The Product Platform
+
+        ---
+
+        # AgentKit &#8212; The Full Platform
+
+        Launched at **DevDay, October 2025**. No platform fee &#8212; standard API pricing.
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 16px; align-items: center; justify-items: center; width: 100%; min-height: 220px;">
+        <div style="background: #FFFFFF; border: 2px solid #000000; border-radius: 0px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 8px 8px; text-align: center; width: 85%;">
+        <div style="font-size: 2em; margin-bottom: 4px;">&#127912;</div>
+        <div style="font-size: 1em; font-weight: 600; margin-bottom: 4px;">
+        <span style="color: #000000;">Agent Builder</span>
+        </div>
+        <p style="font-size: 0.8em; color: #5C5750; margin-bottom: 0;">Visual drag-and-drop canvas for composing multi-agent workflows</p>
+        </div>
+        <div style="background: #F5F4F1; border: 2px solid #000000; border-radius: 0px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 8px 8px; text-align: center; width: 85%;">
+        <div style="font-size: 2em; margin-bottom: 4px;">&#128172;</div>
+        <div style="font-size: 1em; font-weight: 600; margin-bottom: 4px;">
+        <span style="color: #000000;">ChatKit</span>
+        </div>
+        <p style="font-size: 0.8em; color: #5C5750; margin-bottom: 0;">Embeddable chat UI &#8212; React components + Web Component</p>
+        </div>
+        <div style="background: #F5F4F1; border: 2px solid #000000; border-radius: 0px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 8px 8px; text-align: center; width: 85%;">
+        <div style="font-size: 2em; margin-bottom: 4px;">&#128268;</div>
+        <div style="font-size: 1em; font-weight: 600; margin-bottom: 4px;">
+        <span style="color: #000000;">Connector Registry</span>
+        </div>
+        <p style="font-size: 0.8em; color: #5C5750; margin-bottom: 0;">Pre-built data connectors &#8212; Dropbox, Google Drive, SharePoint, MCP</p>
+        </div>
+        <div style="background: #FFFFFF; border: 2px solid #000000; border-radius: 0px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 8px 8px; text-align: center; width: 85%;">
+        <div style="font-size: 2em; margin-bottom: 4px;">&#128202;</div>
+        <div style="font-size: 1em; font-weight: 600; margin-bottom: 4px;">
+        <span style="color: #000000;">Evals for Agents</span>
+        </div>
+        <p style="font-size: 0.8em; color: #5C5750; margin-bottom: 0;">Datasets, trace grading, automated prompt optimization</p>
+        </div>
+        </div>
+
+        <div style="position: absolute; bottom: 30px; width: 100%; left: 0; text-align: left;">
+        <p style="font-size: 14px; margin-bottom: 0px; margin-left: 36px;">
+        <sup>[1]</sup><a href="https://openai.com/index/introducing-agentkit/" style="color: #5C5750;">Introducing AgentKit &#8212; OpenAI</a>
+        </p>
+        </div>
+
+        ---
+
+        # ChatKit &#8212; Embeddable Chat UI
+
+        **Frontend-only** &#8212; React components + framework-agnostic Web Component.
+
+        --
+
+        ```jsx
+        import { ChatKit, useChatKit } from '@openai/chatkit-react';
+
+        const chatkit = useChatKit({
+          api: { getClientSecret },
+          .....
+
+        return <ChatKit control={chatkit.control} />;
+        ```
+
+        --
+
+        <div style="background: #E8F1F9; border: 2px solid #000000; border-radius: 0px; padding: 16px;">
+        <strong>Includes:</strong> file upload, light/dark theming, tool invocation display, chain-of-thought visualization, suggestion chips, event system, and more.
+        </div>
+
+        <div style="position: absolute; bottom: 30px; width: 100%; left: 0; text-align: left;">
+        <p style="font-size: 14px; margin-bottom: 0px; margin-left: 36px;">
+        <sup>[1]</sup><a href="https://platform.openai.com/docs/guides/chatkit" style="color: #5C5750;">ChatKit &#8212; OpenAI Docs</a><br>
+        <sup>[2]</sup><a href="https://github.com/openai/chatkit-js" style="color: #5C5750;">chatkit-js (GitHub)</a>
+        </p>
+        </div>
+
+        ---
+
+        # ChatKit &#8212; Backend Token Exchange
+
+        ```typescript
+        // POST /api/create-session (your backend)
+        const response = await fetch(
+          "https://api.openai.com/v1/chatkit/sessions",
+          {
+            method: "POST",
+            headers: {
+              ....
+        );
+
+        const { client_secret } = await response.json();
+        // Return client_secret to the frontend
+        ```
+
+        --
+
+        <div style="background: #FBEAE7; border: 2px solid #000000; border-radius: 0px; padding: 16px;">
+        <strong>Key pattern:</strong> Your server-side API key is exchanged for a short-lived client token. Per-user sessions via cookies. The frontend <em>never</em> sees your API key.
+        </div>
+
+        ---
+        class: center, middle
+
+        <h1>
+        <span style="background-color: #7CB56B; color: #FFFFFF; padding: 8px 16px;">
+          Demo: ChatKit App
+        </span>
+        </h1>
+
+        ---
+
+        # When to Use Each Layer
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="background: #E8F1F9; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Direct API Control</h4>
+        <ul style="font-size: 16px; color: #2A2825;">
+        <li><strong>Responses API</strong> &#8212; direct calls, full control, learning</li>
+        </ul>
+        </div>
+        <div style="background: #EEF5EC; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Multi-Agent Systems</h4>
+        <ul style="font-size: 16px; color: #2A2825;">
+        <li><strong>Agents SDK</strong> &#8212; orchestration, custom logic, guardrails</li>
+        </ul>
+        </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 0;">
+        <div style="background: #FEF8E6; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Ship a Chat UI</h4>
+        <ul style="font-size: 16px; color: #2A2825;">
+        <li><strong>ChatKit</strong> &#8212; embed a chat experience fast</li>
+        </ul>
+        </div>
+        <div style="background: #FBEAE7; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Visual Workflows & Evals</h4>
+        <ul style="font-size: 16px; color: #2A2825;">
+        <li><strong>Agent Builder</strong> &#8212; drag-and-drop, non-dev teams</li>
+        <li><strong>Evals</strong> &#8212; measure and improve agent quality</li>
+        </ul>
+        </div>
+        </div>
+
+        ---
+
+        # Key Takeaways
+
+        --
+
+        - **Start with Responses API** for maximum control and the deepest learning
+
+        --
+
+        - **Add Agents SDK** when you need multi-agent orchestration, guardrails, tracing
+
+        --
+
+        - **Use AgentKit / ChatKit** when you're ready to ship to real users
+
+        --
+
+        - Each layer **builds on the previous** &#8212; no vendor lock-in at the SDK level
+
+        --
+
+        - The whole stack is available at **standard API pricing** &#8212; no platform fee
+
+        ---
+
+        # What's Next
+
+        We continue building with the **Responses API** in the next sections:
+
+        --
+
+        - **Paper data extraction** &#8212; structured outputs from PDFs
+
+        --
+
+        - **Chat with paper agent** &#8212; document Q&A with tool use
+
+        --
+
+        - **Video script generation** &#8212; multi-modal with images
+
+        --
+
+        - **Research report generation** &#8212; end-to-end agentic workflow
+
+        --
+
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 16px; margin-top: 16px;">
+        <strong>The patterns you learn here apply at every layer of the stack.</strong>
+        </div>
+
+        ---
+
+        # Q&A & References
+
+        <ul style="font-size: 15px; line-height: 2.2; padding-left: 24px;">
+          <li>
+            <a href="https://developers.openai.com/blog/responses-api/">Why we built the Responses API</a>
+            &mdash; OpenAI Blog
+          </li>
+          <li>
+            <a href="https://platform.openai.com/docs/api-reference/responses">Responses API Reference</a>
+            &mdash; OpenAI Docs
+          </li>
+          <li>
+            <a href="https://github.com/openai/openai-agents-python">openai-agents-python</a>
+            &mdash; GitHub
+          </li>
+          <li>
+            <a href="https://openai.github.io/openai-agents-python/">Agents SDK Documentation</a>
+            &mdash; OpenAI
+          </li>
+          <li>
+            <a href="https://openai.com/index/introducing-agentkit/">Introducing AgentKit</a>
+            &mdash; OpenAI
+          </li>
+          <li>
+            <a href="https://platform.openai.com/docs/guides/chatkit">ChatKit Guide</a>
+            &mdash; OpenAI Docs
+          </li>
+          <li>
+            <a href="https://github.com/openai/chatkit-js">chatkit-js</a>
+            &mdash; GitHub
+          </li>
+        </ul>
+
+        --
+
+        <div style="margin-top: 24px; text-align: center;">
+        <p style="color: #5C5750; font-style: italic;">
+        Questions before we move on?
+        </p>
+        </div>
+
+        ---
+
+        ???
+        Presenter notes:
+        - Wrap up the conceptual overview
+        - Transition to hands-on notebooks
+        - Next up: Paper data extraction with structured outputs
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>

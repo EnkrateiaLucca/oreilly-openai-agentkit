@@ -1,4 +1,0 @@
-openai>=1.59.0
-prompt-toolkit>=3.0.47
-python-dotenv>=1.0.0
-rich>=13.7.0

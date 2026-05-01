@@ -5,3 +5,6 @@ seaborn
 pypdf
 requests
 tiktoken
+streamlit
+pydantic
+python-dotenv

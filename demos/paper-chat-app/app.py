@@ -1,8 +1,11 @@
 """Chat with a research paper using the OpenAI Conversations API."""
 
 import streamlit as st
+from dotenv import load_dotenv
 from openai import OpenAI
 from pypdf import PdfReader
+
+load_dotenv()
 
 MODEL = "gpt-4o-mini"
 SYSTEM_INSTRUCTIONS = (

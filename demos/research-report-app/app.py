@@ -4,9 +4,12 @@ import re
 from typing import List
 
 import streamlit as st
+from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel
 from pypdf import PdfReader
+
+load_dotenv()
 
 MODEL = "gpt-4o-mini"
 REPORT_INSTRUCTIONS = (

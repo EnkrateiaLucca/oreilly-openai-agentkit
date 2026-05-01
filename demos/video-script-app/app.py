@@ -4,9 +4,12 @@ import base64
 from typing import List
 
 import streamlit as st
+from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel
 from pypdf import PdfReader
+
+load_dotenv()
 
 MODEL = "gpt-4o-mini"
 IMAGE_MODEL = "gpt-image-1"

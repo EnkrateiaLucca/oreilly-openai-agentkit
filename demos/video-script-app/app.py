@@ -111,7 +111,7 @@ def main() -> None:
                         st.image(
                             image_bytes,
                             caption=f"Scene {scene.scene_number}",
-                            use_container_width=True,
+                            width="stretch",
                         )
     else:
         st.info("Upload a PDF and click 'Generate Script' to begin.")

@@ -58,7 +58,11 @@
 
         --
 
-        **5. When to Use Each Layer**
+        **5. Agent Builder** &#8212; visual workflow orchestration
+
+        --
+
+        **6. When to Use Each Layer**
 
         ---
         class: center, middle
@@ -289,6 +293,492 @@
         </div>
 
         ---
+        class: center, middle
+
+        # Agent Builder
+        ## Visual Workflow Orchestration
+
+        ---
+
+        # Agent Builder &#8212; What It Is
+
+        A **visual drag-and-drop canvas** for composing multi-step agent workflows &#8212; no orchestration glue code required.
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="background: #E8F1F9; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Part of AgentKit</h4>
+        <ul style="font-size: 15px; color: #2A2825;">
+        <li>Sits alongside <strong>ChatKit</strong>, <strong>Connector Registry</strong>, and <strong>Evals</strong></li>
+        <li>Powered by the <strong>Responses API</strong> under the hood</li>
+        <li>Standard API pricing &#8212; no platform fee</li>
+        </ul>
+        </div>
+        <div style="background: #EEF5EC; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">What You Get</h4>
+        <ul style="font-size: 15px; color: #2A2825;">
+        <li>Build multi-agent workflows visually</li>
+        <li>Test interactively before deploying</li>
+        <li>Publish and version with one click</li>
+        <li>Connect to ChatKit or export as code</li>
+        </ul>
+        </div>
+        </div>
+
+        --
+
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 16px;">
+        <strong>Target users:</strong> developers who want visual orchestration <em>and</em> teams who need to ship quickly without writing agent loop code.
+        </div>
+
+        ---
+
+        # Core Concepts &#8212; Workflows &amp; Nodes
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="background: #FBEAE7; padding: 20px; border: 2px solid #000000; border-radius: 0px;">
+        <h3 style="margin-top: 0; color: #E86B5A;">Workflow</h3>
+        <p style="font-size: 15px; color: #2A2825;"><strong>The blueprint.</strong> The complete graph of nodes that defines how a request is processed.</p>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Versioned and publishable</li>
+        <li>Has a unique, stable ID</li>
+        <li>The unit you build, test, and deploy</li>
+        <li>Can be re-used across ChatKit, SDK, or API</li>
+        </ul>
+        </div>
+        <div style="background: #E8F1F9; padding: 20px; border: 2px solid #000000; border-radius: 0px;">
+        <h3 style="margin-top: 0; color: #5B9BD5;">Node</h3>
+        <p style="font-size: 15px; color: #2A2825;"><strong>The building block.</strong> Each node does exactly one thing.</p>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Typed inputs and outputs</li>
+        <li>Connections enforce data contracts</li>
+        <li>Executes independently &#8212; traceable</li>
+        <li>Chain nodes to compose complex behavior</li>
+        </ul>
+        </div>
+        </div>
+
+        --
+
+        <div style="text-align: center; color: #5C5750; font-style: italic; margin-top: 8px;">
+        A workflow is the graph. A node is the vertex. Edges carry typed data.
+        </div>
+
+        ---
+
+        # Node Types
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 16px 0; font-size: 14px;">
+        <div style="background: #FBEAE7; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>Start</strong><br><span style="color: #5C5750;">Entry point &#8212; accepts initial user input</span>
+        </div>
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>Agent</strong><br><span style="color: #5C5750;">Calls an LLM with instructions + tools</span>
+        </div>
+        <div style="background: #E8F1F9; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>Classifier</strong><br><span style="color: #5C5750;">Routes to one of N branches based on output category</span>
+        </div>
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>If / Else</strong><br><span style="color: #5C5750;">Conditional logic on data values</span>
+        </div>
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>File Search</strong><br><span style="color: #5C5750;">Vector search over uploaded documents (RAG)</span>
+        </div>
+        <div style="background: #E8F1F9; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>Transform</strong><br><span style="color: #5C5750;">Maps data between incompatible node outputs/inputs</span>
+        </div>
+        <div style="background: #FBEAE7; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>MCP</strong><br><span style="color: #5C5750;">Calls a hosted MCP server tool (third-party data/actions)</span>
+        </div>
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>Guardrails</strong><br><span style="color: #5C5750;">Input/output safety validation before/after agents</span>
+        </div>
+        <div style="background: #FFFFFF; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>End</strong><br><span style="color: #5C5750;">Returns final output to the caller</span>
+        </div>
+        </div>
+
+        --
+
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 12px; font-size: 14px;">
+        <strong>Typed connections</strong> &#8212; each node declares its output schema; the canvas enforces that downstream nodes receive what they expect.
+        </div>
+
+        ---
+
+        # Templates vs Blank Canvas
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="background: #EEF5EC; padding: 20px; border: 2px solid #000000; border-radius: 0px;">
+        <h3 style="margin-top: 0; color: #000000;">Start from a Template</h3>
+        <p style="font-size: 14px; color: #2A2825;"><strong>Best when:</strong> your use case fits a known pattern</p>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Support triage with routing</li>
+        <li>Document Q&amp;A (RAG)</li>
+        <li>Research assistant</li>
+        <li>Multi-step approval workflow</li>
+        </ul>
+        <p style="font-size: 13px; color: #5C5750; margin-bottom: 0;">Pre-wired nodes &#8212; modify instructions, swap models, go.</p>
+        </div>
+        <div style="background: #E8F1F9; padding: 20px; border: 2px solid #000000; border-radius: 0px;">
+        <h3 style="margin-top: 0; color: #000000;">Start Blank</h3>
+        <p style="font-size: 14px; color: #2A2825;"><strong>Best when:</strong> designing something novel</p>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Custom multi-agent topology</li>
+        <li>Unique data transformation pipeline</li>
+        <li>Experimental classifier routing</li>
+        <li>Prototyping from first principles</li>
+        </ul>
+        <p style="font-size: 13px; color: #5C5750; margin-bottom: 0;">Add nodes one by one &#8212; full control over the graph.</p>
+        </div>
+        </div>
+
+        ---
+
+        # Preview &amp; Testing
+
+        Agent Builder has a built-in interactive test panel &#8212; no deploy step required.
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 24px 0;">
+        <div style="background: #E8F1F9; border: 2px solid #000000; border-radius: 0px; padding: 14px; text-align: center;">
+        <div style="font-size: 1.8em; margin-bottom: 6px;">&#9654;</div>
+        <strong style="font-size: 14px;">Interactive Runs</strong>
+        <p style="font-size: 12px; color: #5C5750; margin: 4px 0 0;">Send test inputs and see full output in real time</p>
+        </div>
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 14px; text-align: center;">
+        <div style="font-size: 1.8em; margin-bottom: 6px;">&#128206;</div>
+        <strong style="font-size: 14px;">File Attachments</strong>
+        <p style="font-size: 12px; color: #5C5750; margin: 4px 0 0;">Attach PDFs and documents for File Search workflows</p>
+        </div>
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 14px; text-align: center;">
+        <div style="font-size: 1.8em; margin-bottom: 6px;">&#128270;</div>
+        <strong style="font-size: 14px;">Per-Node Traces</strong>
+        <p style="font-size: 12px; color: #5C5750; margin: 4px 0 0;">Inspect what each node received and returned</p>
+        </div>
+        </div>
+
+        --
+
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 14px; font-size: 14px;">
+        <strong>Demo 1 (Course Assistant)</strong> &#8212; the simplest test case: Start &#8594; Agent &#8594; End. Per-node trace shows exactly what the agent saw and returned.
+        </div>
+
+        ---
+
+        # Guardrails &#8212; Open-Source Safety Layer
+
+        A **modular, open-source safety layer** that runs before and after your agents &#8212; no changes to agent logic required.
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 16px 0;">
+        <div style="background: #FBEAE7; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">What It Protects Against</h4>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>PII detection &#8212; Block or Redact mode</li>
+        <li>Jailbreak attempts</li>
+        <li>Prompt injection attacks</li>
+        <li>Off-topic requests</li>
+        <li>Sensitive data leakage in responses</li>
+        </ul>
+        </div>
+        <div style="text-align: center; padding: 8px; display: flex; align-items: center; justify-content: center;">
+        <img src="../demos/agent-builder/demo-2-support-triage/images/02-guardrails-settings.png" style="max-height: 220px; width: auto; border: 2px solid #000000;" alt="Guardrails settings panel"/>
+        </div>
+        </div>
+
+        --
+
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 12px; font-size: 14px;">
+        <strong>Demo 2 (Support Triage)</strong> &#8212; Guardrails node gates every request before the Classifier. PII set to Block mode; jailbreak detection enabled.
+        </div>
+
+        ---
+
+        # MCP Integration
+
+        **MCP nodes** connect your workflow to hosted third-party tools via the Model Context Protocol.
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 16px 0;">
+        <div style="background: #E8F1F9; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">How It Works</h4>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Add an MCP node to any workflow</li>
+        <li>Pick a server from the Connector Registry</li>
+        <li>The agent gains access to that tool set</li>
+        <li>Examples: Slack, GitHub, Google Drive, custom APIs</li>
+        </ul>
+        </div>
+        <div style="background: #FBEAE7; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">&#9888; Context-Window Cost</h4>
+        <p style="font-size: 14px; color: #2A2825;">Each MCP tool you add expands the model's context window with tool definitions.</p>
+        <p style="font-size: 14px; color: #2A2825;"><strong>Stack wisely:</strong> more tools = higher latency &amp; cost per call.</p>
+        </div>
+        </div>
+
+        --
+
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 12px; font-size: 14px;">
+        <strong>Demo 3 (File Search RAG)</strong> uses the built-in File Search node &#8212; same composition pattern as MCP, but backed by a vector store instead of an external API.
+        </div>
+
+        ---
+
+        # Widget Studio
+
+        Go beyond plain text &#8212; render **rich, structured outputs** directly from agent responses.
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 24px 0;">
+        <div style="background: #E8F1F9; border: 2px solid #000000; border-radius: 0px; padding: 14px; text-align: center;">
+        <div style="font-size: 1.6em; margin-bottom: 6px;">&#128202;</div>
+        <strong style="font-size: 14px;">Tables &amp; Cards</strong>
+        <p style="font-size: 12px; color: #5C5750; margin: 4px 0 0;">Structured data rendered for review</p>
+        </div>
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 14px; text-align: center;">
+        <div style="font-size: 1.6em; margin-bottom: 6px;">&#128203;</div>
+        <strong style="font-size: 14px;">Forms</strong>
+        <p style="font-size: 12px; color: #5C5750; margin: 4px 0 0;">Approval and input UIs from agent output</p>
+        </div>
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 14px; text-align: center;">
+        <div style="font-size: 1.6em; margin-bottom: 6px;">&#128065;</div>
+        <strong style="font-size: 14px;">Custom Layouts</strong>
+        <p style="font-size: 12px; color: #5C5750; margin: 4px 0 0;">Enterprise dashboards, data review UIs</p>
+        </div>
+        </div>
+
+        --
+
+        <div style="background: #FBEAE7; border: 2px solid #000000; border-radius: 0px; padding: 14px; font-size: 14px;">
+        Widget Studio is configured in the workflow &#8212; the agent outputs structured JSON; Widget Studio renders it as a component in ChatKit.
+        </div>
+
+        ---
+
+        # Versioning &amp; Publishing
+
+        Workflows are **first-class versioned objects** &#8212; not just scripts you save and overwrite.
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="background: #EEF5EC; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Each Version Has</h4>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>A unique, stable workflow ID</li>
+        <li>A published deployment URL / API endpoint</li>
+        <li>An immutable snapshot of the graph</li>
+        </ul>
+        </div>
+        <div style="background: #E8F1F9; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">Workflow Lifecycle</h4>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Prior versions remain accessible</li>
+        <li>Safe rollbacks with no downtime</li>
+        <li>Staged promotion (dev &#8594; staging &#8594; prod)</li>
+        <li>Point ChatKit at a specific version ID</li>
+        </ul>
+        </div>
+        </div>
+
+        ---
+
+        # Deployment Paths
+
+        Once your workflow is published, two paths to ship it:
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="background: #EEF5EC; padding: 20px; border: 2px solid #000000; border-radius: 0px;">
+        <h3 style="margin-top: 0; color: #000000;">&#128172; ChatKit <span style="font-size: 14px; color: #5C5750; font-weight: 400;">(recommended default)</span></h3>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Embed a chat UI in minutes</li>
+        <li>Handles auth, streaming, file upload</li>
+        <li>No backend agent loop code needed</li>
+        <li>Point at a workflow ID &#8212; done</li>
+        </ul>
+        </div>
+        <div style="background: #E8F1F9; padding: 20px; border: 2px solid #000000; border-radius: 0px;">
+        <h3 style="margin-top: 0; color: #000000;">&#128187; SDK Code Export</h3>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Export as Python or TypeScript</li>
+        <li>Full server-side orchestration control</li>
+        <li>Custom approval flows &amp; state management</li>
+        <li>Tool execution hooks &amp; multi-runtime</li>
+        </ul>
+        </div>
+        </div>
+
+        --
+
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 12px; font-size: 14px;">
+        Start with ChatKit. Export to SDK only when you need capabilities the hosted path can't provide.
+        </div>
+
+        ---
+
+        # Evals Integration
+
+        Evals closes the loop between building and improving your workflow.
+
+        --
+
+        <div style="display: flex; justify-content: center; align-items: center; gap: 0; margin: 20px 0;">
+        <div style="background: #FBEAE7; border: 2px solid #000000; border-radius: 0px; padding: 12px 16px; text-align: center; width: 110px;">
+        <div style="font-size: 1.4em;">&#127959;</div>
+        <strong style="font-size: 13px;">Build</strong>
+        </div>
+        <div style="font-size: 20px; color: #2A2825; padding: 0 4px;">&#8594;</div>
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 12px 16px; text-align: center; width: 110px;">
+        <div style="font-size: 1.4em;">&#9654;</div>
+        <strong style="font-size: 13px;">Test</strong>
+        </div>
+        <div style="font-size: 20px; color: #2A2825; padding: 0 4px;">&#8594;</div>
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 12px 16px; text-align: center; width: 110px;">
+        <div style="font-size: 1.4em;">&#128640;</div>
+        <strong style="font-size: 13px;">Deploy</strong>
+        </div>
+        <div style="font-size: 20px; color: #2A2825; padding: 0 4px;">&#8594;</div>
+        <div style="background: #E8F1F9; border: 2px solid #000000; border-radius: 0px; padding: 12px 16px; text-align: center; width: 110px;">
+        <div style="font-size: 1.4em;">&#128200;</div>
+        <strong style="font-size: 13px;">Measure</strong>
+        </div>
+        <div style="font-size: 20px; color: #2A2825; padding: 0 4px;">&#8594;</div>
+        <div style="background: #FBEAE7; border: 2px solid #000000; border-radius: 0px; padding: 12px 16px; text-align: center; width: 110px;">
+        <div style="font-size: 1.4em;">&#9881;</div>
+        <strong style="font-size: 13px;">Improve</strong>
+        </div>
+        </div>
+
+        --
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin: 8px 0; font-size: 13px;">
+        <div style="background: #F5F3EB; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>Trace Grading</strong><br>Did the agent produce the right output on real conversations?
+        </div>
+        <div style="background: #F5F3EB; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>Datasets</strong><br>Build eval sets from live runs &#8212; no manual labeling required
+        </div>
+        <div style="background: #F5F3EB; border: 2px solid #000000; border-radius: 0px; padding: 10px;">
+        <strong>Prompt Optimization</strong><br>Iterate system instructions using eval scores as signal
+        </div>
+        </div>
+
+        ---
+
+        # Agent Builder vs Agents SDK
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; font-size: 14px;">
+        <div style="background: #EEF5EC; border: 2px solid #000000; border-radius: 0px; padding: 16px;">
+        <h4 style="margin-top: 0; color: #000000;">Reach for Agent Builder when&#8230;</h4>
+        <ul style="color: #2A2825; line-height: 1.8;">
+        <li>Visual builder for non-dev teammates</li>
+        <li>Shipping to ChatKit is the goal</li>
+        <li>A template is close to your use case</li>
+        <li>You want Evals + iteration in the UI</li>
+        <li>Prototyping and testing workflows fast</li>
+        </ul>
+        </div>
+        <div style="background: #E8F1F9; border: 2px solid #000000; border-radius: 0px; padding: 16px;">
+        <h4 style="margin-top: 0; color: #000000;">Reach for Agents SDK when&#8230;</h4>
+        <ul style="color: #2A2825; line-height: 1.8;">
+        <li>Server-side orchestration &amp; custom state</li>
+        <li>Custom human-in-the-loop approval flows</li>
+        <li>Fine-grained tool execution control</li>
+        <li>Multi-runtime or non-OpenAI deployment</li>
+        <li>Full code ownership is a requirement</li>
+        </ul>
+        </div>
+        </div>
+
+        --
+
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 12px; font-size: 14px;">
+        These paths are <strong>not mutually exclusive</strong> &#8212; prototype in Agent Builder, export to SDK for production hardening.
+        </div>
+
+        ---
+        class: center, middle
+
+        <h1>
+        <span style="background-color: #7CB56B; color: #FFFFFF; padding: 8px 16px;">
+          Demo: Module 3 &#8212; Agent Builder Use Cases
+        </span>
+        </h1>
+
+        ---
+
+        # Demo 1 &#8212; Course Assistant
+
+        **Simplest workflow:** Start &#8594; Agent &#8594; End
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 16px 0; align-items: start;">
+        <div>
+        <img src="../demos/agent-builder/demo-1-intro-assistant/images/01-workflow.png" style="max-height: 280px; width: auto; border: 2px solid #000000;" alt="Course Assistant workflow"/>
+        </div>
+        <div style="background: #EEF5EC; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0;">What It Demonstrates</h4>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Minimal node composition &#8212; one Agent node</li>
+        <li>How to set system instructions on a node</li>
+        <li>Per-node trace inspection in preview mode</li>
+        <li>Good starter template for any assistant</li>
+        </ul>
+        <p style="font-size: 13px; color: #5C5750; margin-bottom: 0;">Model: gpt-4o-mini with chat history enabled</p>
+        </div>
+        </div>
+
+        ---
+
+        # Demo 2 &#8212; Support Triage with Guardrails
+
+        **Multi-agent routing + safety:** Guardrails &#8594; Classifier &#8594; 3 specialists (or Safety Refusal)
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 16px 0; align-items: start;">
+        <div>
+        <img src="../demos/agent-builder/demo-2-support-triage/images/01-workflow.png" style="max-height: 280px; width: auto; border: 2px solid #000000;" alt="Support triage workflow"/>
+        </div>
+        <div style="background: #FBEAE7; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0;">What It Demonstrates</h4>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>Guardrails node: PII block mode + jailbreak detection</li>
+        <li>Classifier routing to Billing / Technical / General</li>
+        <li>Safety Refusal Agent for policy violations</li>
+        <li>Confidence-based routing prevents unsafe paths</li>
+        </ul>
+        </div>
+        </div>
+
+        ---
+
+        # Demo 3 &#8212; File Search RAG (SEC 10-K Filings)
+
+        **Grounded answers from documents:** Start &#8594; Query Agent &#8594; File Search &#8594; Transform &#8594; Evidence Summarizer
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 16px 0; align-items: start;">
+        <div>
+        <img src="../demos/agent-builder/demo-3-file-search-rag/images/01-workflow.png" style="max-height: 280px; width: auto; border: 2px solid #000000;" alt="File Search RAG workflow"/>
+        </div>
+        <div style="background: #E8F1F9; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0;">What It Demonstrates</h4>
+        <ul style="font-size: 14px; color: #2A2825;">
+        <li>File Search node over 10 SEC 10-K filings</li>
+        <li>Transform node: bridges typed output mismatch</li>
+        <li>Evidence Summarizer with cited sources</li>
+        <li>Vector store with real financial documents</li>
+        </ul>
+        <p style="font-size: 13px; color: #5C5750; margin-bottom: 0;">Query: "What does NVIDIA say about AI data centers and supply chain risks?"</p>
+        </div>
+        </div>
+
+        ---
 
         # ChatKit &#8212; Embeddable Chat UI
 
@@ -413,25 +903,25 @@
 
         ---
 
-        # What's Next
+        # What We Built
 
-        We continue building with the **Responses API** in the next sections:
-
-        --
-
-        - **Paper data extraction** &#8212; structured outputs from PDFs
+        From notebooks to full-stack agent apps across three modules:
 
         --
 
-        - **Chat with paper agent** &#8212; document Q&A with tool use
+        - **Paper Chat App** &#8212; interactive Q&amp;A on uploaded PDFs (Module 1)
 
         --
 
-        - **Video script generation** &#8212; multi-modal with images
+        - **Video Script Generator** &#8212; paper &#8594; 60-second video script with DALL-E scenes (Module 1)
 
         --
 
-        - **Research report generation** &#8212; end-to-end agentic workflow
+        - **Research Report App** &#8212; structured analysis exported as Markdown (Module 1)
+
+        --
+
+        - **3 Agent Builder Workflows** &#8212; Course Assistant, Support Triage, File Search RAG (Module 3)
 
         --
 
@@ -470,6 +960,14 @@
           </li>
           <li>
             <a href="https://github.com/openai/chatkit-js">chatkit-js</a>
+            &mdash; GitHub
+          </li>
+          <li>
+            <a href="https://platform.openai.com/docs/guides/agent-builder">Agent Builder Guide</a>
+            &mdash; OpenAI Docs
+          </li>
+          <li>
+            <a href="https://github.com/openai/openai-agents-python/tree/main/src/agents/guardrails">Guardrails (open-source)</a>
             &mdash; GitHub
           </li>
         </ul>

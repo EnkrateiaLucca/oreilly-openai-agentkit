@@ -1,6 +1,6 @@
 # O'Reilly Live Training - OpenAI AgentKit
 
-Welcome to the O'Reilly Live Training on OpenAI AgentKit! This course will guide you through building AI agents using OpenAI's latest APIs, including structured outputs, file search, and multi-modal capabilities.
+Welcome to the O'Reilly Live Training on OpenAI AgentKit! This course covers the full OpenAI agent stack — from raw API calls with the Responses API, through the Agents SDK, up to the AgentKit product platform (Agent Builder, ChatKit, Connector Registry, and Evals). You'll build real demo applications along the way.
 
 ## Setup
 
@@ -138,10 +138,38 @@ The main notebooks are organized in a progressive learning path:
 
 - **Reference Implementations**: Check `notebooks/reference-implementations-for-production/` for production-ready examples
 
+## Demo Applications
+
+The notebooks have been converted into runnable demo apps. Each demo is self-contained and can be run independently.
+
+### Streamlit Apps (Module 1)
+
+| Demo | Description | Run |
+|------|-------------|-----|
+| [Paper Chat App](demos/paper-chat-app/) | Upload a PDF and ask questions about it using the Responses API | `streamlit run demos/paper-chat-app/app.py` |
+| [Video Script Generator](demos/video-script-app/) | Convert a research paper into a 60-second educational video script with optional DALL-E scene images | `streamlit run demos/video-script-app/app.py` |
+| [Research Report App](demos/research-report-app/) | Generate a structured research report from a PDF, exported as Markdown | `streamlit run demos/research-report-app/app.py` |
+
+### Agent Builder Workflows (Module 3)
+
+Three Agent Builder workflows built in the OpenAI platform, each with a `README.md` and screenshots:
+
+| Demo | Description |
+|------|-------------|
+| [Demo 1 — Course Assistant](demos/agent-builder/demo-1-intro-assistant/) | Minimal single-node workflow: Start → Agent → End. Good starting template. |
+| [Demo 2 — Support Triage with Guardrails](demos/agent-builder/demo-2-support-triage/) | Guardrails → Classifier → 3 specialist agents (Billing / Technical / General) or Safety Refusal. PII detection, jailbreak protection. |
+| [Demo 3 — File Search RAG](demos/agent-builder/demo-3-file-search-rag/) | RAG workflow over 10 SEC 10-K filings: Query Agent → File Search → Transform → Evidence Summarizer with cited sources. |
+
+### ChatKit App (Module 4)
+
+| Demo | Description | Docs |
+|------|-------------|------|
+| [ChatKit App](demos/chatkit-app/) | Next.js starter that embeds an Agent Builder workflow via ChatKit. Handles auth, streaming, and file upload. | [README](demos/chatkit-app/README.md) · [Review](demos/chatkit-app/REVIEW.md) |
+
 ## Repository Structure
 
 ```
-├── notebooks/                              # Main learning notebooks
+├── notebooks/                              # Core learning notebooks
 │   ├── 1.0-intro-agents-responses-api.ipynb
 │   ├── 2.0-simple-chat-responses-api.ipynb
 │   ├── 3.0-structured-outputs-data-extraction.ipynb
@@ -152,9 +180,18 @@ The main notebooks are organized in a progressive learning path:
 │   ├── 8.0-research-report-generation.ipynb
 │   ├── openai-api-overview.ipynb
 │   └── reference-implementations-for-production/
-├── presentation/                           # Course presentation materials
-├── assets/                                 # Images, diagrams, and resources
-├── demos/                                  # Demo applications
+├── demos/                                  # Runnable demo applications
+│   ├── paper-chat-app/                     # Streamlit — PDF Q&A (Module 1)
+│   ├── video-script-app/                   # Streamlit — video script generator (Module 1)
+│   ├── research-report-app/                # Streamlit — research report generator (Module 1)
+│   ├── agent-builder/                      # Agent Builder workflows (Module 3)
+│   │   ├── demo-1-intro-assistant/         # Simple single-node assistant
+│   │   ├── demo-2-support-triage/          # Multi-agent triage with guardrails
+│   │   └── demo-3-file-search-rag/         # RAG over SEC 10-K filings
+│   └── chatkit-app/                        # Next.js ChatKit starter (Module 4)
+├── presentation/                           # Course slides (Remark.js HTML + PDF)
+├── assets/                                 # Images, diagrams, and reference documents
+├── research/                               # Background research and use-case analysis
 ├── requirements/                           # Python dependencies
 │   ├── requirements.in                     # Direct dependencies
 │   └── requirements.txt                    # Locked dependencies
@@ -164,13 +201,17 @@ The main notebooks are organized in a progressive learning path:
 
 ## Key Features
 
-This course covers:
+This course covers the full OpenAI agent stack:
 
-- **OpenAI Responses API**: Building agentic workflows with the latest OpenAI APIs
+- **Responses API**: The primitive — direct API calls, server-side state, built-in tools (`file_search`, `web_search_preview`, `code_interpreter`, `mcp`)
+- **Agents SDK**: The framework — multi-agent orchestration, handoffs, guardrails, tracing; works with 100+ LLMs
+- **Agent Builder**: Visual drag-and-drop workflow composer — nodes, classifiers, guardrails, MCP connectors, versioning, and evals
+- **ChatKit**: Embeddable React/Web Component chat UI — file upload, streaming, tool invocation display
+- **Guardrails**: Open-source modular safety layer — PII detection, jailbreak protection, prompt injection defense
 - **Structured Outputs**: Guaranteed JSON schemas for reliable data extraction
-- **File Search & RAG**: Implementing retrieval-augmented generation patterns
-- **Multi-modal Agents**: Working with text, images, and documents
-- **Production Patterns**: Best practices for deploying AI agents
+- **File Search & RAG**: Retrieval-augmented generation with vector stores
+- **Multi-modal Agents**: Text, images, and document processing
+- **Evals**: Trace grading, dataset building, and automated prompt optimization
 
 ## Troubleshooting
 
@@ -192,11 +233,23 @@ pip install --upgrade pip
 pip install -r requirements/requirements.txt
 ```
 
+**Streamlit Apps:**
+Run from the project root so relative paths resolve correctly:
+```bash
+streamlit run demos/paper-chat-app/app.py
+```
+
+**ChatKit App:**
+Requires Node.js 18+. See [demos/chatkit-app/README.md](demos/chatkit-app/README.md) for full setup.
+
 ## Additional Resources
 
 - [OpenAI Platform Documentation](https://platform.openai.com/docs)
 - [OpenAI Cookbook](https://cookbook.openai.com/)
 - [OpenAI API Reference](https://platform.openai.com/docs/api-reference)
+- [Agent Builder Guide](https://platform.openai.com/docs/guides/agent-builder)
+- [ChatKit Guide](https://platform.openai.com/docs/guides/chatkit)
+- [Agents SDK (GitHub)](https://github.com/openai/openai-agents-python)
 
 ## License
 

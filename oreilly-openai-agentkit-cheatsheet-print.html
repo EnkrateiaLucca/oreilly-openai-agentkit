@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenAI AgentKit &amp; Responses API — Quick Reference</title>
+    <style>
+        /* WeasyPrint optimized print stylesheet */
+
+        @page {
+            size: A4;
+            margin: 14mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 9pt;
+            line-height: 1.4;
+            color: #000;
+            background: #fff;
+        }
+
+        /* ── Header ── */
+        .page-header {
+            text-align: center;
+            padding-bottom: 9pt;
+            margin-bottom: 10pt;
+            border-bottom: 3px solid #000;
+            break-inside: avoid;
+        }
+
+        .page-header h1 {
+            font-size: 20pt;
+            font-weight: 700;
+            margin-bottom: 3pt;
+            text-transform: uppercase;
+            letter-spacing: 1.5pt;
+        }
+
+        .page-header .subtitle {
+            font-size: 10.5pt;
+            color: #333;
+            margin-bottom: 3pt;
+        }
+
+        .page-header .meta {
+            font-size: 8pt;
+            color: #666;
+        }
+
+        /* ── Major Section Wrapper — keeps heading with its content ── */
+        .major-section {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            margin-bottom: 10pt;
+        }
+
+        /* ── Section Title (header bar) ── */
+        .section-title {
+            font-size: 12pt;
+            font-weight: 700;
+            padding: 4pt 9pt;
+            background: #000;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.8pt;
+            margin-bottom: 7pt;
+            break-after: avoid;
+        }
+
+        /* ── Two-Column layout via CSS columns (WeasyPrint-safe) ── */
+        .two-col {
+            column-count: 2;
+            column-gap: 10pt;
+        }
+
+        /* ── Cards ── */
+        .card, .card-light, .card-accent, .definition-card,
+        .code-card, .table-card, .node-item, .info-box,
+        .key-points, .comparison-item, .step {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .card {
+            border: 2px solid #000;
+            padding: 7pt;
+            background: #fff;
+            margin-bottom: 7pt;
+        }
+
+        .card-light {
+            border: 2px solid #000;
+            background: #f9f9f9;
+            padding: 7pt;
+            margin-bottom: 7pt;
+        }
+
+        .card-title {
+            font-size: 10pt;
+            font-weight: 700;
+            margin-bottom: 5pt;
+            padding-bottom: 3pt;
+            border-bottom: 1px solid #bbb;
+        }
+
+        .card-content {
+            font-size: 8.5pt;
+        }
+
+        /* ── Definition Cards ── */
+        .definition-card {
+            border: 2px solid #000;
+            padding: 6pt;
+            background: #fff;
+            margin-bottom: 7pt;
+        }
+
+        .term {
+            font-weight: 700;
+            font-size: 9.5pt;
+            margin-bottom: 2pt;
+        }
+
+        .definition {
+            font-size: 8pt;
+            color: #333;
+        }
+
+        /* ── Code Blocks ── */
+        .code-card {
+            border: 2px solid #000;
+            background: #fff;
+            padding: 0;
+            margin-bottom: 7pt;
+        }
+
+        .code-card-header {
+            background: #000;
+            color: #fff;
+            padding: 4pt 7pt;
+            font-weight: 700;
+            font-size: 8.5pt;
+        }
+
+        .code-card pre {
+            margin: 0;
+            padding: 7pt;
+            font-family: 'Courier New', 'Courier', monospace;
+            font-size: 7.5pt;
+            line-height: 1.3;
+            background: #f9f9f9;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        /* ── Tables ── */
+        .table-card {
+            border: 2px solid #000;
+            background: #fff;
+            padding: 0;
+            margin-bottom: 7pt;
+        }
+
+        .table-card-header {
+            background: #000;
+            color: #fff;
+            padding: 4pt 7pt;
+            font-weight: 700;
+            font-size: 9.5pt;
+        }
+
+        .table-card table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 8pt;
+        }
+
+        .table-card th {
+            background: #f0f0f0;
+            font-weight: 700;
+            text-align: left;
+            padding: 4pt 6pt;
+            border-bottom: 2px solid #000;
+        }
+
+        .table-card td {
+            padding: 4pt 6pt;
+            border-bottom: 1px solid #ddd;
+        }
+
+        /* ── Lists ── */
+        ul, ol { margin-left: 13pt; }
+        li { margin-bottom: 2.5pt; }
+
+        /* ── Info Box ── */
+        .info-box {
+            border: 2px solid #666;
+            border-left: 5px solid #000;
+            padding: 7pt;
+            margin-bottom: 7pt;
+            background: #f5f5f5;
+        }
+
+        .info-box-title {
+            font-weight: 700;
+            font-size: 9.5pt;
+            margin-bottom: 3pt;
+        }
+
+        /* ── Layer Stack (horizontal) ── */
+        .layer-row {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 6pt 0;
+            margin-bottom: 7pt;
+        }
+
+        .layer-cell {
+            display: table-cell;
+            border: 2px solid #000;
+            padding: 7pt;
+            text-align: center;
+            width: 33%;
+            vertical-align: top;
+        }
+
+        .layer-num {
+            font-size: 16pt;
+            font-weight: 700;
+        }
+
+        .layer-name {
+            font-weight: 700;
+            font-size: 9.5pt;
+            margin: 2pt 0;
+        }
+
+        .layer-desc {
+            font-size: 7.5pt;
+            color: #555;
+        }
+
+        /* ── Node Grid (3-col table) ── */
+        .node-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 7pt;
+        }
+
+        .node-table td {
+            border: 1.5px solid #000;
+            padding: 5pt;
+            vertical-align: top;
+            width: 33%;
+        }
+
+        .node-name {
+            font-weight: 700;
+            font-size: 9pt;
+            margin-bottom: 2pt;
+        }
+
+        .node-desc {
+            font-size: 7.5pt;
+            color: #444;
+        }
+
+        /* ── Step Flow (horizontal table) ── */
+        .step-row {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 4pt 0;
+            margin: 7pt 0;
+        }
+
+        .step {
+            display: table-cell;
+            border: 2px solid #000;
+            padding: 5pt;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .step-number {
+            background: #000;
+            color: #fff;
+            width: 16pt;
+            height: 16pt;
+            display: inline-block;
+            line-height: 16pt;
+            font-weight: 700;
+            font-size: 9pt;
+            margin-bottom: 3pt;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 8.5pt;
+            margin-bottom: 2pt;
+        }
+
+        .step-content {
+            font-size: 7.5pt;
+            color: #333;
+        }
+
+        /* ── Key Points ── */
+        .key-points {
+            border: 3px solid #000;
+            background: #f9f9f9;
+            padding: 9pt;
+            margin-top: 9pt;
+        }
+
+        .key-points-title {
+            font-weight: 700;
+            font-size: 10.5pt;
+            margin-bottom: 6pt;
+            text-transform: uppercase;
+        }
+
+        .key-points li { margin-bottom: 4pt; font-size: 9pt; }
+
+        /* ── Inline code ── */
+        code {
+            font-family: 'Courier New', 'Courier', monospace;
+            font-size: 7.5pt;
+            background: #f0f0f0;
+            padding: 1pt 2pt;
+        }
+
+        /* ── Footer ── */
+        footer {
+            margin-top: 12pt;
+            padding-top: 7pt;
+            border-top: 2px solid #000;
+            text-align: center;
+            font-size: 7.5pt;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>OpenAI AgentKit &amp; Responses API</h1>
+        <div class="subtitle">O'Reilly Live Training — Lucas Soares &mdash; Quick Reference</div>
+        <div class="meta">Responses API &nbsp;|&nbsp; Agents SDK &nbsp;|&nbsp; Agent Builder &nbsp;|&nbsp; ChatKit &nbsp;|&nbsp; Evals</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 1: The Three-Layer Stack
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">1. The Three-Layer Stack</div>
+
+        <div class="layer-row">
+            <div class="layer-cell" style="background:#fff8f0;">
+                <div class="layer-num">1</div>
+                <div class="layer-name">Responses API</div>
+                <div class="layer-desc">The Primitive<br>Direct API calls<br>Built-in tools &amp; server-side state<br><em>Released March 2025</em></div>
+            </div>
+            <div class="layer-cell" style="background:#f0f8f0;">
+                <div class="layer-num">2</div>
+                <div class="layer-name">Agents SDK</div>
+                <div class="layer-desc">The Framework<br>Multi-agent orchestration<br>Guardrails &amp; tracing<br><em>Python + TypeScript, 100+ LLMs</em></div>
+            </div>
+            <div class="layer-cell" style="background:#f0f4ff;">
+                <div class="layer-num">3</div>
+                <div class="layer-name">AgentKit</div>
+                <div class="layer-desc">The Product Platform<br>Agent Builder + ChatKit<br>Connectors + Evals<br><em>Launched DevDay Oct 2025</em></div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="info-box-title">Core Principle</div>
+            Each layer builds on the previous — pick the level of abstraction you need. Prototype in Agent Builder, export to SDK for production hardening. No vendor lock-in. Standard API pricing — no platform fee.
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 2: Responses API
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">2. Responses API — The Primitive</div>
+        <div class="two-col">
+
+            <div class="card">
+                <div class="card-title">Key Innovations</div>
+                <div class="card-content">
+                    <ul>
+                        <li><strong>Items-based I/O</strong> — polymorphic output: text, tool calls, reasoning</li>
+                        <li><strong>Server-side state</strong> via <code>previous_response_id</code></li>
+                        <li><strong>Reasoning preservation</strong> across conversation turns</li>
+                        <li>Replaces Chat Completions API <em>and</em> Assistants API</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Built-in Tools</div>
+                <div class="card-content">
+                    <ul>
+                        <li><code>web_search_preview</code> — live web search</li>
+                        <li><code>file_search</code> — RAG over uploaded files</li>
+                        <li><code>code_interpreter</code> — Python sandbox</li>
+                        <li><code>computer_use_preview</code> — GUI automation</li>
+                        <li><code>mcp</code> — Model Context Protocol servers</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-card">
+                <div class="code-card-header">Basic Call</div>
+                <pre><code>from openai import OpenAI
+client = OpenAI()
+
+response = client.responses.create(
+    model="gpt-4o",
+    input="Summarize the latest AI news",
+    tools=[{"type": "web_search_preview"}]
+)
+print(response.output_text)</code></pre>
+            </div>
+
+            <div class="code-card">
+                <div class="code-card-header">Multi-turn (Server-side State)</div>
+                <pre><code>from openai import OpenAI
+client = OpenAI()
+
+r1 = client.responses.create(
+    model="gpt-4o",
+    input="What is the Responses API?"
+)
+# Continue — server manages history:
+r2 = client.responses.create(
+    model="gpt-4o",
+    input="Give me a code example",
+    previous_response_id=r1.id
+)</code></pre>
+            </div>
+
+        </div><!-- /.two-col -->
+    </div><!-- /.major-section -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 3: Agents SDK
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">3. Agents SDK — The Framework</div>
+        <div class="two-col">
+
+            <div class="card">
+                <div class="card-title">5 Core Primitives &nbsp;<small style="font-weight:400;font-size:8pt;"><code>pip install openai-agents</code></small></div>
+                <div class="card-content">
+                    <ul>
+                        <li><strong>Agents</strong> — LLM + tools + instructions</li>
+                        <li><strong>Runner</strong> — automated agent loop execution</li>
+                        <li><strong>Handoffs</strong> — multi-agent delegation</li>
+                        <li><strong>Guardrails</strong> — parallel input/output validation</li>
+                        <li><strong>Tracing</strong> — built-in observability (spans, traces)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Use SDK When…</div>
+                <div class="card-content">
+                    <ul>
+                        <li>Custom server-side state management</li>
+                        <li>Human-in-the-loop approval flows</li>
+                        <li>Fine-grained tool execution control</li>
+                        <li>Multi-runtime or non-OpenAI deployment</li>
+                        <li>Full code ownership required</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-card">
+                <div class="code-card-header">Basic Agent + Runner</div>
+                <pre><code>from agents import Agent, Runner
+
+agent = Agent(
+    name="Research Assistant",
+    instructions="You are a research assistant.",
+    model="gpt-4o",
+    tools=[web_search]
+)
+
+result = await Runner.run(
+    agent, "Summarize recent AI papers"
+)
+print(result.final_output)</code></pre>
+            </div>
+
+            <div class="code-card">
+                <div class="code-card-header">Multi-agent Handoffs</div>
+                <pre><code>from agents import Agent, Runner
+
+billing = Agent(name="Billing Agent", ...)
+technical = Agent(name="Tech Agent", ...)
+general = Agent(name="General Agent", ...)
+
+triage = Agent(
+    name="Triage",
+    instructions="Route to the right agent.",
+    handoffs=[billing, technical, general]
+)
+
+result = await Runner.run(
+    triage, "I can't access my invoice"
+)</code></pre>
+            </div>
+
+        </div><!-- /.two-col -->
+    </div><!-- /.major-section -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 4: AgentKit Platform
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">4. AgentKit Platform — The Product Layer</div>
+        <div class="two-col">
+
+            <div class="definition-card">
+                <div class="term">Agent Builder</div>
+                <div class="definition">Visual drag-and-drop canvas for composing multi-step agent workflows — no orchestration glue code. Versioned, publishable workflows with per-node traces and interactive preview testing.</div>
+            </div>
+
+            <div class="definition-card">
+                <div class="term">ChatKit</div>
+                <div class="definition">Embeddable React component + Web Component chat UI. Handles auth, streaming, file upload, tool invocation display, chain-of-thought visualization, and suggestion chips.</div>
+            </div>
+
+            <div class="definition-card">
+                <div class="term">Connector Registry</div>
+                <div class="definition">Pre-built data connectors: Dropbox, Google Drive, SharePoint, and any MCP server. Add as a node in any workflow — no custom integration code needed.</div>
+            </div>
+
+            <div class="definition-card">
+                <div class="term">Evals for Agents</div>
+                <div class="definition">Trace grading, dataset building from live runs, and automated prompt optimization. Closes the Build &rarr; Test &rarr; Deploy &rarr; Measure &rarr; Improve cycle.</div>
+            </div>
+
+        </div><!-- /.two-col -->
+    </div><!-- /.major-section -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 5: Agent Builder Nodes
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">5. Agent Builder — Node Types</div>
+
+        <table class="node-table">
+            <tr>
+                <td><div class="node-name">Start</div><div class="node-desc">Entry point — accepts initial user input</div></td>
+                <td><div class="node-name">Agent</div><div class="node-desc">Calls an LLM with instructions + tools</div></td>
+                <td><div class="node-name">Classifier</div><div class="node-desc">Routes to one of N branches by output category</div></td>
+            </tr>
+            <tr>
+                <td><div class="node-name">If / Else</div><div class="node-desc">Conditional logic on data values</div></td>
+                <td><div class="node-name">File Search</div><div class="node-desc">Vector search over uploaded documents (RAG)</div></td>
+                <td><div class="node-name">Transform</div><div class="node-desc">Maps data between incompatible node outputs/inputs</div></td>
+            </tr>
+            <tr>
+                <td><div class="node-name">MCP</div><div class="node-desc">Calls a hosted MCP server tool (3rd-party data/actions)</div></td>
+                <td><div class="node-name">Guardrails</div><div class="node-desc">Input/output safety validation before/after agents</div></td>
+                <td><div class="node-name">End</div><div class="node-desc">Returns final output to the caller</div></td>
+            </tr>
+        </table>
+
+        <div class="two-col">
+
+            <div class="card">
+                <div class="card-title">Guardrails Protect Against</div>
+                <div class="card-content">
+                    <ul>
+                        <li>PII detection — Block or Redact mode</li>
+                        <li>Jailbreak attempts</li>
+                        <li>Prompt injection attacks</li>
+                        <li>Off-topic / out-of-scope requests</li>
+                        <li>Sensitive data leakage in responses</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Versioning &amp; Deployment</div>
+                <div class="card-content">
+                    <ul>
+                        <li>Each version: stable ID + immutable graph snapshot</li>
+                        <li>Safe rollbacks — prior versions stay accessible</li>
+                        <li>Staged promotion: dev &rarr; staging &rarr; prod</li>
+                        <li><strong>ChatKit</strong> — embed in minutes, point at workflow ID</li>
+                        <li><strong>SDK Export</strong> — Python/TS for custom server control</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div><!-- /.two-col -->
+    </div><!-- /.major-section -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 6: ChatKit
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">6. ChatKit — Embeddable Chat UI</div>
+        <div class="two-col">
+
+            <div class="code-card">
+                <div class="code-card-header">React Integration</div>
+                <pre><code>import { ChatKit, useChatKit }
+  from '@openai/chatkit-react';
+
+const chatkit = useChatKit({
+  api: { getClientSecret }
+});
+
+return &lt;ChatKit control={chatkit.control} /&gt;;
+</code></pre>
+            </div>
+
+            <div class="code-card">
+                <div class="code-card-header">Backend Token Exchange</div>
+                <pre><code>// POST /api/create-session
+const response = await fetch(
+  "https://api.openai.com/v1/chatkit/sessions",
+  {
+    method: "POST",
+    headers: { Authorization: `Bearer ${API_KEY}` },
+    body: JSON.stringify({ workflow_id: WF_ID })
+  }
+);
+const { client_secret } = await response.json();
+// Return client_secret — never the API key</code></pre>
+            </div>
+
+        </div><!-- /.two-col -->
+    </div><!-- /.major-section -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 7: Evals + Decision Table
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">7. Evals Loop &amp; Layer Decision Guide</div>
+        <div class="two-col">
+
+            <div class="card">
+                <div class="card-title">The Evals Cycle</div>
+                <div class="card-content">
+                    <div class="step-row">
+                        <div class="step"><div class="step-number">1</div><div class="step-title">Build</div></div>
+                        <div class="step"><div class="step-number">2</div><div class="step-title">Test</div></div>
+                        <div class="step"><div class="step-number">3</div><div class="step-title">Deploy</div></div>
+                        <div class="step"><div class="step-number">4</div><div class="step-title">Measure</div></div>
+                        <div class="step"><div class="step-number">5</div><div class="step-title">Improve</div></div>
+                    </div>
+                    <ul style="margin-top:5pt;">
+                        <li><strong>Trace Grading</strong> — grade real conversation outputs</li>
+                        <li><strong>Datasets</strong> — build eval sets from live runs</li>
+                        <li><strong>Prompt Optimization</strong> — iterate instructions using eval scores</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-card-header">When to Use Each Layer</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>What you need</th>
+                            <th>Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Direct API control / learning</td><td><strong>Responses API</strong></td></tr>
+                        <tr><td>Multi-agent orchestration, custom state</td><td><strong>Agents SDK</strong></td></tr>
+                        <tr><td>Ship a chat UI fast</td><td><strong>ChatKit</strong></td></tr>
+                        <tr><td>Visual workflows, non-dev teams</td><td><strong>Agent Builder</strong></td></tr>
+                        <tr><td>Measure &amp; improve agent quality</td><td><strong>Evals</strong></td></tr>
+                        <tr><td>Prototype &rarr; production hardening</td><td><strong>Builder &rarr; SDK</strong></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div><!-- /.two-col -->
+    </div><!-- /.major-section -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 8: Demo Workflows
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">8. Demo Workflows (Agent Builder)</div>
+        <div class="two-col">
+
+            <div class="card" style="background:#fff8f0;">
+                <div class="card-title">Demo 1 — Course Assistant</div>
+                <div class="card-content">
+                    <strong>Start &rarr; Agent &rarr; End</strong>
+                    <ul>
+                        <li>Minimal single-node workflow</li>
+                        <li>Set system instructions on Agent node</li>
+                        <li>Per-node trace inspection in preview</li>
+                        <li>Best starting template for any assistant</li>
+                        <li><em>Model: gpt-4o-mini, chat history on</em></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="background:#fff0f0;">
+                <div class="card-title">Demo 2 — Support Triage</div>
+                <div class="card-content">
+                    <strong>Guardrails &rarr; Classifier &rarr; Billing / Technical / General or Safety Refusal</strong>
+                    <ul>
+                        <li>PII detection (Block mode)</li>
+                        <li>Jailbreak detection enabled</li>
+                        <li>Confidence-based routing</li>
+                        <li>Safety Refusal for policy violations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="background:#f0f4ff;">
+                <div class="card-title">Demo 3 — File Search RAG (SEC 10-K)</div>
+                <div class="card-content">
+                    <strong>Query Agent &rarr; File Search &rarr; Transform &rarr; Evidence Summarizer</strong>
+                    <ul>
+                        <li>10 SEC 10-K filings in vector store</li>
+                        <li>Transform node bridges typed output mismatch</li>
+                        <li>Evidence Summarizer with cited sources</li>
+                        <li><em>"What does NVIDIA say about AI data centers?"</em></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">ChatKit App (Module 4)</div>
+                <div class="card-content">
+                    Next.js starter embedding a published Agent Builder workflow via ChatKit.
+                    <ul>
+                        <li>Auth via short-lived client secrets</li>
+                        <li>Streaming responses out of the box</li>
+                        <li>File upload support built-in</li>
+                        <li>Run: <code>npm run dev</code> (requires Node.js 18+)</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div><!-- /.two-col -->
+    </div><!-- /.major-section -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 9: Notebooks + Setup
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="major-section">
+        <div class="section-title">9. Notebooks &amp; Setup</div>
+        <div class="two-col">
+
+            <div class="card-light">
+                <div class="card-title">Core Learning Notebooks</div>
+                <div class="card-content">
+                    <ol>
+                        <li><strong>Intro to Agents</strong> — Responses API fundamentals</li>
+                        <li><strong>Simple Chat</strong> — conversational interfaces</li>
+                        <li><strong>Structured Outputs</strong> — guaranteed JSON schemas</li>
+                        <li><strong>Agentic Workflows</strong> — complex agent pipelines</li>
+                        <li><strong>File Search &amp; RAG</strong> — vector store retrieval</li>
+                        <li><strong>Video Script + Images</strong> — multi-modal vision agents</li>
+                        <li><strong>Chat with Paper Agent</strong> — document Q&amp;A</li>
+                        <li><strong>Research Report Generation</strong> — end-to-end research agent</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div>
+                <div class="code-card">
+                    <div class="code-card-header">Setup (uv)</div>
+                    <pre><code>curl -LsSf https://astral.sh/uv/install.sh | sh
+make all           # venv + deps + kernel
+source .venv/bin/activate
+# .env:
+OPENAI_API_KEY=sk-...</code></pre>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">Key Links</div>
+                    <div class="card-content">
+                        <ul>
+                            <li>Agents SDK: <code>github.com/openai/openai-agents-python</code></li>
+                            <li>Agent Builder Guide: <code>platform.openai.com/docs/guides/agent-builder</code></li>
+                            <li>ChatKit Guide: <code>platform.openai.com/docs/guides/chatkit</code></li>
+                            <li>OpenAI Cookbook: <code>cookbook.openai.com</code></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.two-col -->
+    </div><!-- /.major-section -->
+
+    <!-- ═══════════════════════════════════════════════════════════
+         KEY TAKEAWAYS
+         ═══════════════════════════════════════════════════════════ -->
+    <div class="key-points">
+        <div class="key-points-title">Key Takeaways</div>
+        <ul>
+            <li><strong>Start with Responses API</strong> — maximum control &amp; deepest learning; replaces Chat Completions API + Assistants API (March 2025)</li>
+            <li><strong>Add Agents SDK</strong> when you need multi-agent orchestration, handoffs, guardrails, and built-in tracing</li>
+            <li><strong>Use Agent Builder</strong> for visual workflow composition — great for non-dev teams, rapid prototyping, and Evals in the UI</li>
+            <li><strong>Deploy via ChatKit</strong> when shipping to real users — auth, streaming, and file upload are handled for you</li>
+            <li><strong>Each layer builds on the previous</strong> — prototype in Agent Builder, export to SDK for production; no vendor lock-in at SDK level</li>
+        </ul>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Automata Learning Lab &nbsp;|&nbsp; O'Reilly Live Training: Building Agents with OpenAI AgentKit &nbsp;|&nbsp; Lucas Soares</p>
+    </footer>
+
+</body>
+</html>

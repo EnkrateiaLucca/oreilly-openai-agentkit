@@ -1,3 +1,8 @@
+> **Deprecation notice:** Agent Builder is being shut down by OpenAI on **November 30, 2026**.
+> This demo will not be reproducible after that date. The multi-agent patterns it demonstrates
+> (handoffs, guardrails, classifiers, retrieval) are fully reproducible using the
+> [Agents SDK](https://github.com/openai/openai-agents-python).
+
 # Demo 2 - Support Triage With Guardrails
 
 This demo shows a support workflow with a safety gate, classification, branching, and specialist support agents.

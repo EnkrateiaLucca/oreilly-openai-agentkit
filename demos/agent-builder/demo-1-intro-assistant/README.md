@@ -1,3 +1,8 @@
+> **Deprecation notice:** Agent Builder is being shut down by OpenAI on **November 30, 2026**.
+> This demo will not be reproducible after that date. The multi-agent patterns it demonstrates
+> (handoffs, guardrails, classifiers, retrieval) are fully reproducible using the
+> [Agents SDK](https://github.com/openai/openai-agents-python).
+
 # Demo 1 - Course Assistant
 
 This is the clean introductory Agent Builder demo. It shows the smallest useful workflow: user input goes into one agent, and the agent returns a course-friendly answer.

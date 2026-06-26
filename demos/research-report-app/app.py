@@ -11,7 +11,7 @@ from pypdf import PdfReader
 
 load_dotenv()
 
-MODEL = "gpt-4o-mini"
+MODEL = "gpt-5.4-mini"
 REPORT_INSTRUCTIONS = (
     "You are an expert research analyst who creates detailed, structured "
     "reports about academic papers. Be thorough, accurate, and clear."

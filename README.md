@@ -167,7 +167,7 @@ Three Agent Builder workflows built in the OpenAI platform, each with a `README.
 │   │   ├── demo-2-support-triage/          # Multi-agent triage with guardrails
 │   │   └── demo-3-file-search-rag/         # RAG over SEC 10-K filings
 │   └── chatkit-app/                        # Next.js ChatKit starter (Module 4)
-├── presentation/                           # Course slides (Remark.js HTML + PDF)
+├── presentation/                           # Course slides (Remark.js HTML + PDF) + handout (HTML + PDF)
 ├── assets/                                 # Images, diagrams, and reference documents
 ├── research/                               # Background research and use-case analysis
 ├── requirements/                           # Python dependencies

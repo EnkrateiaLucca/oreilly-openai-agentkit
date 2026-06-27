@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAI AgentKit — Course Reference Handout</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        @page {
+            size: A4;
+            margin: 18mm;
+            @top-left { content: none; }
+            @top-center { content: none; }
+            @top-right { content: none; }
+            @bottom-left { content: none; }
+            @bottom-center { content: none; }
+            @bottom-right { content: none; }
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            font-size: 10.5pt;
+            line-height: 1.5;
+            color: #2A2825;
+            background: #fff;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 18mm;
+        }
+
+        h1 {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 22pt;
+            font-weight: 700;
+            margin-bottom: 6pt;
+            padding-bottom: 8pt;
+            border-bottom: 3px solid #000;
+            letter-spacing: 0.5pt;
+        }
+
+        h2 {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 15pt;
+            font-weight: 700;
+            margin-top: 18pt;
+            margin-bottom: 8pt;
+            border-bottom: 1px solid #333;
+            padding-bottom: 3pt;
+        }
+
+        h3 {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            font-weight: 700;
+            margin-top: 12pt;
+            margin-bottom: 5pt;
+        }
+
+        .subtitle {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 12pt;
+            color: #555;
+            margin-bottom: 6pt;
+            font-style: italic;
+        }
+
+        .metadata {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 9pt;
+            color: #666;
+            margin-bottom: 16pt;
+            padding-bottom: 10pt;
+            border-bottom: 1px solid #ddd;
+        }
+
+        p { margin-bottom: 8pt; }
+
+        ul, ol { margin-left: 18pt; margin-bottom: 9pt; }
+        li { margin-bottom: 3pt; }
+
+        pre {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 8.5pt;
+            background: #F5F3EB;
+            border: 1px solid #ccc;
+            border-left: 3px solid #000;
+            padding: 8pt;
+            margin: 8pt 0;
+            overflow: hidden;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 9.5pt;
+            background: #f0efe9;
+            padding: 1pt 3pt;
+            border-radius: 2pt;
+            word-break: break-word;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow-wrap: break-word;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 8pt 0;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 9pt;
+        }
+
+        th {
+            background: #2A2825;
+            color: #fff;
+            font-weight: 700;
+            text-align: left;
+            padding: 5pt 7pt;
+            border: 1px solid #2A2825;
+        }
+
+        td { padding: 5pt 7pt; border: 1px solid #999; vertical-align: top; }
+        tr:nth-child(even) { background: #faf9f5; }
+
+        .lead {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10pt;
+            color: #444;
+            margin-bottom: 10pt;
+        }
+
+        @media print {
+            body { margin: 0; padding: 0; }   /* @page already supplies 18mm margins */
+            h1, h2, h3 { page-break-after: avoid; }
+            table, pre { page-break-inside: avoid; }
+        }
+
+        footer {
+            margin-top: 24pt;
+            padding-top: 10pt;
+            border-top: 1px solid #ccc;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 8pt;
+            color: #666;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>OpenAI AgentKit — Course Reference</h1>
+        <div class="subtitle">From the Responses API primitive to the AgentKit product stack</div>
+        <div class="metadata">
+            <strong>Course:</strong> Building Agents with OpenAI's AgentKit &amp; Responses API (Lucas Soares, O'Reilly Live Training) &nbsp;|&nbsp;
+            <strong>Updated:</strong> June 2026 &nbsp;|&nbsp;
+            <strong>Models:</strong> <code>gpt-5.4-mini</code> (default), <code>gpt-5.5</code> (frontier)
+        </div>
+    </header>
+
+    <main>
+        <p class="lead">The full OpenAI agent stack builds in layers: the <strong>Responses API</strong> is the
+        primitive (one model call with server-side state and built-in tools); the <strong>Agents SDK</strong>
+        adds orchestration; <strong>AgentKit</strong> (Agent Builder, ChatKit, Connector Registry, Evals) is the
+        product platform on top. Learn the primitive first — everything else composes from it.</p>
+
+        <h2>1. The Stack at a Glance</h2>
+        <table>
+            <thead><tr><th>Layer</th><th>What it is</th><th>You reach for it when…</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Responses API</strong></td><td>Single stateful model call: items I/O, server-side state, built-in tools, structured outputs</td><td>You want direct control over one model turn</td></tr>
+                <tr><td><strong>Conversations API</strong></td><td>Durable, server-side conversation object the Responses API writes to</td><td>You need persistent multi-turn state without resending history</td></tr>
+                <tr><td><strong>Agents SDK</strong></td><td>Framework: multi-agent orchestration, handoffs, guardrails, tracing (100+ LLMs)</td><td>You need multiple agents / tools / routing in code</td></tr>
+                <tr><td><strong>Agent Builder</strong></td><td>Visual drag-and-drop workflow composer (nodes, classifiers, guardrails)</td><td>You want to compose a workflow without code <em>(deprecated Nov 30 2026 — patterns transfer to the SDK)</em></td></tr>
+                <tr><td><strong>ChatKit</strong></td><td>Embeddable React/Web-Component chat UI (streaming, file upload, tool display)</td><td>You want a ready chat front-end for a workflow</td></tr>
+                <tr><td><strong>Guardrails</strong></td><td>Open-source safety layer: PII detection, jailbreak &amp; prompt-injection defense</td><td>You need input/output safety around an agent</td></tr>
+            </tbody>
+        </table>
+
+        <h2>2. Responses API — the primitive</h2>
+
+        <h3>2.1 Basic call &amp; output</h3>
+<pre><code>from openai import OpenAI
+client = OpenAI()  # reads OPENAI_API_KEY
+
+resp = client.responses.create(
+    model="gpt-5.4-mini",
+    input="Explain agents in one sentence.",
+)
+print(resp.output_text)   # convenience accessor for the text
+# resp.output is the list of output items (reasoning, tool calls, message)</code></pre>
+
+        <h3>2.2 Input items &amp; multi-turn</h3>
+        <p>Inputs are a list of typed items. Chain turns server-side with <code>previous_response_id</code> (no need to resend history).</p>
+<pre><code>resp = client.responses.create(
+    model="gpt-5.4-mini",
+    input=[{"role": "user", "content": "What are 3 core snowboarding skills?"}],
+)
+followup = client.responses.create(
+    model="gpt-5.4-mini",
+    input=[{"role": "user", "content": "Give 3 drills for each."}],
+    previous_response_id=resp.id,    # server keeps the prior context
+)</code></pre>
+
+        <h3>2.3 Structured outputs (Pydantic)</h3>
+        <p>Use <code>responses.parse</code> with a Pydantic model as <code>text_format</code>; read the typed object from <code>output_parsed</code>.</p>
+<pre><code>from pydantic import BaseModel
+
+class PaperData(BaseModel):
+    title: str
+    abstract_summary: list[str]
+
+resp = client.responses.parse(
+    model="gpt-5.4-mini",
+    input=[{"role": "user", "content": paper_text}],
+    text_format=PaperData,
+)
+data = resp.output_parsed       # -> PaperData(title=..., abstract_summary=[...])</code></pre>
+
+        <h3>2.4 Token counting (before you send)</h3>
+        <p>Ask the API for the exact input-token count for a given model — more reliable than a local tokenizer for new models.</p>
+<pre><code>result = client.responses.input_tokens.count(
+    model="gpt-5.5",
+    input="Hello folks!",
+)
+print(result.input_tokens)</code></pre>
+
+        <h3>2.5 Streaming (typed semantic events)</h3>
+        <p><strong>Gotcha:</strong> a streamed response yields <em>typed events</em>, not chunks with <code>.output</code>. Accumulate
+        text on <code>response.output_text.delta</code> events via <code>event.delta</code>.</p>
+<pre><code>full = ""
+for event in client.responses.create(
+        model="gpt-5.4-mini", input="Explain backprop in 3 sentences.", stream=True):
+    if event.type == "response.output_text.delta":
+        full += event.delta
+        print(event.delta, end="", flush=True)
+# other events: response.created, response.output_text.done, response.completed</code></pre>
+
+        <h2>3. Function / Tool Calling</h2>
+        <p class="lead">Pattern: define a tool schema → the model emits a <code>function_call</code> item → you run the
+        function → send the result back as a <code>function_call_output</code> linked by <code>call_id</code> → the model
+        produces the final answer. Responses API function-call items are <strong>flat</strong> (<code>.name</code>,
+        <code>.arguments</code>, <code>.call_id</code>) — there is no nested <code>.function</code> as in Chat Completions.</p>
+<pre><code>tools = [{
+    "type": "function",
+    "name": "get_weather",
+    "description": "Get the weather for a city.",
+    "parameters": {
+        "type": "object",
+        "properties": {"city": {"type": "string"}},
+        "required": ["city"],
+    },
+}]
+
+resp = client.responses.create(model="gpt-5.4-mini",
+                               input=[{"role": "user", "content": "Weather in Lisbon?"}],
+                               tools=tools)
+
+next_input = []
+for item in resp.output:                 # NOTE: iterate resp.output, not resp
+    if item.type == "function_call":
+        args = json.loads(item.arguments)
+        result = get_weather(**args)     # run your function
+        next_input.append({
+            "type": "function_call_output",
+            "call_id": item.call_id,      # link the result to the call
+            "output": json.dumps(result),
+        })
+
+final = client.responses.create(model="gpt-5.4-mini",
+                                input=next_input,
+                                previous_response_id=resp.id,
+                                tools=tools)
+print(final.output_text)</code></pre>
+
+        <h2>4. Built-in Tools</h2>
+        <p>The model executes these server-side — just enable them in <code>tools</code>.</p>
+        <table>
+            <thead><tr><th>Tool</th><th>Enable with</th><th>Use for</th></tr></thead>
+            <tbody>
+                <tr><td><code>web_search</code></td><td><code>{"type": "web_search"}</code></td><td>Live web answers with citations (annotations)</td></tr>
+                <tr><td><code>file_search</code></td><td><code>{"type": "file_search", "vector_store_ids": [...]}</code></td><td>RAG over uploaded docs / vector stores</td></tr>
+                <tr><td><code>code_interpreter</code></td><td><code>{"type": "code_interpreter"}</code></td><td>Run Python (data analysis, math, files)</td></tr>
+                <tr><td><code>mcp</code></td><td><code>{"type": "mcp", "server_url": ...}</code></td><td>Call external MCP servers / connectors</td></tr>
+            </tbody>
+        </table>
+<pre><code># Minimal agent loop with the built-in web_search tool
+resp = client.responses.create(
+    model="gpt-5.4-mini",
+    input=[{"role": "user", "content": "Latest LLM news from simonwillison.net?"}],
+    tools=[{"type": "web_search"}],
+)
+for item in resp.output:
+    if item.type == "web_search_call": print("searched:", item.action)
+    if item.type == "message":         print(item.content[0].text)  # answer + citations</code></pre>
+
+        <h2>5. Conversations API — durable server-side state</h2>
+        <p class="lead">A Conversation is a long-lived object with its own id. Pass <code>conversation=conv.id</code> to
+        <code>responses.create</code> and the API <strong>auto-appends both the user input and the assistant output</strong>
+        — don't add them by hand or you double every turn. In items, user turns use <code>input_text</code> and assistant
+        turns use <code>output_text</code>.</p>
+<pre><code>conv = client.conversations.create(metadata={"user_id": "u_123"})
+client.conversations.retrieve(conv.id)
+client.conversations.update(conv.id, metadata={"status": "in_progress"})
+
+# Items CRUD
+client.conversations.items.create(conv.id, items=[
+    {"type": "message", "role": "user",
+     "content": [{"type": "input_text", "text": "Help me set up my account."}]},
+])
+items = client.conversations.items.list(conv.id)     # paginated
+client.conversations.items.retrieve(conv.id, item_id)
+# client.conversations.items.delete(conv.id, item_id)
+
+# Stateful turn — API appends user + assistant automatically
+resp = client.responses.create(model="gpt-5.4-mini",
+                               input="What can you do?",
+                               conversation=conv.id)</code></pre>
+
+        <h2>6. AgentKit Stack — when to climb a layer</h2>
+        <ul>
+            <li><strong>Agents SDK</strong> — multi-agent orchestration in code: agents, handoffs, function tools, guardrails, and tracing. Works with 100+ models. The durable path as Agent Builder/Evals are deprecated.</li>
+            <li><strong>Agent Builder</strong> — visual workflow composer (Start → Agent → tools/guardrails → End), versioning, evals. <em>Deprecated Nov 30 2026; the node patterns map directly onto the Agents SDK.</em></li>
+            <li><strong>ChatKit</strong> — embeddable chat UI (React component / web component) that fronts a workflow: auth, streaming, file upload, tool-call display.</li>
+            <li><strong>Guardrails</strong> — modular open-source safety layer that runs before and after agents: PII detection (block/redact), jailbreak attempts, prompt-injection defense, off-topic and sensitive-data filtering — no changes to agent logic.</li>
+        </ul>
+
+        <h2>7. Quick Reference &amp; Gotchas</h2>
+        <ul>
+            <li><strong>Model lineup:</strong> <code>gpt-5.4-mini</code> for most work; <code>gpt-5.5</code> for frontier reasoning. Responses report a dated snapshot (e.g. <code>gpt-5.4-mini-2026-03-17</code>).</li>
+            <li><strong>Iterate <code>resp.output</code>, never <code>resp</code>:</strong> a <code>Response</code> is a Pydantic model — iterating it yields field tuples, not output items.</li>
+            <li><strong>Streaming = events:</strong> accumulate <code>event.delta</code> on <code>response.output_text.delta</code>; there is no <code>chunk.output</code>.</li>
+            <li><strong>Function calls are flat:</strong> <code>item.name</code> / <code>item.arguments</code> / <code>item.call_id</code>; feed results back as <code>function_call_output</code>.</li>
+            <li><strong>Conversations auto-append:</strong> with <code>conversation=...</code> the API stores both sides of the turn for you.</li>
+            <li><strong>Structured output:</strong> prefer <code>responses.parse(text_format=Model)</code> → <code>output_parsed</code> over hand-rolled JSON schemas.</li>
+        </ul>
+    </main>
+
+    <footer>
+        <p>OpenAI AgentKit — O'Reilly Live Training with Lucas Soares · Course reference handout · Updated June 2026</p>
+    </footer>
+</body>
+</html>

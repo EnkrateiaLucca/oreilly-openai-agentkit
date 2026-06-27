@@ -143,7 +143,7 @@ Three Agent Builder workflows built in the OpenAI platform, each with a `README.
 
 | Demo | Description | Docs |
 |------|-------------|------|
-| [ChatKit App](demos/chatkit-app/) | Next.js starter that embeds an Agent Builder workflow via ChatKit. Handles auth, streaming, and file upload. | [README](demos/chatkit-app/README.md) · [Review](demos/chatkit-app/REVIEW.md) |
+| [ChatKit App](demos/chatkit-app/) | Next.js starter that embeds an Agent Builder workflow via ChatKit. Handles auth, streaming, and file upload. | [README](demos/chatkit-app/README.md) · [Setup Guide](demos/chatkit-app/SETUP_GUIDE.md) |
 
 ## Repository Structure
 

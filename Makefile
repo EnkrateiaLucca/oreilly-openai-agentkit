@@ -14,7 +14,7 @@ env-setup: venv-create
 
 repo-setup:
 	mkdir -p requirements
-	echo "ipykernel" > requirements/requirements.in
+	@test -f requirements/requirements.in || echo "ipykernel" > requirements/requirements.in
 
 notebook-setup:
 	$(VENV_PATH)/bin/python -m ipykernel install --user --name=$(ENV_NAME) --display-name="$(ENV_NAME)"

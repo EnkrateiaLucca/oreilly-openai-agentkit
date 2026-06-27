@@ -1,4 +1,5 @@
 ipykernel
+jupyterlab
 openai
 matplotlib
 seaborn
@@ -8,3 +9,4 @@ tiktoken
 streamlit
 pydantic
 python-dotenv
+numpy!=2.4.0  # 2.4.0 was yanked (backward-compat bug)

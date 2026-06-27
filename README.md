@@ -103,25 +103,19 @@ OPENAI_API_KEY=your-openai-api-key-here
 
 ## Notebooks
 
-### Core Learning Path
+The notebooks live in `notebooks/` and run in order as a single sequence. `0.x`–`1.x` are
+the core teaching path; `2.x` are production-oriented reference implementations.
 
-The actual notebooks in this repo:
+1. [**0.0 — Intro to Responses API**](notebooks/0.0-intro-responses-api.ipynb) — Main teaching notebook. Covers the Responses API end-to-end: items-based I/O, server-side state, built-in tools, structured outputs, and multi-turn agents.
+2. [**1.0 — Paper Data Extraction**](notebooks/1.0-paper-data-extraction.ipynb) — Applied use-case: extract structured data from academic papers using the Responses API and Pydantic schemas.
+3. [**1.1 — Data Analysis (Finance)**](notebooks/1.1-data-analysis-finance.ipynb) — Data-analysis workflow with tool/function calling over the Responses API.
+4. [**2.0 — Agentic Workflow with Structured Outputs**](notebooks/2.0-agentic-workflow-struct-out.ipynb) — Structured-output agentic pipeline.
+5. [**2.1 — Intro to Responses API (reference)**](notebooks/2.1-intro-responses-api.ipynb) — Complete Responses API lifecycle reference (create, retrieve, cancel, token counts).
+6. [**2.2 — Building with the Responses API**](notebooks/2.2-building-with-responses-api.ipynb) — Ten production patterns: streaming, retries, token budgets, function calling, caching, and more.
+7. [**2.3 — Intro to Conversations API (reference)**](notebooks/2.3-intro-conversations-api.ipynb) — Complete Conversations API lifecycle reference (create, update, items CRUD, pagination).
+8. [**2.4 — Building with the Conversations API**](notebooks/2.4-building-with-conversations-api.ipynb) — Production conversation patterns: sessions, templates, batch ops, branching, analytics.
 
-1. [**Intro to Responses API**](notebooks/0.0-intro-responses-api.ipynb) — Main teaching notebook. Covers the Responses API end-to-end: items-based I/O, server-side state, built-in tools, structured outputs, and multi-turn agents.
-
-2. [**Paper Data Extraction**](notebooks/1.0-usecase-paper-data-extraction.ipynb) — Applied use-case: extract structured data from academic papers using the Responses API and Pydantic schemas.
-
-3. [**Data Analysis — Finance**](notebooks/data-analysis-finance.ipynb) — Supporting notebook demonstrating data analysis workflows with the Responses API.
-
-### Reference Implementations
-
-Production-ready examples in `notebooks/reference-implementations-for-production/`:
-
-- [`2.0-agentic-workflow-with-struct-out-responses.ipynb`](notebooks/reference-implementations-for-production/2.0-agentic-workflow-with-struct-out-responses.ipynb) — Structured-output agentic pipeline
-- [`building-with-conversations-api.ipynb`](notebooks/reference-implementations-for-production/building-with-conversations-api.ipynb) — Conversations API patterns
-- [`building-with-responses-api.ipynb`](notebooks/reference-implementations-for-production/building-with-responses-api.ipynb) — Responses API patterns
-- [`intro-openai-conversations-api.ipynb`](notebooks/reference-implementations-for-production/intro-openai-conversations-api.ipynb) — Conversations API intro
-- [`intro-openai-responses-api.ipynb`](notebooks/reference-implementations-for-production/intro-openai-responses-api.ipynb) — Responses API intro
+Input files the notebooks read (PDFs, images, sample text) live in `notebooks/assets/` and the repo-level `assets/`.
 
 ## Demo Applications
 
@@ -154,16 +148,16 @@ Three Agent Builder workflows built in the OpenAI platform, each with a `README.
 ## Repository Structure
 
 ```
-├── notebooks/                              # Core learning notebooks
+├── notebooks/                              # Course notebooks (run in order)
 │   ├── 0.0-intro-responses-api.ipynb
-│   ├── 1.0-usecase-paper-data-extraction.ipynb
-│   ├── data-analysis-finance.ipynb
-│   └── reference-implementations-for-production/
-│       ├── 2.0-agentic-workflow-with-struct-out-responses.ipynb
-│       ├── building-with-conversations-api.ipynb
-│       ├── building-with-responses-api.ipynb
-│       ├── intro-openai-conversations-api.ipynb
-│       └── intro-openai-responses-api.ipynb
+│   ├── 1.0-paper-data-extraction.ipynb
+│   ├── 1.1-data-analysis-finance.ipynb
+│   ├── 2.0-agentic-workflow-struct-out.ipynb
+│   ├── 2.1-intro-responses-api.ipynb
+│   ├── 2.2-building-with-responses-api.ipynb
+│   ├── 2.3-intro-conversations-api.ipynb
+│   ├── 2.4-building-with-conversations-api.ipynb
+│   └── assets/                             # Notebook input files (PDFs, images, text)
 ├── demos/                                  # Runnable demo applications
 │   ├── paper-chat-app/                     # Streamlit — PDF Q&A (Module 1)
 │   ├── video-script-app/                   # Streamlit — video script generator (Module 1)

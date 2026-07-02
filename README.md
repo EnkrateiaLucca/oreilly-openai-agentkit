@@ -103,40 +103,19 @@ OPENAI_API_KEY=your-openai-api-key-here
 
 ## Notebooks
 
-### Core Learning Path
+The notebooks live in `notebooks/` and run in order as a single sequence. `0.x`–`1.x` are
+the core teaching path; `2.x` are production-oriented reference implementations.
 
-The main notebooks are organized in a progressive learning path:
+1. [**0.0 — Intro to Responses API**](notebooks/0.0-intro-responses-api.ipynb) — Main teaching notebook. Covers the Responses API end-to-end: items-based I/O, server-side state, built-in tools, structured outputs, and multi-turn agents.
+2. [**1.0 — Paper Data Extraction**](notebooks/1.0-paper-data-extraction.ipynb) — Applied use-case: extract structured data from academic papers using the Responses API and Pydantic schemas.
+3. [**1.1 — Data Analysis (Finance)**](notebooks/1.1-data-analysis-finance.ipynb) — Data-analysis workflow with tool/function calling over the Responses API.
+4. [**2.0 — Agentic Workflow with Structured Outputs**](notebooks/2.0-agentic-workflow-struct-out.ipynb) — Structured-output agentic pipeline.
+5. [**2.1 — Intro to Responses API (reference)**](notebooks/2.1-intro-responses-api.ipynb) — Complete Responses API lifecycle reference (create, retrieve, cancel, token counts).
+6. [**2.2 — Building with the Responses API**](notebooks/2.2-building-with-responses-api.ipynb) — Ten production patterns: streaming, retries, token budgets, function calling, caching, and more.
+7. [**2.3 — Intro to Conversations API (reference)**](notebooks/2.3-intro-conversations-api.ipynb) — Complete Conversations API lifecycle reference (create, update, items CRUD, pagination).
+8. [**2.4 — Building with the Conversations API**](notebooks/2.4-building-with-conversations-api.ipynb) — Production conversation patterns: sessions, templates, batch ops, branching, analytics.
 
-1. [**Intro to Agents with Responses API**](notebooks/1.0-intro-agents-responses-api.ipynb) - Fundamentals of building agents with OpenAI
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/1.0-intro-agents-responses-api.ipynb)
-
-2. [**Simple Chat with Responses API**](notebooks/2.0-simple-chat-responses-api.ipynb) - Building conversational interfaces
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/2.0-simple-chat-responses-api.ipynb)
-
-3. [**Structured Outputs for Data Extraction**](notebooks/3.0-structured-outputs-data-extraction.ipynb) - Extracting structured data with guaranteed schemas
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/3.0-structured-outputs-data-extraction.ipynb)
-
-4. [**Agentic Workflows with Structured Outputs**](notebooks/4.0-agentic-workflow-with-struct-out-responses.ipynb) - Building complex agent workflows
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/4.0-agentic-workflow-with-struct-out-responses.ipynb)
-
-5. [**File Search & RAG with Agentic Retrieval**](notebooks/5.0-file-search-rag-agentic-retrieval.ipynb) - Implementing retrieval-augmented generation
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/5.0-file-search-rag-agentic-retrieval.ipynb)
-
-6. [**Video Script Generation with Images**](notebooks/6.0-video-script-generation-with-images.ipynb) - Multi-modal agents with vision capabilities
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/6.0-video-script-generation-with-images.ipynb)
-
-7. [**Chat with Paper Agent**](notebooks/7.0-chat-with-paper-agent.ipynb) - Building document Q&A agents
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/7.0-chat-with-paper-agent.ipynb)
-
-8. [**Research Report Generation**](notebooks/8.0-research-report-generation.ipynb) - End-to-end research agent system
-   [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/8.0-research-report-generation.ipynb)
-
-### Additional Resources
-
-- [**OpenAI API Overview**](notebooks/openai-api-overview.ipynb) - Comprehensive overview of OpenAI's APIs
-  [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/EnkrateiaLucca/oreilly-openai-agentkit/blob/main/notebooks/openai-api-overview.ipynb)
-
-- **Reference Implementations**: Check `notebooks/reference-implementations-for-production/` for production-ready examples
+Input files the notebooks read (PDFs, images, sample text) live in `notebooks/assets/` and the repo-level `assets/`.
 
 ## Demo Applications
 
@@ -150,7 +129,7 @@ The notebooks have been converted into runnable demo apps. Each demo is self-con
 | [Video Script Generator](demos/video-script-app/) | Convert a research paper into a 60-second educational video script with optional DALL-E scene images | `streamlit run demos/video-script-app/app.py` |
 | [Research Report App](demos/research-report-app/) | Generate a structured research report from a PDF, exported as Markdown | `streamlit run demos/research-report-app/app.py` |
 
-### Agent Builder Workflows (Module 3)
+### Agent Builder Workflows (Module 3) *(deprecated Nov 30, 2026 — patterns transferable to Agents SDK)*
 
 Three Agent Builder workflows built in the OpenAI platform, each with a `README.md` and screenshots:
 
@@ -164,22 +143,21 @@ Three Agent Builder workflows built in the OpenAI platform, each with a `README.
 
 | Demo | Description | Docs |
 |------|-------------|------|
-| [ChatKit App](demos/chatkit-app/) | Next.js starter that embeds an Agent Builder workflow via ChatKit. Handles auth, streaming, and file upload. | [README](demos/chatkit-app/README.md) · [Review](demos/chatkit-app/REVIEW.md) |
+| [ChatKit App](demos/chatkit-app/) | Next.js starter that embeds an Agent Builder workflow via ChatKit. Handles auth, streaming, and file upload. | [README](demos/chatkit-app/README.md) · [Setup Guide](demos/chatkit-app/SETUP_GUIDE.md) |
 
 ## Repository Structure
 
 ```
-├── notebooks/                              # Core learning notebooks
-│   ├── 1.0-intro-agents-responses-api.ipynb
-│   ├── 2.0-simple-chat-responses-api.ipynb
-│   ├── 3.0-structured-outputs-data-extraction.ipynb
-│   ├── 4.0-agentic-workflow-with-struct-out-responses.ipynb
-│   ├── 5.0-file-search-rag-agentic-retrieval.ipynb
-│   ├── 6.0-video-script-generation-with-images.ipynb
-│   ├── 7.0-chat-with-paper-agent.ipynb
-│   ├── 8.0-research-report-generation.ipynb
-│   ├── openai-api-overview.ipynb
-│   └── reference-implementations-for-production/
+├── notebooks/                              # Course notebooks (run in order)
+│   ├── 0.0-intro-responses-api.ipynb
+│   ├── 1.0-paper-data-extraction.ipynb
+│   ├── 1.1-data-analysis-finance.ipynb
+│   ├── 2.0-agentic-workflow-struct-out.ipynb
+│   ├── 2.1-intro-responses-api.ipynb
+│   ├── 2.2-building-with-responses-api.ipynb
+│   ├── 2.3-intro-conversations-api.ipynb
+│   ├── 2.4-building-with-conversations-api.ipynb
+│   └── assets/                             # Notebook input files (PDFs, images, text)
 ├── demos/                                  # Runnable demo applications
 │   ├── paper-chat-app/                     # Streamlit — PDF Q&A (Module 1)
 │   ├── video-script-app/                   # Streamlit — video script generator (Module 1)
@@ -189,7 +167,7 @@ Three Agent Builder workflows built in the OpenAI platform, each with a `README.
 │   │   ├── demo-2-support-triage/          # Multi-agent triage with guardrails
 │   │   └── demo-3-file-search-rag/         # RAG over SEC 10-K filings
 │   └── chatkit-app/                        # Next.js ChatKit starter (Module 4)
-├── presentation/                           # Course slides (Remark.js HTML + PDF)
+├── presentation/                           # Course slides (Remark.js HTML + PDF) + handout (HTML + PDF)
 ├── assets/                                 # Images, diagrams, and reference documents
 ├── research/                               # Background research and use-case analysis
 ├── requirements/                           # Python dependencies
@@ -203,7 +181,7 @@ Three Agent Builder workflows built in the OpenAI platform, each with a `README.
 
 This course covers the full OpenAI agent stack:
 
-- **Responses API**: The primitive — direct API calls, server-side state, built-in tools (`file_search`, `web_search_preview`, `code_interpreter`, `mcp`)
+- **Responses API**: The primitive — direct API calls, server-side state, built-in tools (`file_search`, `web_search`, `code_interpreter`, `mcp`)
 - **Agents SDK**: The framework — multi-agent orchestration, handoffs, guardrails, tracing; works with 100+ LLMs
 - **Agent Builder**: Visual drag-and-drop workflow composer — nodes, classifiers, guardrails, MCP connectors, versioning, and evals
 - **ChatKit**: Embeddable React/Web Component chat UI — file upload, streaming, tool invocation display
@@ -211,7 +189,7 @@ This course covers the full OpenAI agent stack:
 - **Structured Outputs**: Guaranteed JSON schemas for reliable data extraction
 - **File Search & RAG**: Retrieval-augmented generation with vector stores
 - **Multi-modal Agents**: Text, images, and document processing
-- **Evals**: Trace grading, dataset building, and automated prompt optimization
+- **Evals**: Trace grading, dataset building, and automated prompt optimization *(deprecated Nov 30, 2026 — migrate to Agents SDK tracing)*
 
 ## Troubleshooting
 

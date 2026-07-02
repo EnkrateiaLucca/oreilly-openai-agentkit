@@ -1,3 +1,8 @@
+> **Deprecation notice:** Agent Builder is being shut down by OpenAI on **November 30, 2026**.
+> This demo will not be reproducible after that date. The multi-agent patterns it demonstrates
+> (handoffs, guardrails, classifiers, retrieval) are fully reproducible using the
+> [Agents SDK](https://github.com/openai/openai-agents-python).
+
 # Module 3 Demo 3 - Simple File Search RAG
 
 This demo shows the built-in File Search/RAG capability in Agent Builder.

@@ -21,6 +21,17 @@ venv/
 *.pickle
 *.h5
 
+# Notebook-generated runtime artifacts (recreated on run; don't commit)
+notebooks/papers_database.csv
+notebooks/test.txt
+notebooks/philosophy_of_agents.md
+notebooks/test_agent_paper.pdf
+
 # IDE
 .idea/
 .vscode/
+
+# Course process artifacts (not student-facing content)
+Plans/
+research/
+walkthrough.md

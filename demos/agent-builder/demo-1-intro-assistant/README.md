@@ -56,7 +56,7 @@ Keep it under 180 words.
 Configuration:
 
 - Include chat history: on
-- Model: `gpt-5.4-nano`
+- Model: `gpt-5.6-luna`
 - Reasoning effort: `none`
 - Output format: `Text`
 - Verbosity: `medium`

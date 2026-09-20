@@ -87,7 +87,7 @@ Configuration:
 
 - Name: `Ticket Classifier`
 - Input: `safe_text`
-- Classifier: `gpt-5.4-mini`
+- Classifier: `gpt-5.6-luna`
 
 Categories:
 
@@ -143,7 +143,7 @@ Keep the response under 160 words.
 Configuration:
 
 - Include chat history: on
-- Model: `gpt-5.4-nano`
+- Model: `gpt-5.6-luna`
 - Reasoning effort: `low`
 - Output format: `Text`
 
@@ -185,7 +185,7 @@ Keep the response under 180 words.
 Configuration:
 
 - Include chat history: on
-- Model: `gpt-5.4-nano`
+- Model: `gpt-5.6-luna`
 - Reasoning effort: `low`
 - Output format: `Text`
 
@@ -224,7 +224,7 @@ Keep the response under 150 words.
 Configuration:
 
 - Include chat history: on
-- Model: `gpt-5.4-nano`
+- Model: `gpt-5.6-luna`
 - Reasoning effort: `low`
 - Output format: `Text`
 
@@ -268,7 +268,7 @@ Keep the response under 100 words.
 Configuration:
 
 - Include chat history: on
-- Model: `gpt-5.5`
+- Model: `gpt-5.6-terra`
 - Reasoning effort: `low`
 - Output format: `Text`
 

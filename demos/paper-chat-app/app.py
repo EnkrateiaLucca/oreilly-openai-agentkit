@@ -7,7 +7,7 @@ from pypdf import PdfReader
 
 load_dotenv()
 
-MODEL = "gpt-5.4-mini"
+MODEL = "gpt-5.6-luna"
 SYSTEM_INSTRUCTIONS = (
     "You are a helpful research assistant who explains academic papers "
     "in clear, simple terms. Answer questions accurately and concisely."

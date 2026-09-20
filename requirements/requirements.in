@@ -1,6 +1,7 @@
 ipykernel
 jupyterlab
 openai
+openai-agents
 matplotlib
 seaborn
 pypdf

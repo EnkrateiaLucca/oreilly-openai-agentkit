@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAI AgentKit &amp; Responses API — Quick Reference</title>
+        <title>OpenAI AgentKit &amp; Responses API — Quick Reference</title>
     <style>
         /* ========================================
            MODULAR GRID/CARD LAYOUT TEMPLATE
@@ -434,6 +433,14 @@
             .section-title { break-after: avoid; }
             a { text-decoration: none; color: #000; }
         }
+    
+        /* ── WeasyPrint print overrides (html-to-print) ── */
+        @page { size: A4; margin: 12mm; }
+        body { font-size: 9pt; line-height: 1.4; max-width: none; margin: 0; padding: 0; }
+        .major-section { break-inside: avoid; page-break-inside: avoid; margin-bottom: 10pt; }
+        .section-title { break-after: avoid; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        @media print { body { margin: 0; padding: 0; } }
     </style>
 </head>
 <body>
@@ -445,6 +452,7 @@
         <div class="meta">Responses API &nbsp;|&nbsp; Agents SDK &nbsp;|&nbsp; Agent Builder &nbsp;|&nbsp; ChatKit &nbsp;|&nbsp; Evals &nbsp;|&nbsp; Updated September 2026</div>
     </div>
 
+    <div class="major-section">
     <!-- Section 1: The Three-Layer Stack -->
     <div class="section-title">1. The Three-Layer Stack</div>
 
@@ -472,7 +480,9 @@
         <div class="info-box-title">Core Principle</div>
         Each layer builds on the previous — you pick the level of abstraction you need. No vendor lock-in at the SDK level. Standard API pricing throughout — no platform fee.
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 2: Responses API -->
     <div class="section-title">2. Responses API — The Primitive</div>
 
@@ -532,7 +542,9 @@ r2 = client.responses.create(
 )</code></pre>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 3: Agents SDK -->
     <div class="section-title">3. Agents SDK — The Framework</div>
 
@@ -603,7 +615,9 @@ result = await Runner.run(
 )</code></pre>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 4: AgentKit Platform -->
     <div class="section-title">4. AgentKit Platform — The Product Layer</div>
 
@@ -625,7 +639,9 @@ result = await Runner.run(
             <div class="definition">Trace grading, dataset building from live runs, and automated prompt optimization. Closes the loop between building and improving workflows.</div>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 5: Agent Builder Node Types -->
     <div class="section-title">5. Agent Builder — Node Types</div>
     <div class="mb-small" style="font-style: italic;">Agent Builder and Evals are deprecated Nov 30 2026; the node patterns map directly onto the Agents SDK.</div>
@@ -695,7 +711,9 @@ result = await Runner.run(
             </div>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 6: ChatKit -->
     <div class="section-title">6. ChatKit — Embeddable Chat UI</div>
     <div class="mb-small" style="font-style: italic;">Survives Nov 30 2026 only as the self-hosted "Advanced integration"; the OpenAI-hosted "Recommended integration" (point at a workflow ID) retires with Agent Builder.</div>
@@ -727,7 +745,9 @@ const { client_secret } = await response.json();
 // Return client_secret to frontend — never the API key</code></pre>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 7: Evals Loop + Decision Table -->
     <div class="section-title">7. Evals Loop &amp; Layer Decision Guide</div>
 
@@ -803,7 +823,9 @@ const { client_secret } = await response.json();
             </table>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 8: Demo Workflows -->
     <div class="section-title">8. Demo Workflows (Agent Builder)</div>
 
@@ -854,7 +876,9 @@ const { client_secret } = await response.json();
             </div>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 9: Notebooks -->
     <div class="section-title">9. Core Learning Notebooks</div>
 
@@ -882,7 +906,9 @@ const { client_secret } = await response.json();
             </div>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Section 10: Setup -->
     <div class="section-title">10. Setup &amp; Key Resources</div>
 
@@ -921,7 +947,9 @@ OPENAI_API_KEY=sk-...</code></pre>
             </div>
         </div>
     </div>
+    </div><!-- /.major-section -->
 
+    <div class="major-section">
     <!-- Key Takeaways -->
     <div class="key-points">
         <div class="key-points-title">Key Takeaways</div>
@@ -937,6 +965,7 @@ OPENAI_API_KEY=sk-...</code></pre>
     <footer>
         <p>&copy; 2026 Automata Learning Lab &nbsp;|&nbsp; O'Reilly Live Training: Building Agents with OpenAI AgentKit &nbsp;|&nbsp; Lucas Soares</p>
     </footer>
+    </div><!-- /.major-section -->
 
 </body>
 </html>

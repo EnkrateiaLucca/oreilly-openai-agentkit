@@ -223,7 +223,7 @@ Set the same environment variables on your hosting platform:
 
 ## Additional Resources
 
-- [OpenAI ChatKit Documentation](https://platform.openai.com/docs/chatkit)
+- [OpenAI ChatKit Documentation](https://developers.openai.com/api/docs/guides/chatkit)
 - [Next.js Documentation](https://nextjs.org/docs)
 - [React Documentation](https://react.dev)
 

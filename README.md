@@ -18,6 +18,7 @@ This project uses [uv](https://github.com/astral-sh/uv), a fast Python package i
    make all
    ```
    This creates a virtual environment in `.venv`, installs dependencies, and sets up Jupyter kernel.
+   Dependencies include `openai-agents`, so the Agents SDK examples (`Agent`, `Runner`) run out of the box.
 
 3. **Activate the environment:**
    ```bash
@@ -115,7 +116,7 @@ the core teaching path; `2.x` are production-oriented reference implementations.
 7. [**2.3 — Intro to Conversations API (reference)**](notebooks/2.3-intro-conversations-api.ipynb) — Complete Conversations API lifecycle reference (create, update, items CRUD, pagination).
 8. [**2.4 — Building with the Conversations API**](notebooks/2.4-building-with-conversations-api.ipynb) — Production conversation patterns: sessions, templates, batch ops, branching, analytics.
 
-Input files the notebooks read (PDFs, images, sample text) live in `notebooks/assets/` and the repo-level `assets/`.
+Input files the notebooks read (PDFs, images, sample text) live in `notebooks/assets/` and the repo-level `assets/`. `assets/paper2.pdf` is a spare PDF fixture for the paper-chat demo.
 
 ## Demo Applications
 
@@ -222,11 +223,11 @@ Requires Node.js 18+. See [demos/chatkit-app/README.md](demos/chatkit-app/README
 
 ## Additional Resources
 
-- [OpenAI Platform Documentation](https://platform.openai.com/docs)
+- [OpenAI Platform Documentation](https://developers.openai.com/api/docs)
 - [OpenAI Cookbook](https://cookbook.openai.com/)
-- [OpenAI API Reference](https://platform.openai.com/docs/api-reference)
-- [Agent Builder Guide](https://platform.openai.com/docs/guides/agent-builder)
-- [ChatKit Guide](https://platform.openai.com/docs/guides/chatkit)
+- [OpenAI API Reference](https://developers.openai.com/api/reference/overview)
+- [Agent Builder Guide](https://developers.openai.com/api/docs/guides/agent-builder)
+- [ChatKit Guide](https://developers.openai.com/api/docs/guides/chatkit)
 - [Agents SDK (GitHub)](https://github.com/openai/openai-agents-python)
 
 ## License

@@ -36,7 +36,9 @@
 
         ## Lucas Soares
 
-        O'Reilly Live Training 
+        O'Reilly Live Training
+
+        September 2026
 
         ---
 
@@ -316,9 +318,11 @@
 
         # Where the patterns live after November 2026
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <p style="font-size: 15px; color: #2A2825; margin: 0;"><strong>AgentKit is a bundle, not one product.</strong> On November&nbsp;30, <strong>Agent Builder</strong> and <strong>Evals</strong> retire. <strong>ChatKit</strong> continues, self-hosted only. The <strong>Agents SDK</strong> continues unchanged.</p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 12px 0;">
         <div style="background: #E8F1F9; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
-        <h4 style="margin-top: 0; color: #000000;">Agents SDK</h4>
+        <h4 style="margin-top: 0; color: #000000;">Developers &#8594; Agents SDK</h4>
         <p style="font-size: 15px; color: #2A2825;"><code>pip install openai-agents</code></p>
         <ul style="font-size: 15px; color: #2A2825;">
         <li>Same patterns in Python code</li>
@@ -327,7 +331,7 @@
         </ul>
         </div>
         <div style="background: #EEF5EC; padding: 16px; border: 2px solid #000000; border-radius: 0px;">
-        <h4 style="margin-top: 0; color: #000000;">Workspace Agents</h4>
+        <h4 style="margin-top: 0; color: #000000;">No-code &#8594; Workspace Agents</h4>
         <p style="font-size: 15px; color: #2A2825;">ChatGPT Business / Enterprise</p>
         <ul style="font-size: 15px; color: #2A2825;">
         <li>No-code, connects to Slack / Google Drive / Salesforce</li>
@@ -336,7 +340,53 @@
         </div>
         </div>
 
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 14px; margin-top: 8px;">
+        <p style="font-size: 15px; color: #2A2825; margin: 0;"><strong>ChatKit is not killed &#8212; only its hosted mode is.</strong> The OpenAI-hosted &#8220;Recommended integration&#8221; used Agent Builder as its backend, so it retires with it on November&nbsp;30. The &#8220;Advanced integration&#8221; stays: the same widget on <strong>your own backend</strong> &#8212; ChatKit Python SDK + Agents SDK. Module&nbsp;4's app still ships; you now run the server.</p>
+        </div>
+
         <p style="font-size: 14px; color: #5C5750; margin-top: 8px;">Module rewrite targeting Agents SDK is planned for a future course revision.</p>
+
+        ---
+
+        # Same patterns, outside OpenAI
+
+        <p style="font-size: 16px; color: #2A2825; margin: 0;">Agent Builder was one way to <em>draw</em> the flow. The flow itself carries over to any orchestration tool:</p>
+
+        <div style="background: #FEF8E6; border: 2px solid #000000; border-radius: 0px; padding: 10px; margin: 12px 0; text-align: center; font-size: 15px; color: #2A2825;">
+        Guardrails &#8594; Classifier &#8594; specialist agents &#8594; human approval before any action
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin: 12px 0;">
+        <div style="background: #EEF5EC; padding: 14px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">n8n</h4>
+        <p style="font-size: 14px; color: #5C5750; margin: 0 0 8px;">Visual &#8212; closest to the canvas</p>
+        <ul style="font-size: 14px; color: #2A2825; padding-left: 18px; margin: 0;">
+        <li>Drag-and-drop workflows with AI agents</li>
+        <li>Self-hostable</li>
+        <li>OpenAI, Anthropic, Google models</li>
+        </ul>
+        </div>
+        <div style="background: #E8F1F9; padding: 14px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">LangGraph</h4>
+        <p style="font-size: 14px; color: #5C5750; margin: 0 0 8px;">Code &#8212; a graph of steps + shared state</p>
+        <ul style="font-size: 14px; color: #2A2825; padding-left: 18px; margin: 0;">
+        <li>Long-running, stateful agents</li>
+        <li>Built-in human-in-the-loop</li>
+        <li>Works with any model</li>
+        </ul>
+        </div>
+        <div style="background: #FBEAE7; padding: 14px; border: 2px solid #000000; border-radius: 0px;">
+        <h4 style="margin-top: 0; color: #000000;">CrewAI</h4>
+        <p style="font-size: 14px; color: #5C5750; margin: 0 0 8px;">Code &#8212; teams of role-based agents</p>
+        <ul style="font-size: 14px; color: #2A2825; padding-left: 18px; margin: 0;">
+        <li>Agents defined by role, goal, backstory</li>
+        <li>Flows for routing and state</li>
+        <li>Anthropic, Gemini, Ollama, and more</li>
+        </ul>
+        </div>
+        </div>
+
+        <p style="font-size: 14px; color: #5C5750; margin-top: 8px;">The code options lose what the canvas gave for free: a diagram a non-engineer can read and approve. n8n keeps it.</p>
 
         ---
 
@@ -771,7 +821,7 @@
         <li>Per-node trace inspection in preview mode</li>
         <li>Good starter template for any assistant</li>
         </ul>
-        <p style="font-size: 13px; color: #5C5750; margin-bottom: 0;">Model: gpt-5.4-mini with chat history enabled</p>
+        <p style="font-size: 13px; color: #5C5750; margin-bottom: 0;">Model: gpt-5.6-luna with chat history enabled</p>
         </div>
         </div>
 
@@ -844,7 +894,7 @@
 
         <div style="position: absolute; bottom: 30px; width: 100%; left: 0; text-align: left;">
         <p style="font-size: 14px; margin-bottom: 0px; margin-left: 36px;">
-        <sup>[1]</sup><a href="https://platform.openai.com/docs/guides/chatkit" style="color: #5C5750;">ChatKit &#8212; OpenAI Docs</a><br>
+        <sup>[1]</sup><a href="https://developers.openai.com/api/docs/guides/chatkit" style="color: #5C5750;">ChatKit &#8212; OpenAI Docs</a><br>
         <sup>[2]</sup><a href="https://github.com/openai/chatkit-js" style="color: #5C5750;">chatkit-js (GitHub)</a>
         </p>
         </div>
@@ -979,7 +1029,7 @@
             &mdash; OpenAI Blog
           </li>
           <li>
-            <a href="https://platform.openai.com/docs/api-reference/responses">Responses API Reference</a>
+            <a href="https://developers.openai.com/api/reference/resources/responses">Responses API Reference</a>
             &mdash; OpenAI Docs
           </li>
           <li>
@@ -995,7 +1045,7 @@
             &mdash; OpenAI
           </li>
           <li>
-            <a href="https://platform.openai.com/docs/guides/chatkit">ChatKit Guide</a>
+            <a href="https://developers.openai.com/api/docs/guides/chatkit">ChatKit Guide</a>
             &mdash; OpenAI Docs
           </li>
           <li>
@@ -1003,7 +1053,7 @@
             &mdash; GitHub
           </li>
           <li>
-            <a href="https://platform.openai.com/docs/guides/agent-builder">Agent Builder Guide</a>
+            <a href="https://developers.openai.com/api/docs/guides/agent-builder">Agent Builder Guide</a>
             &mdash; OpenAI Docs
           </li>
           <li>

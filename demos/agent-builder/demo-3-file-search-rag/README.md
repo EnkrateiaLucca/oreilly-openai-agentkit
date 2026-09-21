@@ -115,7 +115,7 @@ user message: {{workflow.input_as_text}}
 Configuration:
 
 - Include chat history: on
-- Model: `gpt-5.4-mini`
+- Model: `gpt-5.6-luna`
 - Reasoning effort: `low`
 - Output format: `Text`
 
@@ -208,7 +208,7 @@ If the retrieved excerpts do not contain enough information, say what is missing
 Configuration:
 
 - Include chat history: on
-- Model: `gpt-5.4-mini`
+- Model: `gpt-5.6-luna`
 - Reasoning effort: `low`
 - Output format: `Text`
 

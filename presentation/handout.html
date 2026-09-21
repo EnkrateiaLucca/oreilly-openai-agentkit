@@ -161,8 +161,8 @@
         <div class="subtitle">From the Responses API primitive to the AgentKit product stack</div>
         <div class="metadata">
             <strong>Course:</strong> Building Agents with OpenAI's AgentKit &amp; Responses API (Lucas Soares, O'Reilly Live Training) &nbsp;|&nbsp;
-            <strong>Updated:</strong> June 2026 &nbsp;|&nbsp;
-            <strong>Models:</strong> <code>gpt-5.4-mini</code> (default), <code>gpt-5.5</code> (frontier)
+            <strong>Updated:</strong> September 2026 &nbsp;|&nbsp;
+            <strong>Models:</strong> <code>gpt-5.6-luna</code> (default), <code>gpt-5.6-terra</code> (balanced)
         </div>
     </header>
 
@@ -192,7 +192,7 @@
 client = OpenAI()  # reads OPENAI_API_KEY
 
 resp = client.responses.create(
-    model="gpt-5.4-mini",
+    model="gpt-5.6-luna",
     input="Explain agents in one sentence.",
 )
 print(resp.output_text)   # convenience accessor for the text
@@ -201,11 +201,11 @@ print(resp.output_text)   # convenience accessor for the text
         <h3>2.2 Input items &amp; multi-turn</h3>
         <p>Inputs are a list of typed items. Chain turns server-side with <code>previous_response_id</code> (no need to resend history).</p>
 <pre><code>resp = client.responses.create(
-    model="gpt-5.4-mini",
+    model="gpt-5.6-luna",
     input=[{"role": "user", "content": "What are 3 core snowboarding skills?"}],
 )
 followup = client.responses.create(
-    model="gpt-5.4-mini",
+    model="gpt-5.6-luna",
     input=[{"role": "user", "content": "Give 3 drills for each."}],
     previous_response_id=resp.id,    # server keeps the prior context
 )</code></pre>
@@ -219,7 +219,7 @@ class PaperData(BaseModel):
     abstract_summary: list[str]
 
 resp = client.responses.parse(
-    model="gpt-5.4-mini",
+    model="gpt-5.6-luna",
     input=[{"role": "user", "content": paper_text}],
     text_format=PaperData,
 )
@@ -228,7 +228,7 @@ data = resp.output_parsed       # -> PaperData(title=..., abstract_summary=[...]
         <h3>2.4 Token counting (before you send)</h3>
         <p>Ask the API for the exact input-token count for a given model — more reliable than a local tokenizer for new models.</p>
 <pre><code>result = client.responses.input_tokens.count(
-    model="gpt-5.5",
+    model="gpt-5.6-terra",
     input="Hello folks!",
 )
 print(result.input_tokens)</code></pre>
@@ -238,7 +238,7 @@ print(result.input_tokens)</code></pre>
         text on <code>response.output_text.delta</code> events via <code>event.delta</code>.</p>
 <pre><code>full = ""
 for event in client.responses.create(
-        model="gpt-5.4-mini", input="Explain backprop in 3 sentences.", stream=True):
+        model="gpt-5.6-luna", input="Explain backprop in 3 sentences.", stream=True):
     if event.type == "response.output_text.delta":
         full += event.delta
         print(event.delta, end="", flush=True)
@@ -260,7 +260,7 @@ for event in client.responses.create(
     },
 }]
 
-resp = client.responses.create(model="gpt-5.4-mini",
+resp = client.responses.create(model="gpt-5.6-luna",
                                input=[{"role": "user", "content": "Weather in Lisbon?"}],
                                tools=tools)
 
@@ -275,7 +275,7 @@ for item in resp.output:                 # NOTE: iterate resp.output, not resp
             "output": json.dumps(result),
         })
 
-final = client.responses.create(model="gpt-5.4-mini",
+final = client.responses.create(model="gpt-5.6-luna",
                                 input=next_input,
                                 previous_response_id=resp.id,
                                 tools=tools)
@@ -294,7 +294,7 @@ print(final.output_text)</code></pre>
         </table>
 <pre><code># Minimal agent loop with the built-in web_search tool
 resp = client.responses.create(
-    model="gpt-5.4-mini",
+    model="gpt-5.6-luna",
     input=[{"role": "user", "content": "Latest LLM news from simonwillison.net?"}],
     tools=[{"type": "web_search"}],
 )
@@ -321,7 +321,7 @@ client.conversations.items.retrieve(conv.id, item_id)
 # client.conversations.items.delete(conv.id, item_id)
 
 # Stateful turn — API appends user + assistant automatically
-resp = client.responses.create(model="gpt-5.4-mini",
+resp = client.responses.create(model="gpt-5.6-luna",
                                input="What can you do?",
                                conversation=conv.id)</code></pre>
 
@@ -329,13 +329,13 @@ resp = client.responses.create(model="gpt-5.4-mini",
         <ul>
             <li><strong>Agents SDK</strong> — multi-agent orchestration in code: agents, handoffs, function tools, guardrails, and tracing. Works with 100+ models. The durable path as Agent Builder/Evals are deprecated.</li>
             <li><strong>Agent Builder</strong> — visual workflow composer (Start → Agent → tools/guardrails → End), versioning, evals. <em>Deprecated Nov 30 2026; the node patterns map directly onto the Agents SDK.</em></li>
-            <li><strong>ChatKit</strong> — embeddable chat UI (React component / web component) that fronts a workflow: auth, streaming, file upload, tool-call display.</li>
+            <li><strong>ChatKit</strong> — embeddable chat UI (React component / web component) that fronts a workflow: auth, streaming, file upload, tool-call display. <em>Survives Nov 30 2026 only as the self-hosted "Advanced integration"; the OpenAI-hosted "Recommended integration" retires with Agent Builder.</em></li>
             <li><strong>Guardrails</strong> — modular open-source safety layer that runs before and after agents: PII detection (block/redact), jailbreak attempts, prompt-injection defense, off-topic and sensitive-data filtering — no changes to agent logic.</li>
         </ul>
 
         <h2>7. Quick Reference &amp; Gotchas</h2>
         <ul>
-            <li><strong>Model lineup:</strong> <code>gpt-5.4-mini</code> for most work; <code>gpt-5.5</code> for frontier reasoning. Responses report a dated snapshot (e.g. <code>gpt-5.4-mini-2026-03-17</code>).</li>
+            <li><strong>Model lineup:</strong> <code>gpt-5.6-luna</code> for most work; <code>gpt-5.6-terra</code> for harder reasoning. Responses report a dated snapshot, not the alias you sent.</li>
             <li><strong>Iterate <code>resp.output</code>, never <code>resp</code>:</strong> a <code>Response</code> is a Pydantic model — iterating it yields field tuples, not output items.</li>
             <li><strong>Streaming = events:</strong> accumulate <code>event.delta</code> on <code>response.output_text.delta</code>; there is no <code>chunk.output</code>.</li>
             <li><strong>Function calls are flat:</strong> <code>item.name</code> / <code>item.arguments</code> / <code>item.call_id</code>; feed results back as <code>function_call_output</code>.</li>
@@ -345,7 +345,7 @@ resp = client.responses.create(model="gpt-5.4-mini",
     </main>
 
     <footer>
-        <p>OpenAI AgentKit — O'Reilly Live Training with Lucas Soares · Course reference handout · Updated June 2026</p>
+        <p>OpenAI AgentKit — O'Reilly Live Training with Lucas Soares · Course reference handout · Updated September 2026</p>
     </footer>
 </body>
 </html>

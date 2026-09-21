@@ -11,7 +11,7 @@ from pypdf import PdfReader
 
 load_dotenv()
 
-MODEL = "gpt-5.4-mini"
+MODEL = "gpt-5.6-luna"
 IMAGE_MODEL = "gpt-image-2"
 SCRIPT_INSTRUCTIONS = (
     "You are an expert at creating educational video scripts about research "

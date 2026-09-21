@@ -442,7 +442,7 @@
     <div class="page-header">
         <h1>OpenAI AgentKit &amp; Responses API</h1>
         <div class="subtitle">O'Reilly Live Training — Lucas Soares &mdash; Quick Reference</div>
-        <div class="meta">Responses API &nbsp;|&nbsp; Agents SDK &nbsp;|&nbsp; Agent Builder &nbsp;|&nbsp; ChatKit &nbsp;|&nbsp; Evals</div>
+        <div class="meta">Responses API &nbsp;|&nbsp; Agents SDK &nbsp;|&nbsp; Agent Builder &nbsp;|&nbsp; ChatKit &nbsp;|&nbsp; Evals &nbsp;|&nbsp; Updated September 2026</div>
     </div>
 
     <!-- Section 1: The Three-Layer Stack -->
@@ -492,10 +492,10 @@
             <div class="card-title">Built-in Tools</div>
             <div class="card-content">
                 <ul>
-                    <li><code>web_search_preview</code> — live web search</li>
+                    <li><code>web_search</code> — live web search</li>
                     <li><code>file_search</code> — RAG over uploaded files</li>
                     <li><code>code_interpreter</code> — Python sandbox execution</li>
-                    <li><code>computer_use_preview</code> — GUI automation</li>
+                    <li><code>computer_use</code> — GUI automation</li>
                     <li><code>mcp</code> — Model Context Protocol servers</li>
                 </ul>
             </div>
@@ -509,9 +509,9 @@
 client = OpenAI()
 
 response = client.responses.create(
-    model="gpt-4o",
+    model="gpt-5.6-luna",
     input="Summarize the latest AI news",
-    tools=[{"type": "web_search_preview"}]
+    tools=[{"type": "web_search"}]
 )
 print(response.output_text)</code></pre>
         </div>
@@ -521,12 +521,12 @@ print(response.output_text)</code></pre>
 client = OpenAI()
 
 r1 = client.responses.create(
-    model="gpt-4o",
+    model="gpt-5.6-luna",
     input="What is the Responses API?"
 )
 # Continue with server-side state:
 r2 = client.responses.create(
-    model="gpt-4o",
+    model="gpt-5.6-luna",
     input="Give me a code example",
     previous_response_id=r1.id
 )</code></pre>
@@ -574,7 +574,7 @@ r2 = client.responses.create(
 agent = Agent(
     name="Research Assistant",
     instructions="You are a research assistant.",
-    model="gpt-4o",
+    model="gpt-5.6-luna",
     tools=[web_search]
 )
 
@@ -628,6 +628,7 @@ result = await Runner.run(
 
     <!-- Section 5: Agent Builder Node Types -->
     <div class="section-title">5. Agent Builder — Node Types</div>
+    <div class="mb-small" style="font-style: italic;">Agent Builder and Evals are deprecated Nov 30 2026; the node patterns map directly onto the Agents SDK.</div>
 
     <div class="node-grid">
         <div class="node-item">
@@ -697,6 +698,7 @@ result = await Runner.run(
 
     <!-- Section 6: ChatKit -->
     <div class="section-title">6. ChatKit — Embeddable Chat UI</div>
+    <div class="mb-small" style="font-style: italic;">Survives Nov 30 2026 only as the self-hosted "Advanced integration"; the OpenAI-hosted "Recommended integration" (point at a workflow ID) retires with Agent Builder.</div>
 
     <div class="grid-2">
         <div class="code-card">
@@ -819,7 +821,7 @@ const { client_secret } = await response.json();
                     <li>Best starting template</li>
                 </ul>
                 <br>
-                <em>Model: gpt-4o-mini, chat history on</em>
+                <em>Model: gpt-5.6-luna, chat history on</em>
             </div>
         </div>
         <div class="card" style="background:#fff0f0;">
@@ -903,10 +905,10 @@ OPENAI_API_KEY=sk-...</code></pre>
             <div class="card-title">Key References</div>
             <div class="card-content">
                 <ul>
-                    <li><strong>Responses API</strong> — platform.openai.com/docs/api-reference/responses</li>
+                    <li><strong>Responses API</strong> — developers.openai.com/api/reference/resources/responses</li>
                     <li><strong>Agents SDK</strong> — github.com/openai/openai-agents-python</li>
-                    <li><strong>Agent Builder Guide</strong> — platform.openai.com/docs/guides/agent-builder</li>
-                    <li><strong>ChatKit Guide</strong> — platform.openai.com/docs/guides/chatkit</li>
+                    <li><strong>Agent Builder Guide</strong> — developers.openai.com/api/docs/guides/agent-builder</li>
+                    <li><strong>ChatKit Guide</strong> — developers.openai.com/api/docs/guides/chatkit</li>
                     <li><strong>OpenAI Cookbook</strong> — cookbook.openai.com</li>
                 </ul>
                 <br>
@@ -933,7 +935,7 @@ OPENAI_API_KEY=sk-...</code></pre>
     </div>
 
     <footer>
-        <p>&copy; 2025 Automata Learning Lab &nbsp;|&nbsp; O'Reilly Live Training: Building Agents with OpenAI AgentKit &nbsp;|&nbsp; Lucas Soares</p>
+        <p>&copy; 2026 Automata Learning Lab &nbsp;|&nbsp; O'Reilly Live Training: Building Agents with OpenAI AgentKit &nbsp;|&nbsp; Lucas Soares</p>
     </footer>
 
 </body>

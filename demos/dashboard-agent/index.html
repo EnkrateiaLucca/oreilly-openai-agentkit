@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dashboard Agent</title>
+<style>
+  :root {
+    --bg: #0f1420; --panel: #161c2b; --panel-2: #1d2536; --line: #2a3348;
+    --text: #e7ecf5; --muted: #8b97ad; --accent: #2f6bff; --accent-soft: #223258;
+    --user: #2f6bff; --agent: #222b40;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--text); overflow: hidden;
+  }
+  header {
+    height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 20px;
+    border-bottom: 1px solid var(--line); background: var(--panel);
+  }
+  header h1 { font-size: 17px; margin: 0; font-weight: 650; letter-spacing: .2px; }
+  header .dot { width: 9px; height: 9px; border-radius: 50%; background: #35d07f; box-shadow: 0 0 8px #35d07f; }
+  header .spacer { flex: 1; }
+  header button {
+    background: var(--panel-2); color: var(--muted); border: 1px solid var(--line);
+    border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer;
+  }
+  header button:hover { color: var(--text); border-color: var(--accent); }
+
+  .layout { display: grid; grid-template-columns: 420px 1fr; height: calc(100% - 56px); min-height: 0; }
+
+  /* ---- Chat (left) ---- */
+  .chat { display: flex; flex-direction: column; border-right: 1px solid var(--line); background: var(--panel); min-width: 0; min-height: 0; }
+  .messages { flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+  .msg { max-width: 92%; padding: 10px 14px; border-radius: 14px; white-space: pre-wrap; word-wrap: break-word; }
+  .msg.user { align-self: flex-end; background: var(--user); color: #fff; border-bottom-right-radius: 4px; }
+  .msg.agent { align-self: flex-start; background: var(--agent); border-bottom-left-radius: 4px; }
+  .msg.tools { align-self: flex-start; background: transparent; color: var(--muted); font-size: 12px; padding: 0 4px; font-family: ui-monospace, Menlo, monospace; }
+  .composer { border-top: 1px solid var(--line); padding: 14px; display: flex; gap: 10px; background: var(--panel); }
+  .composer textarea {
+    flex: 1; resize: none; height: 44px; max-height: 140px; padding: 11px 14px; border-radius: 12px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--text); font: inherit; outline: none;
+  }
+  .composer textarea:focus { border-color: var(--accent); }
+  .composer button {
+    background: var(--accent); color: #fff; border: none; border-radius: 12px; padding: 0 18px;
+    font-weight: 600; cursor: pointer;
+  }
+  .composer button:disabled { opacity: .5; cursor: default; }
+
+  /* ---- Dashboard (right) ---- */
+  .dash { overflow-y: auto; min-height: 0; padding: 22px; background: var(--bg); }
+  .dash-head { display: flex; align-items: baseline; gap: 10px; margin: 0 4px 18px; }
+  .dash-head h2 { font-size: 14px; text-transform: uppercase; letter-spacing: 1.4px; color: var(--muted); margin: 0; font-weight: 600; }
+  .dash-head span { color: var(--line); font-size: 13px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 18px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; animation: rise .25s ease; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .card .cap { padding: 11px 15px; font-size: 13px; font-weight: 600; border-bottom: 1px solid var(--line); color: var(--text); display:flex; gap:8px; align-items:center; }
+  .card .cap .tag { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 6px; }
+  .card img { width: 100%; display: block; background: #fff; }
+  .card .tbl-wrap { overflow-x: auto; max-height: 340px; }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { color: var(--muted); font-weight: 600; position: sticky; top: 0; background: var(--panel-2); }
+  td { color: var(--text); }
+  .empty { color: var(--muted); text-align: center; margin-top: 12vh; padding: 0 30px; }
+  .empty h3 { color: var(--text); font-weight: 600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:18px; }
+  .chip { background: var(--panel); border:1px solid var(--line); color: var(--muted); border-radius: 20px; padding: 7px 13px; font-size: 12px; cursor: pointer; }
+  .chip:hover { color: var(--text); border-color: var(--accent); }
+  .typing { display:inline-flex; gap:4px; }
+  .typing i { width:6px; height:6px; border-radius:50%; background: var(--muted); animation: blink 1.2s infinite; }
+  .typing i:nth-child(2){ animation-delay:.2s } .typing i:nth-child(3){ animation-delay:.4s }
+  @keyframes blink { 0%,60%,100%{opacity:.25} 30%{opacity:1} }
+</style>
+</head>
+<body>
+  <header>
+    <span class="dot"></span>
+    <h1>Dashboard Agent</h1>
+    <span style="color:var(--muted);font-size:13px">agent_dashboard_playground.csv</span>
+    <div class="spacer"></div>
+    <button id="reset">Reset</button>
+  </header>
+
+  <div class="layout">
+    <section class="chat">
+      <div class="messages" id="messages"></div>
+      <div class="composer">
+        <textarea id="input" placeholder="Ask about the mission data…"></textarea>
+        <button id="send">Send</button>
+      </div>
+    </section>
+
+    <section class="dash">
+      <div class="dash-head"><h2>Dashboard</h2><span id="count"></span></div>
+      <div class="cards" id="cards"></div>
+    </section>
+  </div>
+
+<script>
+const messages = document.getElementById('messages');
+const cards = document.getElementById('cards');
+const input = document.getElementById('input');
+const sendBtn = document.getElementById('send');
+const countEl = document.getElementById('count');
+let cardCount = 0;
+
+const SUGGESTIONS = [
+  "Average cost by department",
+  "Success score by model — bar chart",
+  "Which agents have the most SLA breaches?",
+  "Distribution of duration_seconds",
+];
+
+function showEmpty() {
+  cards.innerHTML = `<div class="empty" style="grid-column:1/-1">
+    <h3>Your charts & tables will appear here</h3>
+    <p>Ask a question and the agent builds the dashboard as it answers.</p>
+    <div class="chips">${SUGGESTIONS.map(s=>`<span class="chip">${s}</span>`).join('')}</div>
+  </div>`;
+  cards.querySelectorAll('.chip').forEach(c => c.onclick = () => { input.value = c.textContent; send(); });
+}
+showEmpty();
+
+function addMsg(text, cls) {
+  const d = document.createElement('div');
+  d.className = 'msg ' + cls;
+  d.textContent = text;
+  messages.appendChild(d); messages.scrollTop = messages.scrollHeight;
+  return d;
+}
+
+function addChart(a) {
+  const c = document.createElement('div');
+  c.className = 'card';
+  c.innerHTML = `<div class="cap"><span class="tag">chart</span>${a.title}</div>
+    <img src="${a.url}?t=${Date.now()}" alt="${a.title}">`;
+  cards.appendChild(c);
+}
+
+function addTable(a) {
+  const c = document.createElement('div');
+  c.className = 'card';
+  const head = a.columns.map(x => `<th>${x}</th>`).join('');
+  const body = a.rows.map(r => `<tr>${a.columns.map(k => `<td>${r[k] ?? ''}</td>`).join('')}</tr>`).join('');
+  c.innerHTML = `<div class="cap"><span class="tag">table</span>${a.title}</div>
+    <div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+  cards.appendChild(c);
+}
+
+function renderArtifacts(list) {
+  if (!list.length) return;
+  if (cardCount === 0) cards.innerHTML = '';
+  list.forEach(a => { a.type === 'chart' ? addChart(a) : addTable(a); cardCount++; });
+  countEl.textContent = cardCount + (cardCount === 1 ? ' panel' : ' panels');
+}
+
+// Safety net: pull any chart path the agent mentions in prose (e.g. ./charts/x.png)
+// and normalize to a servable URL, so a stale/text-only reference still renders.
+function chartUrlsInText(text) {
+  const matches = text.match(/\.?\/?charts\/[\w.\-]+\.png/g) || [];
+  return [...new Set(matches.map(p => '/' + p.replace(/^[.\/]+/, '')))];
+}
+function stripPaths(text) {
+  return text.replace(/`?\.?\/?charts\/[\w.\-]+\.png`?/g, '').replace(/[ \t]{2,}/g, ' ').trim();
+}
+
+async function send() {
+  const text = input.value.trim();
+  if (!text || sendBtn.disabled) return;
+  input.value = '';
+  addMsg(text, 'user');
+  sendBtn.disabled = true;
+  const thinking = addMsg('', 'agent');
+  thinking.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+
+  try {
+    const res = await fetch('/chat', {
+      method: 'POST', headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ message: text })
+    });
+    const data = await res.json();
+    const artifacts = data.artifacts || [];
+
+    // Fallback: render chart paths mentioned in text but not already emitted as artifacts.
+    const have = new Set(artifacts.filter(a => a.type === 'chart').map(a => a.url));
+    chartUrlsInText(data.reply).forEach(url => {
+      if (!have.has(url)) artifacts.push({ type: 'chart', title: 'Chart', url });
+    });
+
+    const replyText = stripPaths(data.reply) || 'Done — see the dashboard.';
+    if (data.tools && data.tools.length) {
+      thinking.remove();
+      addMsg(data.tools.map(t => '→ ' + t.name).join('   '), 'tools');
+      addMsg(replyText, 'agent');
+    } else {
+      thinking.className = 'msg agent'; thinking.textContent = replyText;
+    }
+    renderArtifacts(artifacts);
+  } catch (e) {
+    thinking.className = 'msg agent'; thinking.textContent = 'Error: ' + e.message;
+  } finally {
+    sendBtn.disabled = false; input.focus();
+  }
+}
+
+sendBtn.onclick = send;
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+document.getElementById('reset').onclick = async () => {
+  await fetch('/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({reset:true}) });
+  messages.innerHTML = ''; cardCount = 0; countEl.textContent = ''; showEmpty();
+};
+input.focus();
+</script>
+</body>
+</html>

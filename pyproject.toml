@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "building-agents-with-openai"
+version = "1.0.0"
+description = "A three-hour, evidence-first research assistant workshop"
+requires-python = ">=3.11"
+dependencies = [
+  "openai==3.16.2",
+  "openai-agents==0.22.3",
+  "pydantic==2.12.5",
+  "pypdf==6.5.0",
+  "python-dotenv==1.2.2",
+  "httpx==0.28.1",
+]
+
+[project.optional-dependencies]
+class = ["ipykernel==7.1.0", "jupyterlab==4.6.0"]
+app = ["streamlit==1.57.0", "fastapi==0.141.1", "uvicorn==0.46.0"]
+dev = ["pytest==9.1.1", "pytest-asyncio==1.4.0", "nbclient==0.11.0", "nbformat==5.11.1", "ruff==0.16.9", "markdown-it-py==4.2.0"]
+
+[project.scripts]
+agents-course = "course.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["course*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = ["archive", "optional", "notebooks", "lessons"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "B"]
+ignore = ["B008"] # FastAPI's documented Depends defaults are intentional.

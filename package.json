@@ -1,0 +1,20 @@
+{
+  "name": "building-agents-with-openai-slides",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Optional pinned Marp build for the course teaching materials",
+  "scripts": {
+    "slides": "marp presentation/slides.md --html --no-stdin --theme-set presentation/theme/automata.css -o presentation/slides.html",
+    "slides:pdf": "marp presentation/slides.md --html --no-stdin --theme-set presentation/theme/automata.css -o presentation/slides.pdf"
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "4.5.1"
+  },
+  "overrides": {
+    "puppeteer-core": "25.12.0",
+    "@xmldom/xmldom": "0.9.12"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}

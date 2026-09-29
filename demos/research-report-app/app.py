@@ -1,186 +1,166 @@
-"""Generate a structured research report from a PDF and download it as Markdown."""
+"""Streamlit UI: API key stays in the authenticated research backend."""
 
-import re
-from typing import List
+import base64
+import json
+import os
 
+import httpx
 import streamlit as st
-from dotenv import load_dotenv
-from openai import OpenAI
-from pydantic import BaseModel
-from pypdf import PdfReader
 
-load_dotenv()
-
-MODEL = "gpt-5.6-luna"
-REPORT_INSTRUCTIONS = (
-    "You are an expert research analyst who creates detailed, structured "
-    "reports about academic papers. Be thorough, accurate, and clear."
-)
+st.set_page_config(page_title="Building Agents with OpenAI", page_icon="📚", layout="wide")
+st.title("Research brief studio")
+st.caption("Read a paper, inspect the evidence, and revise a cited brief.")
+API = os.getenv("COURSE_BACKEND_URL", "http://127.0.0.1:8000")
 
 
-class KeyFinding(BaseModel):
-    finding: str
-    significance: str
-
-
-class ResearchReport(BaseModel):
-    title: str
-    authors: str
-    year: str
-    executive_summary: str
-    research_problem: str
-    background: str
-    methodology_summary: str
-    key_techniques: List[str]
-    key_findings: List[KeyFinding]
-    strengths: List[str]
-    limitations: List[str]
-    practical_applications: List[str]
-    future_directions: str
-
-
-def extract_pdf_text(uploaded_file) -> str:
-    reader = PdfReader(uploaded_file)
-    return "\n".join((page.extract_text() or "") for page in reader.pages)
-
-
-def init_state() -> None:
-    st.session_state.setdefault("report", None)
-    st.session_state.setdefault("paper_text", None)
-
-
-def format_report_as_markdown(report: ResearchReport) -> str:
-    lines: List[str] = []
-    lines.append(f"# {report.title}")
-    lines.append("")
-    lines.append(f"**Authors:** {report.authors}")
-    lines.append(f"**Year:** {report.year}")
-    lines.append("")
-    lines.append("## Executive Summary")
-    lines.append(report.executive_summary)
-    lines.append("")
-    lines.append("## Research Problem")
-    lines.append(report.research_problem)
-    lines.append("")
-    lines.append("## Background")
-    lines.append(report.background)
-    lines.append("")
-    lines.append("## Methodology Summary")
-    lines.append(report.methodology_summary)
-    lines.append("")
-    lines.append("## Key Techniques")
-    for item in report.key_techniques:
-        lines.append(f"- {item}")
-    lines.append("")
-    lines.append("## Key Findings")
-    for kf in report.key_findings:
-        lines.append(f"- **{kf.finding}** — {kf.significance}")
-    lines.append("")
-    lines.append("## Strengths")
-    for item in report.strengths:
-        lines.append(f"- {item}")
-    lines.append("")
-    lines.append("## Limitations")
-    for item in report.limitations:
-        lines.append(f"- {item}")
-    lines.append("")
-    lines.append("## Practical Applications")
-    for item in report.practical_applications:
-        lines.append(f"- {item}")
-    lines.append("")
-    lines.append("## Future Directions")
-    lines.append(report.future_directions)
-    lines.append("")
-    return "\n".join(lines)
-
-
-def slugify(value: str) -> str:
-    value = value.strip().lower()
-    value = re.sub(r"[^a-z0-9]+", "-", value)
-    value = value.strip("-")
-    return value or "research-report"
-
-
-def render_report(report: ResearchReport) -> None:
-    st.title(report.title)
-    st.markdown(f"**Authors:** {report.authors}  \n**Year:** {report.year}")
-
-    st.header("Executive Summary")
-    st.markdown(report.executive_summary)
-
-    st.header("Research Problem")
-    st.markdown(report.research_problem)
-
-    st.header("Background")
-    st.markdown(report.background)
-
-    st.header("Methodology")
-    st.subheader("Summary")
-    st.markdown(report.methodology_summary)
-    st.subheader("Key Techniques")
-    for item in report.key_techniques:
-        st.markdown(f"- {item}")
-
-    st.header("Key Findings")
-    for kf in report.key_findings:
-        st.markdown(f"- **{kf.finding}** — {kf.significance}")
-
-    st.header("Strengths")
-    for item in report.strengths:
-        st.markdown(f"- {item}")
-
-    st.header("Limitations")
-    for item in report.limitations:
-        st.markdown(f"- {item}")
-
-    st.header("Practical Applications")
-    for item in report.practical_applications:
-        st.markdown(f"- {item}")
-
-    st.header("Future Directions")
-    st.markdown(report.future_directions)
-
-
-def main() -> None:
-    st.set_page_config(page_title="Research Report Generator", page_icon=":page_facing_up:")
-    st.title("Research Paper Report Generator")
-    st.caption("Upload a PDF to generate a structured analytical report.")
-
-    init_state()
-    client = OpenAI()
-
-    uploaded_file = st.file_uploader("Upload a research paper (PDF)", type=["pdf"])
-    if uploaded_file is not None:
-        st.session_state.paper_text = extract_pdf_text(uploaded_file)
-
-    if st.button("Generate Report", disabled=st.session_state.paper_text is None):
-        with st.spinner("Analyzing the paper and writing the report..."):
-            response = client.responses.parse(
-                model=MODEL,
-                instructions=REPORT_INSTRUCTIONS,
-                input=(
-                    "Create a detailed research report analyzing this paper:"
-                    f"\n\n{st.session_state.paper_text}"
-                ),
-                text_format=ResearchReport,
-            )
-            st.session_state.report = response.output_parsed
-
-    if st.session_state.report is not None:
-        report = st.session_state.report
-        render_report(report)
-
-        markdown_text = format_report_as_markdown(report)
-        filename = f"{slugify(report.title)}.md"
-        st.download_button(
-            label="Download report as Markdown",
-            data=markdown_text,
-            file_name=filename,
-            mime="text/markdown",
+def request(method, path, **kwargs):
+    try:
+        response = httpx.request(
+            method,
+            API + path,
+            headers={"Authorization": f"Bearer {st.session_state.token}"},
+            timeout=150,
+            **kwargs,
         )
-    else:
-        st.info("Upload a PDF and click 'Generate Report' to begin.")
+        if response.is_error:
+            st.error(response.json().get("detail", "The backend could not complete the request."))
+            st.stop()
+        return response.json()
+    except httpx.HTTPError:
+        st.error("Backend connection failed. Start the backend and check its address.")
+        st.stop()
 
 
-if __name__ == "__main__":
-    main()
+with st.sidebar:
+    st.header("Classroom sign-in")
+    token = st.text_input("Classroom token", type="password", key="token")
+    st.caption("Use the instructor's classroom token. API keys belong on the backend.")
+    runtime = st.selectbox(
+        "Runtime",
+        ["offline", "managed", "responses", "sdk"],
+        disabled=bool(st.session_state.get("session_id")),
+    )
+    if runtime == "offline":
+        st.info("Offline rehearsal: deterministic output, no model call.")
+    uploaded = st.file_uploader(
+        "Paper PDF (optional, up to 5 MiB)",
+        type=["pdf"],
+        disabled=bool(st.session_state.get("session_id")),
+    )
+    st.caption("Leave empty to use the course paper. Tools can read text from up to 12 pages.")
+    if st.button("Start session", disabled=not token or bool(st.session_state.get("session_id"))):
+        body = {"runtime": runtime}
+        if uploaded:
+            if uploaded.size > 5 * 1024 * 1024:
+                st.error("Choose a PDF up to 5 MiB.")
+                st.stop()
+            body["paper_base64"] = base64.b64encode(uploaded.getvalue()).decode()
+        st.session_state.session_id = request("POST", "/sessions", json=body)["session_id"]
+        st.session_state.messages = []
+        st.session_state.session_token = token
+        st.rerun()
+    if st.button("Close session", disabled=not st.session_state.get("session_id")):
+        request("DELETE", f"/sessions/{st.session_state.session_id}")
+        for key in ["session_id", "messages", "result", "preview", "session_token"]:
+            st.session_state.pop(key, None)
+        st.rerun()
+
+if not st.session_state.get("session_id"):
+    st.info("Sign in and start a session. The offline option works without an OpenAI key.")
+    st.stop()
+if token != st.session_state.get("session_token"):
+    # Do not show a previous principal's session after the login changes.
+    for key in ["session_id", "messages", "result", "preview", "session_token"]:
+        st.session_state.pop(key, None)
+    st.rerun()
+
+for message in st.session_state.get("messages", []):
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+prompt = st.chat_input("Read page 1, look up Context Engineering, and write two cited claims.")
+if prompt:
+    st.session_state.pop("preview", None)
+    st.session_state.pop("result", None)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.write(prompt)
+    with st.status("Researching…", expanded=True) as status:
+        try:
+            received = False
+            with httpx.stream(
+                "POST",
+                API + f"/sessions/{st.session_state.session_id}/turns",
+                headers={"Authorization": f"Bearer {token}"},
+                json={"prompt": prompt},
+                timeout=150,
+            ) as response:
+                if response.is_error:
+                    st.error(json.loads(response.read()).get("detail", "Request failed."))
+                    st.stop()
+                for line in response.iter_lines():
+                    if not line.startswith("data: "):
+                        continue
+                    event = json.loads(line[6:])
+                    if event["type"] in {"progress", "tool"}:
+                        st.write(event.get("message", event.get("name")))
+                    elif event["type"] == "error":
+                        st.error(event["message"])
+                        status.update(label="Run stopped", state="error")
+                        st.stop()
+                    elif event["type"] == "result":
+                        received = True
+                        st.session_state.result = event["result"]
+                        st.session_state.messages.append(
+                            {"role": "assistant", "content": event["result"]["markdown"]}
+                        )
+            if not received:
+                st.error("The stream ended without a brief. Close this session and start again.")
+                st.stop()
+            status.update(label="Brief ready", state="complete")
+        except httpx.HTTPError:
+            st.error("Backend connection failed. Start the backend and check its address.")
+            st.stop()
+    st.rerun()
+
+if result := st.session_state.get("result"):
+    st.download_button("Download brief", result["markdown"], "research-brief.md", "text/markdown")
+    with st.expander("Inspect run and evidence"):
+        st.json(
+            {
+                key: result[key]
+                for key in [
+                    "runtime",
+                    "model",
+                    "usage",
+                    "latency_seconds",
+                    "tool_calls",
+                    "semantic_review",
+                ]
+            }
+        )
+    st.caption("Quote checks passed. Review whether each claim follows from its evidence.")
+    if st.button("Preview mock publication"):
+        st.session_state.preview = request(
+            "POST", f"/sessions/{st.session_state.session_id}/preview"
+        )
+    if preview := st.session_state.get("preview"):
+        st.markdown(preview["markdown"])
+        approved = st.checkbox(
+            "I reviewed this exact brief and approve mock publication", key=preview["draft_id"]
+        )
+        if st.button("Publish once", disabled=not approved):
+            outcome = request(
+                "POST",
+                "/publish",
+                json={
+                    "draft_id": preview["draft_id"],
+                    "digest": preview["digest"],
+                    "approved": approved,
+                },
+            )
+            st.success(
+                "Already published."
+                if outcome["already_published"]
+                else "Saved to the local mock publication table."
+            )

@@ -1,0 +1,11 @@
+{
+  "recorded_at": "2026-09-29T12:21:26.209345+00:00",
+  "runtime": "offline",
+  "model": null,
+  "cases_sha256": "267791327d8dd2c9ea960eaf57dee86d853e222e20bab01ca039a1a26886ba1a",
+  "passed": 10,
+  "total": 10,
+  "kind": "deterministic software rehearsal",
+  "semantic_grounding": "Human review required: a valid quote does not establish entailment.",
+  "cost_note": "Null means unknown. Configured-rate estimates exclude tools/sandboxes/cache-write charges."
+}

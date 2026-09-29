@@ -1,0 +1,27 @@
+name: Course checks
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  classroom:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    env:
+      PYTHON_DOTENV_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: '0.9.28'
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --frozen --extra class --extra app --extra dev
+      - run: uv run --no-sync python -m pytest -q
+      - run: uv run --no-sync ruff check course tests scripts demos/research-report-app
+      - run: uv run --no-sync python scripts/build_materials.py --check
+      - run: uv run --no-sync python scripts/check_materials.py
+      - run: uv run --no-sync python scripts/verify_notebooks.py
+      - run: uv run --no-sync python -m course evaluate --runtime offline --output outputs/ci-evaluation

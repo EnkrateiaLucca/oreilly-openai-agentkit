@@ -1,0 +1,30 @@
+{
+  "checked_at": "2026-09-29T12:04:53.417516+00:00",
+  "python": "3.13.5",
+  "model": "gpt-6-luna",
+  "key_configured": true,
+  "versions": {
+    "openai": "3.16.2",
+    "openai-agents": "0.22.3",
+    "pydantic": "2.12.5",
+    "pypdf": "6.5.0"
+  },
+  "paper_pages_available": 12,
+  "fixture_lookup": true,
+  "model_access": {
+    "status": "completed",
+    "usage": {
+      "input_tokens": 12,
+      "input_tokens_details": {
+        "cache_write_tokens": 0,
+        "cached_tokens": 0
+      },
+      "output_tokens": 17,
+      "output_tokens_details": {
+        "reasoning_tokens": 10
+      },
+      "total_tokens": 29
+    }
+  },
+  "managed_access": "agent listing succeeded; sandbox run still required"
+}

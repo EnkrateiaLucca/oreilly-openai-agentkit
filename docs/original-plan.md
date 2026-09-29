@@ -1,0 +1,41 @@
+# Building Agents with OpenAI — Course Guide & Repo Revamp
+
+- **Scope:** proposed replacement curriculum for `oreilly-openai-agentkit`; guide only, implementation pending. Docs checked September 29, 2026; proposed 3-hour teaching sequence, breaks extra.
+- **Outcome:** build, inspect, evaluate, and serve a research assistant that reads a paper, looks up related records, and produces a cited Markdown brief. Reuse the repo’s PDFs, `papers_database.csv`, extraction notebook, and research-report app.
+- **Core path:** playground demonstration → managed Agents API → understand the Responses tool loop → compare Agents SDK → evaluate → serve. Runtime choices are alternatives, not mandatory migration stages. [Runtime comparison](https://developers.openai.com/api/docs/guides/agents)
+
+- **0 · Setup & map — 15 min**
+  - Say: “The model chooses actions; the runtime executes the loop; tools supply capabilities; the application enforces permissions.” Distinguish saved agent, session, and sandbox. [Concepts](https://developers.openai.com/api/docs/guides/agents-api/overview)
+  - Prepare Python/Jupyter, project API key, environment variables, tested dependency versions, one configurable model, and small demo budgets. Keep credentials server-side; check managed-API access before class. [Quickstart](https://developers.openai.com/api/docs/guides/agents-api/quickstart)
+- **1 · Playground: first useful agent — 20 min**
+  - Show the [Agents playground](https://platform.openai.com/agents/new); set a narrow research task, instructions, available tools, and output expectations; compare an ordinary answer with a tool-assisted answer.
+  - Exercise: request evidence, introduce missing information, revise instructions, rerun. Checkpoint: students explain a tool call and identify an unsupported claim. [Agent configuration](https://developers.openai.com/api/docs/guides/agents-api/configuration)
+  - Instructor prep: verify the signed-in UI and its API relationship before recording; current controls/export were not verified for this guide. Use the API quickstart if playground access is unavailable.
+- **2 · Managed agent in Python — 30 min**
+  - Demo: configure agent + environment → create session → submit task → stream events → continue the session; distinguish reusable configuration from conversation state. [Quickstart](https://developers.openai.com/api/docs/guides/agents-api/quickstart) · [Configuration](https://developers.openai.com/api/docs/guides/agents-api/configuration)
+  - Use a hosted sandbox for paper/file work; have the agent produce a brief, then revise it on the next turn. Inspect tool activity and token usage; retain the output and clean up demo resources. [Managed runtime](https://developers.openai.com/api/docs/guides/agents-api/overview) · [Observability](https://developers.openai.com/api/docs/guides/agents-api/observability)
+- **3 · Responses: expose the loop — 25 min**
+  - Reuse `0.0-intro-responses-api.ipynb` and `1.0-paper-data-extraction.ipynb`: model request → structured extraction → validate result; valid schema does not establish factual accuracy. [Structured outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
+  - Add `lookup_paper(query)` over the fixture CSV: model requests function → Python validates/executes → return matching call result → repeat or finish; cap iterations and handle failure. Checkpoint: students identify which code actually executes the tool. [Function calling](https://developers.openai.com/api/docs/guides/function-calling)
+- **4 · Agents SDK: own the runtime — 25 min**
+  - Rebuild the same small task with `Agent`, a function tool, and `Runner`; compare application-owned execution with managed sessions. Reuse the tool implementation, not assumed interchangeable state objects. [SDK](https://developers.openai.com/api/docs/guides/agents/sdk) · [Quickstart](https://developers.openai.com/api/docs/guides/agents/quickstart)
+  - Inspect a run, add multi-turn state, demonstrate a failing tool. Exercise: choose a runtime for a hosted research worker versus an existing application with custom storage and permissions. [Runtime comparison](https://developers.openai.com/api/docs/guides/agents)
+- **5 · Grounding & actions — 20 min**
+  - Compare passing one PDF with searching a document collection; require evidence and an explicit “not found.” Reuse SEC filing fixtures for optional retrieval practice. [File inputs](https://developers.openai.com/api/docs/guides/pdf-files) · [File search](https://developers.openai.com/api/docs/guides/tools-file-search)
+  - Add a mock `publish_brief` action: preview → explicit approval → application authorization → execute once. Treat retrieved instructions as untrusted; inject a hostile instruction into a test document and inspect behavior. [Function tools](https://developers.openai.com/api/docs/guides/agents-api/tools/functions)
+- **6 · Evaluate & repair — 25 min**
+  - Run 10 fixed cases: 3 normal, 2 missing evidence, 2 tool failures, 2 injection attempts, 1 denied action. Score grounded claims, correct tool use, output validity, and approval enforcement; record latency and cost.
+  - Inspect one failed trace → change one instruction/tool → rerun all cases. Traces explain behavior; evaluations judge it. Keep fixtures and a local results table. [Observability](https://developers.openai.com/api/docs/guides/agents-api/observability)
+- **7 · Ship & recap — 20 min**
+  - Adapt the existing Streamlit research-report app: authenticated backend → selected runtime → streamed progress → downloadable brief; isolate user sessions, protect keys, bound work, and handle errors.
+  - Optional ChatKit exercise: connect the UI to your own backend; replace the existing Agent Builder workflow-ID integration. [ChatKit](https://developers.openai.com/api/docs/guides/chatkit)
+  - Exit task: demonstrate evidence, one real tool call, a follow-up turn, a handled failure, and passing evaluation results; explain the runtime choice.
+
+- **Repo implementation checklist**
+  - Replace README/course branding with “Building Agents with OpenAI”; make this guide the teaching source; regenerate slides/handout from its sequence.
+  - Create numbered lessons `00-setup` through `07-ship`; centralize instructions, model configuration, fixture tools, and sample inputs; provide completed demos plus exercises.
+  - Keep/refactor Responses intro, paper extraction, PDF fixtures, and research-report app; add managed-session and SDK versions of the same task plus evaluation fixtures/results.
+  - Move finance analysis, video generation, lifecycle CRUD notebooks, and advanced Conversations patterns to optional references; remove them from first-run setup requirements.
+  - Archive Agent Builder workflows/screenshots; preserve their useful triage/retrieval exercises in code. Agent Builder shuts down November 30, 2026. [Migration](https://developers.openai.com/api/docs/guides/agent-builder/migrate-from-agent-builder)
+  - Replace hosted Evals/prompt-object dependencies; Evals becomes read-only October 31 and shuts down November 30, 2026; prompt objects also shut down November 30. Keep prompts in code and evaluation cases in the repo. [Deprecations](https://developers.openai.com/api/docs/deprecations)
+  - Before release: clean-install every core lesson, verify current model/API access, remove stale workflow IDs/model references, rerun evaluations, and record a fallback demo. Keep MCP, skills, subagents, and voice as optional extensions. [Tools and extensions](https://developers.openai.com/api/docs/guides/agents)

@@ -12,6 +12,17 @@ venv/
 # Environments
 .env
 .env.*
+!.env.example
+!**/.env.local.example
+.runtime/
+outputs/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+node_modules/
+.coverage
+htmlcov/
 
 # Jupyter
 .ipynb_checkpoints/

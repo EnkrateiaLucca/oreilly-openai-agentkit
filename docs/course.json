@@ -1,0 +1,540 @@
+{
+  "title": "Building Agents with OpenAI",
+  "subtitle": "One research task. Three runtimes. Evidence you can inspect.",
+  "checked": "2026-09-29",
+  "outcome": "Build, inspect, evaluate, and serve a research assistant that reads a paper, looks up related records, and produces a cited Markdown brief.",
+  "lessons": [
+    {
+      "id": "00-setup",
+      "title": "Setup & map",
+      "minutes": 15,
+      "say": "The model chooses actions; the runtime executes the loop; tools supply capabilities; the application enforces permissions.",
+      "objective": "Run the offline rehearsal and distinguish a saved agent, a conversation session, and a sandbox.",
+      "beats": [
+        "0–4: show the final brief and the three runtime choices.",
+        "4–10: install the locked environment, run preflight, and open the fallback.",
+        "10–15: identify where configuration, state, execution, and permission live."
+      ],
+      "teach": [
+        "The course uses one paper, one CSV of secondary summaries, shared instructions, and one output schema.",
+        "A saved managed agent stores reusable configuration; a session stores ongoing work; a sandbox is an execution environment. None is an interchangeable ID.",
+        "Managed Agents API, Responses, and Agents SDK are alternatives. Our order is a teaching sequence, not a migration prescription.",
+        "All live paths read OPENAI_MODEL from server configuration, with gpt-6-luna as the course default. Access must be tested for the teaching project.",
+        "The offline runtime is a deterministic teaching simulation. Its successful run is not evidence that a live model works."
+      ],
+      "commands": [
+        "uv sync --extra class --extra app --extra dev",
+        "uv run python -m course preflight",
+        "uv run python -m course demo --runtime offline --follow-up --output outputs/setup",
+        "uv run python -m course replay"
+      ],
+      "inspect": [
+        "course/config.py",
+        "course/prompts.py",
+        "course/schemas.py",
+        "docs/verification.md"
+      ],
+      "checkpoint": "Point to the model setting, the tool dispatcher, the brief schema, and the application permission check. Explain why offline success cannot verify API access.",
+      "exercise": [
+        "Draw four boxes: model, runtime, tool, application. Place choose a function, execute Python, enforce publisher permission, and keep conversation history in the correct boxes.",
+        "Run preflight and the offline demo. Identify a primary-paper citation and explain how a CSV citation differs.",
+        "Name what must be rechecked before moving from offline to each live runtime."
+      ],
+      "solution": [
+        "The model proposes calls; a runtime coordinates steps; the application tool handler executes Python; application authorization decides whether a requested side effect is permitted. History belongs to the chosen runtime/state strategy.",
+        "paper:N identifies a page from the PDF. record:N identifies an existing secondary CSV summary, not a newly verified paper.",
+        "Check credentials without printing them, model/project access, managed capability access, available budget, and the live verification report. Run preflight --live, then a small runtime smoke test."
+      ],
+      "fallback": "Use the offline demo and replay. Teach the distinction between deterministic simulation and captured live output explicitly.",
+      "sources": [
+        [
+          "Runtime comparison",
+          "https://developers.openai.com/api/docs/guides/agents"
+        ],
+        [
+          "Agents API concepts",
+          "https://developers.openai.com/api/docs/guides/agents-api/overview"
+        ]
+      ],
+      "slide_takeaways": [
+        "Model → chooses a next step",
+        "Runtime → coordinates the loop and state",
+        "Tools → return evidence or request an action",
+        "Application → enforces identity and permissions"
+      ],
+      "instructor_commands": [
+        "uv run python -m course preflight",
+        "uv run python -m course demo --runtime offline --follow-up --output outputs/setup"
+      ]
+    },
+    {
+      "id": "01-playground",
+      "title": "Playground: first useful agent",
+      "minutes": 20,
+      "say": "An answer becomes useful when we can show where it came from and what it cannot establish.",
+      "objective": "Compare an ordinary answer with an evidence-backed answer, then expose missing information.",
+      "beats": [
+        "0–5: open the signed-in Agents playground and describe the task.",
+        "5–10: compare an answer without evidence with one using the supplied file/tool.",
+        "10–17: run the missing-information exercise and revise instructions.",
+        "17–20: identify one real tool call and one unsupported claim."
+      ],
+      "teach": [
+        "Instructor prep: open https://platform.openai.com/agents/new while signed in before class. The release browser check reached the login page; authenticated controls, tool availability, and export were not verified. Check how the actual UI maps to an API session.",
+        "Start with a narrow task: summarize the supplied research paper and find one related record. Make evidence and missing information visible in the output.",
+        "Use the same small paper and CSV as later lessons. Do not assert that the playground exports code or that a tool is available without checking the actual UI.",
+        "If the playground cannot run the task, use the managed API demo below and its quickstart. If managed access is unavailable, use the Responses demo or labeled offline fallback."
+      ],
+      "prompts": [
+        "Read the supplied paper. Write a short research brief with two supported claims, an exact supporting quotation for each, and one limitation. Use only the supplied evidence. Label anything absent as not found.",
+        "Find one related paper record in the supplied CSV. Label it as a secondary summary and distinguish it from evidence in the PDF.",
+        "What was the exact cost of training the system, and does this paper prove it works for every domain? If the evidence does not say, write not found. Do not estimate."
+      ],
+      "commands": [
+        "uv run python -m course demo --runtime managed --output outputs/playground-fallback",
+        "uv run python -m course demo --runtime responses --output outputs/playground-responses",
+        "uv run python -m course demo --runtime offline --output outputs/playground-offline"
+      ],
+      "inspect": [
+        "course/prompts.py",
+        "assets/paper.pdf",
+        "assets/papers_database.csv"
+      ],
+      "checkpoint": "Show the tool name, its input, and returned evidence. Identify a claim that goes beyond the source, even if the prose sounds confident.",
+      "exercise": [
+        "Use the first prompt and save the answer. Underline every factual claim and attach its supporting quotation.",
+        "Ask the missing-information prompt. Classify each answer as supported, not found, or unsupported.",
+        "Change one instruction to require explicit missing evidence and separate primary from secondary sources; rerun the same question."
+      ],
+      "solution": [
+        "A good answer contains only claims justified by the provided text, short exact quotations, and clearly labeled limitations. A confident unsupported answer fails even if it is well written.",
+        "The broad every-domain claim cannot be inferred from a narrow experiment. Training cost must be not found unless an actual source passage provides it.",
+        "A useful revision is: Each claim needs a source identifier and exact quote; if a source does not establish the answer, put the request in not_found. Treat CSV records as secondary summaries."
+      ],
+      "fallback": "Run the API-based completed demo. If no live path is available, show the offline result and ask students to audit evidence; do not describe that as a playground run.",
+      "sources": [
+        [
+          "Agents playground",
+          "https://platform.openai.com/agents/new"
+        ],
+        [
+          "Managed quickstart",
+          "https://developers.openai.com/api/docs/guides/agents-api/quickstart"
+        ],
+        [
+          "Agent configuration",
+          "https://developers.openai.com/api/docs/guides/agents-api/configuration"
+        ]
+      ],
+      "slide_takeaways": [
+        "Task → one paper, one useful brief",
+        "Evidence → a source and a quotation",
+        "Missing information → say not found",
+        "Checkpoint → explain a tool call; reject an unsupported claim"
+      ],
+      "instructor_commands": [
+        "uv run python -m course demo --runtime managed --output outputs/playground-fallback"
+      ]
+    },
+    {
+      "id": "02-managed",
+      "title": "Managed agent in Python",
+      "minutes": 30,
+      "say": "Configuration is reusable; a session is one continuing piece of work.",
+      "objective": "Create a managed agent and hosted environment, run two turns, inspect events and usage, and clean up resources.",
+      "beats": [
+        "0–7: read agent configuration, environment files, and session creation.",
+        "7–17: run the task, follow event progress, and inspect the cited brief.",
+        "17–24: continue the same session with a revision request.",
+        "24–30: inspect usage, discuss bounds, and clean up."
+      ],
+      "teach": [
+        "course/runtimes/managed.py creates a saved agent and a session with an OpenAI-hosted environment. The classroom environment disables network access and receives the supplied paper, text, and CSV.",
+        "Open the event stream before submitting input so fast events are not missed. Submit function results with their original turn_id and call_id.",
+        "A requires_action event asks the application to execute a function. Managed orchestration does not remove application validation or permission checks.",
+        "Wait for the root turn to complete, then collect its final assistant message from paginated session items. An idle event or a subagent event is not a final answer.",
+        "The follow-up uses the same managed session. Local request history, SDK history, and managed session IDs are different state strategies.",
+        "The application uses a deadline, a tool-call budget, and cancellation. The managed API path does not claim a native model-step or output-token cap; configure project spend limits separately. Cleanup removes the demonstration session and saved agent."
+      ],
+      "commands": [
+        "uv run python -m course preflight --live",
+        "uv run python -m course demo --runtime managed --follow-up --output outputs/managed",
+        "uv run python -m course cleanup"
+      ],
+      "inspect": [
+        "course/runtimes/managed.py",
+        "course/runtimes/base.py",
+        "course/tools.py",
+        "course/config.py"
+      ],
+      "checkpoint": "Find the session creation, stream opening, tool-result submission, completion condition, and cleanup. Explain which state the follow-up reused.",
+      "exercise": [
+        "Trace one function request from requires_action to ToolBox.dispatch and back to input.tool_result. Record the two correlation IDs.",
+        "Change the follow-up instruction to shorten the brief while retaining evidence. Explain which object must be reused.",
+        "Sketch what happens if the stream disconnects before completion. Identify what must be inspected before retrying a side-effecting task."
+      ],
+      "solution": [
+        "The application matches the required function action by turn_id and call_id, validates arguments in ToolBox.dispatch, and submits output or error under those same IDs.",
+        "Reuse the managed runtime/session. Do not create a new session and claim it continued the old conversation. The runner caches function results by turn/call to avoid re-execution within that process.",
+        "A disconnected stream is an incomplete observation. Inspect saved session items and resource records; do not blindly resubmit an action. The demo stops rather than claiming a final brief. Run cleanup for pending demo resources."
+      ],
+      "fallback": "Replay a labeled capture if available. Otherwise walk through managed.py beside the deterministic offline two-turn demo; mark managed API access unverified.",
+      "sources": [
+        [
+          "Managed quickstart",
+          "https://developers.openai.com/api/docs/guides/agents-api/quickstart"
+        ],
+        [
+          "Agent configuration",
+          "https://developers.openai.com/api/docs/guides/agents-api/configuration"
+        ],
+        [
+          "Observability and usage",
+          "https://developers.openai.com/api/docs/guides/agents-api/observability"
+        ]
+      ],
+      "slide_takeaways": [
+        "Saved agent → reusable instructions and tools",
+        "Session → turns, items, and environment",
+        "Stream → progress and required actions",
+        "Follow-up → reuse the session; cleanup → remove demo resources"
+      ],
+      "instructor_commands": [
+        "uv run python -m course demo --runtime managed --follow-up --output outputs/managed",
+        "uv run python -m course cleanup"
+      ]
+    },
+    {
+      "id": "03-responses",
+      "title": "Responses: expose the loop",
+      "minutes": 25,
+      "say": "The model asks for a function; this Python line is what actually runs it.",
+      "objective": "Extract a typed result, then trace a bounded function-calling loop from request to final brief.",
+      "beats": [
+        "0–7: run the Responses intro and extraction notebooks.",
+        "7–15: trace function_call → dispatch → function_call_output.",
+        "15–21: test missing evidence and a simulated lookup failure.",
+        "21–25: explain schema validity versus factual support."
+      ],
+      "teach": [
+        "Use notebooks/0.0-intro-responses-api.ipynb and notebooks/1.0-paper-data-extraction.ipynb. Begin with offline cells, then enable live calls only when prepared.",
+        "Structured output validates shape. A valid title, author list, or quotation field may still be wrong; compare extraction against the actual source.",
+        "ResponsesRuntime sends shared instructions, tool definitions, history, and a JSON schema. It preserves all returned output items before adding function-call results.",
+        "ToolBox.dispatch validates name and arguments, executes lookup_paper over the existing CSV or reads a PDF page, and returns a result. A matching call_id connects the result to the request.",
+        "A failed tool returns an explicit error and the brief must expose missing evidence. Step, tool-call, output-token, and wall-clock limits prevent an unbounded classroom loop."
+      ],
+      "commands": [
+        "uv run python -m course extract",
+        "uv run python -m course extract --live",
+        "uv run python -m course demo --runtime responses --follow-up --output outputs/responses",
+        "uv run python -m course demo --runtime responses --failure lookup_paper --output outputs/responses-failure"
+      ],
+      "inspect": [
+        "notebooks/0.0-intro-responses-api.ipynb",
+        "notebooks/1.0-paper-data-extraction.ipynb",
+        "course/runtimes/responses.py",
+        "course/tools.py",
+        "course/schemas.py"
+      ],
+      "checkpoint": "Point to self.tools.dispatch in ResponsesRuntime. Explain why a well-formed JSON result can contain an unsupported claim.",
+      "exercise": [
+        "Open exercise.py. Implement matching_outputs so every model function call receives a JSON-encoded function_call_output with the original call_id.",
+        "Run solution.py locally. Predict the result of an unknown tool and a nonexistent CSV query before executing it.",
+        "Compare the ordinary and simulated-failure runs. Identify the missing evidence rather than treating an error-shaped result as a successful search."
+      ],
+      "solution": [
+        "See solution.py: dispatch each call by name and arguments, serialize the returned object, and preserve call_id. The model does not execute lookup_paper itself.",
+        "Unknown tool names return an explicit tool error; an ordinary unmatched search returns found=false and an empty record list. These outcomes have different meanings even if both leave the model without evidence.",
+        "Schema validation proves field/type conformity. Quote checks prove that a quoted substring exists in a known source. A person must still judge whether the claim follows from that quotation."
+      ],
+      "fallback": "Run extraction offline and the local exercise solution. Replay a saved Responses run if present; label offline behavior as simulation.",
+      "sources": [
+        [
+          "Structured outputs",
+          "https://developers.openai.com/api/docs/guides/structured-outputs"
+        ],
+        [
+          "Function calling",
+          "https://developers.openai.com/api/docs/guides/function-calling"
+        ]
+      ],
+      "slide_takeaways": [
+        "Request → the model chooses a function",
+        "Dispatch → Python validates and executes",
+        "Result → return the original call_id",
+        "Repeat or finish → bound the loop; inspect the evidence"
+      ],
+      "instructor_commands": [
+        "uv run python -m course extract",
+        "uv run python -m course demo --runtime responses --follow-up --output outputs/responses"
+      ]
+    },
+    {
+      "id": "04-sdk",
+      "title": "Agents SDK: own the runtime",
+      "minutes": 25,
+      "say": "The SDK runs the loop inside our application; our application still owns its permissions and state strategy.",
+      "objective": "Rebuild the task with Agent, function_tool, and Runner; compare state and execution ownership.",
+      "beats": [
+        "0–7: map Agent, function_tool, output_type, and Runner to the previous loop.",
+        "7–14: run a brief and a follow-up, inspect local run events.",
+        "14–19: demonstrate a failing function tool.",
+        "19–25: choose a runtime for two concrete deployment scenarios."
+      ],
+      "teach": [
+        "course/runtimes/sdk.py wraps the same ToolBox functions using function_tool, constructs Agent, and asks Runner.run_streamed to orchestrate the run.",
+        "The application supplies deployment, tool code, storage decisions, identity, and approval enforcement. Runner provides the orchestration loop.",
+        "The completed demo carries result.to_input_list() into the next turn. This local SDK history is not a managed API session or a sandbox.",
+        "The SDK demo disables hosted tracing and records local results/events. Traces are useful diagnostics; they do not grade correctness.",
+        "A shared tool contract and schema make comparison possible. Reusing a session object across unrelated runtimes is not part of that contract."
+      ],
+      "commands": [
+        "uv run python -m course demo --runtime sdk --follow-up --output outputs/sdk",
+        "uv run python -m course demo --runtime sdk --failure read_paper --output outputs/sdk-failure"
+      ],
+      "inspect": [
+        "course/runtimes/sdk.py",
+        "course/runtimes/responses.py",
+        "course/runtimes/managed.py",
+        "course/tools.py"
+      ],
+      "checkpoint": "Find Agent, a function_tool, Runner.run_streamed, and the saved SDK history. Explain what the SDK replaced and what remains application code.",
+      "exercise": [
+        "Choose a runtime for a hosted research worker that should retain progress between tasks. State one reason and one responsibility that remains yours.",
+        "Choose a runtime for an existing application with its own user permissions and custom database. Explain how you would retain follow-up state.",
+        "Run the failed read_paper demo. Check whether missing primary evidence is disclosed and secondary summaries are labeled."
+      ],
+      "solution": [
+        "The managed Agents API is a reasonable choice for the hosted worker when its access, retention, environment, and billing fit. The application still controls tool validation and authorization.",
+        "The Agents SDK is a reasonable choice for an existing application with custom storage and permissions. Persist SDK-compatible history or use a supported SDK session strategy; the classroom demo keeps local history only. Responses is also defensible when explicit loop control is the priority.",
+        "An unavailable PDF must not silently turn a CSV summary into primary-paper evidence. Inspect tool_calls, not_found, limitations, and citations; repair any unsupported claim."
+      ],
+      "fallback": "Inspect sdk.py alongside the offline demo; use local events or a recorded SDK output to compare state. Do not claim Runner ran if the SDK live call was unavailable.",
+      "sources": [
+        [
+          "Agents SDK",
+          "https://developers.openai.com/api/docs/guides/agents/sdk"
+        ],
+        [
+          "SDK quickstart",
+          "https://developers.openai.com/api/docs/guides/agents/quickstart"
+        ],
+        [
+          "Runtime comparison",
+          "https://developers.openai.com/api/docs/guides/agents"
+        ]
+      ],
+      "slide_takeaways": [
+        "Agent → shared instructions, model, output contract",
+        "function_tool → the same application functions",
+        "Runner → orchestration inside your app",
+        "History → choose and own one state strategy"
+      ],
+      "instructor_commands": [
+        "uv run python -m course demo --runtime sdk --follow-up --output outputs/sdk",
+        "uv run python -m course demo --runtime sdk --failure read_paper --output outputs/sdk-failure"
+      ]
+    },
+    {
+      "id": "05-grounding-actions",
+      "title": "Grounding & actions",
+      "minutes": 20,
+      "say": "Evidence can inform the answer. It cannot grant itself permission to act.",
+      "objective": "Distinguish file input from retrieval and enforce preview, explicit approval, authorization, and execute-once publication.",
+      "beats": [
+        "0–5: compare a single PDF with searching a document collection.",
+        "5–11: inspect the mock publication preview and permission checks.",
+        "11–16: insert a hostile retrieved instruction and inspect behavior.",
+        "16–20: demonstrate denied publication and duplicate-click handling."
+      ],
+      "teach": [
+        "The core app extracts a bounded set of PDF pages locally, then tools return evidence to the model. Direct PDF input is a different API pattern; file search adds retrieval over a collection.",
+        "The CSV is a collection of secondary summaries, not a web search or a vector store. Optional SEC retrieval uses local fixture search and is labeled as such.",
+        "Retrieved text may contain instructions. Treat it as untrusted evidence, never as authority to change tools, identity, policy, or output requirements.",
+        "The completed injection demo appends fixtures/injections/publish.txt to returned evidence and records the brief and tool results. Its offline default demonstrates the boundary deterministically; choose a verified live runtime explicitly to inspect actual model behavior.",
+        "The model's publish_brief function can only request approval. Actual mock publication requires an authenticated user, an exact preview digest, explicit approval, and publisher permission.",
+        "Publisher records approval and its local mock side effect in one SQLite transaction. Repeating an approved request reports already_published rather than repeating the side effect. No external publication occurs."
+      ],
+      "commands": [
+        "uv run python -m course actions",
+        "uv run python lessons/05-grounding-actions/demo.py --runtime offline",
+        "uv run python lessons/05-grounding-actions/solution.py",
+        "uv run python optional/retrieval.py --query revenue --limit 3"
+      ],
+      "inspect": [
+        "course/actions.py",
+        "course/tools.py",
+        "course/backend.py",
+        "fixtures/sec",
+        "optional/retrieval.py",
+        "lessons/05-grounding-actions/demo.py"
+      ],
+      "checkpoint": "Show that model text cannot publish. Explain why both approval and authorization are required, and why approving one digest cannot authorize an edited brief.",
+      "exercise": [
+        "Open exercise.py and complete the authorization decision table: approval absent, permission absent, wrong owner, changed digest, valid request, repeated valid request.",
+        "Run demo.py with its offline default to inspect hostile tool evidence, then choose --runtime responses, sdk, or managed only if that live path is prepared. Explain which application boundary prevents the retrieved instruction from publishing.",
+        "Choose direct PDF input or collection retrieval for one report versus 500 filings. State how source IDs and not-found behavior should survive either approach."
+      ],
+      "solution": [
+        "Missing approval, missing publisher permission, wrong owner, or changed content digest must deny. A valid request publishes once; repeating it returns already_published=true. solution.py exercises these cases against a temporary SQLite database.",
+        "Instructions inside returned evidence are data. The model may refuse or ignore them; the application permission boundary must still prevent publication even if the model follows them.",
+        "A small known paper can be passed or exposed directly. A collection usually benefits from retrieval; inspect retrieved passages and citations. Neither method establishes factual correctness merely by returning a source."
+      ],
+      "fallback": "The mock action and local retrieval demos require no API. Use them to demonstrate the authorization boundary even when live model behavior is unavailable.",
+      "sources": [
+        [
+          "File inputs",
+          "https://developers.openai.com/api/docs/guides/pdf-files"
+        ],
+        [
+          "File search",
+          "https://developers.openai.com/api/docs/guides/tools-file-search"
+        ],
+        [
+          "Managed function tools",
+          "https://developers.openai.com/api/docs/guides/agents-api/tools/functions"
+        ]
+      ],
+      "slide_takeaways": [
+        "Grounding → preserve evidence and missing information",
+        "Preview → show the exact content",
+        "Approval + authorization → separate decisions",
+        "Execute once → bind to content, owner, and an idempotency record"
+      ],
+      "instructor_commands": [
+        "uv run python -m course actions",
+        "uv run python lessons/05-grounding-actions/demo.py --runtime offline"
+      ]
+    },
+    {
+      "id": "06-evaluate",
+      "title": "Evaluate & repair",
+      "minutes": 25,
+      "say": "A trace explains what happened. An evaluation judges whether it met the task.",
+      "objective": "Run ten fixed cases, inspect one failure, change one cause, and rerun the whole suite.",
+      "beats": [
+        "0–6: read the ten cases and agree on the rubric.",
+        "6–12: run offline evaluation and inspect the local results table.",
+        "12–20: inspect a failed output or inject a bad candidate; make one repair.",
+        "20–25: rerun all ten and compare quality, latency, and cost fields."
+      ],
+      "teach": [
+        "The fixed suite has 3 normal cases, 2 missing-evidence cases, 2 tool failures, 2 injection attempts, and 1 denied action.",
+        "Score grounded evidence, correct tool use, schema/output validity, and application approval enforcement. Quote matching is a useful mechanical check, not proof that the claim is entailed.",
+        "Read the returned source passage and claim side by side. A quote may be genuine while the conclusion exaggerates it. Semantic review remains necessary.",
+        "Record runtime, model, token usage when available, elapsed time, and estimated model cost only when configured rates support it. Unknown cost stays unknown; managed environment/tool charges are not included in a token estimate.",
+        "Change one instruction or tool behavior, then rerun the same ten cases. A passing offline suite validates the local harness and deterministic behavior, not the live model."
+      ],
+      "commands": [
+        "uv run python -m course evaluate --runtime offline --output evals/results/classroom-before",
+        "uv run python lessons/06-evaluate/solution.py",
+        "uv run python -m course evaluate --runtime responses --output evals/results/classroom-live",
+        "uv run python -m course evaluate --runtime offline --output evals/results/classroom-after"
+      ],
+      "inspect": [
+        "evals/cases.json",
+        "course/evaluation.py",
+        "course/schemas.py",
+        "evals/results",
+        "docs/verification.md"
+      ],
+      "checkpoint": "Show all ten rows, one concrete failure, the repair, and the rerun. Explain what the mechanical scores cannot establish.",
+      "exercise": [
+        "Open exercise.py. Create a schema-valid brief that cites an exact quotation from the supplied synthetic passage but makes a stronger claim than the quote supports.",
+        "Run solution.py and explain why quote checking accepts the quote while a human reviewer should reject the claim.",
+        "For a failed case, record observed behavior, expected behavior, likely cause, one change, and the full rerun result. If the baseline passes, use the deliberately bad candidate to practice diagnosis before changing course code."
+      ],
+      "solution": [
+        "solution.py uses a deliberately synthetic teaching passage but claims the approach is guaranteed for every possible task. A real quote does not support that universal conclusion.",
+        "The mechanical checker verifies source presence and quote substring membership; it does not perform semantic entailment. Mark the case failed during human review.",
+        "A useful repair adds a narrow evidence requirement to instructions or validates missing evidence at the tool boundary. Keep the same case set and compare all rows so a local improvement does not hide a regression."
+      ],
+      "fallback": "Run the offline suite and inspect its recording. Label it as harness coverage; use saved live results only when their metadata identifies a genuine API run.",
+      "sources": [
+        [
+          "Observability and usage",
+          "https://developers.openai.com/api/docs/guides/agents-api/observability"
+        ],
+        [
+          "Agent workflow evaluation",
+          "https://developers.openai.com/api/docs/guides/agent-evals"
+        ]
+      ],
+      "slide_takeaways": [
+        "10 cases → 3 normal · 2 missing · 2 failures · 2 injections · 1 denial",
+        "Judge → evidence, tools, validity, approval",
+        "Inspect → one failed trace and its source",
+        "Repair → one cause; rerun the whole set"
+      ],
+      "instructor_commands": [
+        "uv run python -m course evaluate --runtime offline --output evals/results/classroom-before",
+        "uv run python lessons/06-evaluate/solution.py"
+      ]
+    },
+    {
+      "id": "07-ship",
+      "title": "Ship & recap",
+      "minutes": 20,
+      "say": "The interface can request work; the authenticated backend decides whose work it is and what may happen.",
+      "objective": "Serve the same research task through an authenticated backend and Streamlit UI, then demonstrate the five exit requirements.",
+      "beats": [
+        "0–5: start backend and app; sign in with a classroom token.",
+        "5–11: choose a runtime, run a brief, follow up, and download Markdown.",
+        "11–15: inspect ownership, bounded work, error handling, and mock approval.",
+        "15–20: complete the exit demonstration and explain a runtime choice."
+      ],
+      "teach": [
+        "The Streamlit app sends requests to a separate authenticated FastAPI backend. The API key stays on the backend; a classroom bearer token identifies the user.",
+        "The backend isolates conversation ownership, serializes turns per session, caps work, expires idle sessions, and returns progress events plus a downloadable validated brief.",
+        "Start with offline mode for UI rehearsal. Live runtime selection sends the task and evidence to OpenAI; model access and costs still depend on the configured project.",
+        "This is a local classroom application: conversation state is in memory and mock publications are in SQLite. A public deployment needs TLS, production identity, durable shared state, job handling, and operational controls.",
+        "The optional ChatKit exercise replaces the archived workflow-ID integration with an adapter to your own authenticated backend. The existing Streamlit UI is the completed core deliverable."
+      ],
+      "commands": [
+        "uv run python -m course access",
+        "make backend",
+        "make app",
+        "uv run python -m course cleanup"
+      ],
+      "inspect": [
+        "demos/research-report-app/app.py",
+        "course/backend.py",
+        "course/actions.py",
+        "optional/chatkit/README.md"
+      ],
+      "checkpoint": "Demonstrate evidence, one real tool call, a follow-up turn, a handled failure, and passing evaluation results; explain your runtime choice and which checks were live.",
+      "exercise": [
+        "Run the app as one user, produce a brief, follow up, and download it. Start a second user's session and attempt to read the first session through the backend; expect denial.",
+        "Try publication without a publisher role, then preview and approve as an authorized user. Repeat the same approval and inspect idempotency.",
+        "Complete the five-part exit task. If live access is unavailable, record which elements were demonstrated only by offline rehearsal and list the remaining live checks."
+      ],
+      "solution": [
+        "Backend ownership checks return session not found to a different principal, even when that principal knows a session ID. Runtime state remains associated with its owning session.",
+        "Publication requires both the explicit approval flag and the server's can_publish role. The preview's digest binds approval to the exact brief; the SQLite transaction records one mock publication.",
+        "A complete exit packet includes the brief and its quotations, tool-call record, second-turn output, failure output, and ten-case results. A live model claim requires live metadata, not an offline transcript."
+      ],
+      "fallback": "The app defaults to offline and can demonstrate authentication, session ownership, streaming progress, downloads, and mock approval without an API call.",
+      "sources": [
+        [
+          "ChatKit",
+          "https://developers.openai.com/api/docs/guides/chatkit"
+        ],
+        [
+          "ChatKit advanced integration",
+          "https://developers.openai.com/api/docs/guides/custom-chatkit"
+        ]
+      ],
+      "slide_takeaways": [
+        "Backend → identity, permissions, limits, state",
+        "UI → progress, follow-up, preview, download",
+        "Exit → evidence + tools + continuity + failure + evaluation",
+        "Choose → explain where your runtime and state belong"
+      ],
+      "instructor_commands": [
+        "uv run python -m course access",
+        "make backend",
+        "make app"
+      ]
+    }
+  ]
+}

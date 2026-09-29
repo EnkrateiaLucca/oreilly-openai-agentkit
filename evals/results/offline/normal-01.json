@@ -1,0 +1,102 @@
+{
+  "case": {
+    "id": "normal-01",
+    "category": "normal",
+    "query": "Context Engineering",
+    "prompt": "Read page 1 and look up 'Context Engineering'. Write two claims with evidence.",
+    "expected_tools": [
+      "read_paper",
+      "lookup_paper"
+    ],
+    "min_claims": 1
+  },
+  "events": [
+    {
+      "type": "progress",
+      "message": "Starting offline turn 1"
+    },
+    {
+      "type": "tool",
+      "name": "read_paper",
+      "message": "Local rehearsal tool"
+    },
+    {
+      "type": "tool",
+      "name": "lookup_paper",
+      "message": "Local rehearsal tool"
+    }
+  ],
+  "result": {
+    "runtime": "offline",
+    "model": null,
+    "brief": {
+      "title": "Research brief — offline rehearsal",
+      "claims": [
+        {
+          "text": "The supplied page includes: SII-GAIR Context Engineering 2.0: The Context of Context Engineering Qishuo Hua1,3 Lyumanshan Ye1,3 Dayuan Fu2,3 Yang Xiao2,3 Xiaojie Cai1,3 Yunze Wu1,2,3 Jifan",
+          "evidence": {
+            "source_id": "paper:1",
+            "quote": "SII-GAIR Context Engineering 2.0: The Context of Context Engineering Qishuo Hua1,3 Lyumanshan Ye1,3 Dayuan Fu2,3 Yang Xiao2,3 Xiaojie Cai1,3 Yunze Wu1,2,3 Jifan"
+          }
+        },
+        {
+          "text": "The secondary record states: The paper defines and situates context engineering as the systematic process of designing, organizing, and managing contextual information to reduce entropy between human intentions and machine understanding, traces its ",
+          "evidence": {
+            "source_id": "record:1",
+            "quote": "The paper defines and situates context engineering as the systematic process of designing, organizing, and managing contextual information to reduce entropy between human intentions and machine understanding, traces its "
+          }
+        }
+      ],
+      "not_found": [],
+      "limitations": [
+        "Deterministic rehearsal; no model inference occurred.",
+        "CSV records are secondary summaries; verify against the original paper."
+      ],
+      "action": "none"
+    },
+    "markdown": "# Research brief — offline rehearsal\n\n## Supported claims\n\n- The supplied page includes: SII\\-GAIR Context Engineering 2\\.0: The Context of Context Engineering Qishuo Hua1,3 Lyumanshan Ye1,3 Dayuan Fu2,3 Yang Xiao2,3 Xiaojie Cai1,3 Yunze Wu1,2,3 Jifan [1]\n\n- The secondary record states: The paper defines and situates context engineering as the systematic process of designing, organizing, and managing contextual information to reduce entropy between human intentions and machine understanding, traces its  [2]\n\n## Not found\n\n\n## Limitations\n\n- Deterministic rehearsal; no model inference occurred\\.\n- CSV records are secondary summaries; verify against the original paper\\.\n\n## Evidence\n\n[1] paper:1: “SII\\-GAIR Context Engineering 2\\.0: The Context of Context Engineering Qishuo Hua1,3 Lyumanshan Ye1,3 Dayuan Fu2,3 Yang Xiao2,3 Xiaojie Cai1,3 Yunze Wu1,2,3 Jifan”\n\n[2] record:1: “The paper defines and situates context engineering as the systematic process of designing, organizing, and managing contextual information to reduce entropy between human intentions and machine understanding, traces its ”\n\nAction: none\n",
+    "usage": {
+      "input_tokens": 0,
+      "output_tokens": 0,
+      "cached_tokens": 0
+    },
+    "latency_seconds": 0.0,
+    "estimated_model_cost_usd": 0.0,
+    "tool_calls": [
+      {
+        "name": "read_paper",
+        "arguments": {
+          "page": 1
+        },
+        "result": {
+          "found": true,
+          "source_id": "paper:1",
+          "text": "SII-GAIR\nContext Engineering 2.0:\nThe Context of Context Engineering\nQishuo Hua1,3 Lyumanshan Ye1,3 Dayuan Fu2,3 Yang Xiao2,3 Xiaojie Cai1,3\nYunze Wu1,2,3 Jifan Lin1,3 Junfei Wang3 Pengfei Liu1,2,3,†\n1SJTU 2SII 3GAIR\n/githubGithub\nSII Context\n“A person is the sum of their contexts. ” — Authors\nAbstract\nKarl Marx once wrote that “the human essence is the ensemble of social relations” (Marx, 1845), suggesting\nthat individuals are not isolated entities, but are fundamentally shaped by their interactions with other\nentities — within which contexts play a constitutive and essential role. With the advent of computers\nand artificial intelligence, these contexts are no longer limited to purely human-human interactions:\nhuman-machine interactions are included as well. Then a central question emerges:How can machines\nbetter understand our situations and purposes?To address this challenge, researchers have recently\n“developed” the concept ofcontext engineering. Although it is often regarded as a recent innovation of the\nagent era, in fact, we argue that related practices can be traced back to over20 years ago. Since the early\n1990s, it has evolved through distinct historical phases, each shaped by its intelligence level of machines:\nfrom early human-computer interaction (HCI) frameworks built around primitive computers, to today’s\nhuman-agent interaction (HAI) paradigms driven by intelligent agents, and potentially to human-level or\neven superhuman intelligence in the future. In this paper, we discuss the context of context engineering,\nprovide a systematic definition, outline our perspective on its historical and conceptual landscape, and\nexamine key design considerations for its practice. By addressing these questions, we aim to offer a\nconceptual foundation for context engineering and sketch its promising future. This paper serves as a\nstepping stone for a broader community effort toward systematic context engineering in AI systems.\nCont e xt 1 . 0 Cont e xt 2. 0 Cont e xt 3 . 0 Cont e xt 4 . 0\nP assiv e Ex ecut or \nInt elligence \nLe v el\nCont e xt\nInput\nHuman–AI Int er action Cost\nInitiativ e A gent R eliable Collabor at or Consider at e Mast er\nCont e xt as tr anslation Cont e xt as instruction Cont e xt as Scenario  Cont e xt as W orld\nMor e Int elligence.  Mor e Cont e xt -Pr ocessing Ability .  Lo w er Human–AI Int er action Cost.\nW e ar e curr ent ly  in Er a 2. 0 ,  \ntr ansitioning t o Er a 3 . 0\nFigure 1: The Overview of context engineering 1.0 to context engineering 4.0, illustrating that more intelligence\nleads to greater context-processing ability and lower human-AI interaction cost.\n0† Corresponding author.\n1\narXiv:2510.26493v1  [cs.AI]  30 Oct 2025"
+        }
+      },
+      {
+        "name": "lookup_paper",
+        "arguments": {
+          "query": "Context Engineering"
+        },
+        "result": {
+          "found": true,
+          "records": [
+            {
+              "source_id": "record:1",
+              "title": "Context Engineering 2.0: The Context of Context Engineering",
+              "abstract_summary": "The paper defines and situates context engineering as the systematic process of designing, organizing, and managing contextual information to reduce entropy between human intentions and machine understanding, traces its evolution over four eras from early HCI/context-aware systems to speculative superhuman intelligence, formalizes context and context engineering mathematically, and proposes design considerations for context collection, management, and usage while identifying open challenges and future directions.",
+              "intro_backgrounds_summary": "The introduction motivates context engineering by highlighting the impact of context on LLM and agent behavior, argues that context engineering predates modern LLM practices (rooted in ubiquitous computing and HCI), and frames the core task as compressing high-entropy human contexts into machine-understandable low-entropy representations.",
+              "methods_summary": "The paper formalizes context with mathematical definitions (entities, Char, Context) and defines context engineering as a transformation CE:(C,T)→f_context composed from modular operations (ϕi), and it proposes a four-stage evolutionary characterization (Era 1.0–4.0) tied to machine intelligence levels.",
+              "results_summary": "Rather than empirical experiments, the paper presents a conceptual and historical analysis: a comparison of Era 1.0 vs 2.0 practices, catalogs of context collection/storage/management/usage techniques (e.g., multimodal encoding, hierarchical memory, subagents, RAG, embeddings), representative system patterns and applications (CLI, deep research agents, BCIs), and a set of emerging engineering practices and trade-offs.",
+              "discussion_summary": "The discussion highlights key challenges for lifelong and large-scale context engineering (storage bottlenecks, processing degradation, system instability, evaluation difficulty), argues for new architectures and a ‘‘semantic operating system’’ for context, and forecasts increasing machine responsibility in interpreting and constructing context as intelligence advances."
+            }
+          ],
+          "source_kind": "secondary CSV summaries"
+        }
+      }
+    ],
+    "citation_errors": [],
+    "semantic_review": "required"
+  }
+}

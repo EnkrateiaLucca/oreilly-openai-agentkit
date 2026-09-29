@@ -1,235 +1,105 @@
-# O'Reilly Live Training - OpenAI AgentKit
+# Building Agents with OpenAI
 
-Welcome to the O'Reilly Live Training on OpenAI AgentKit! This course covers the full OpenAI agent stack — from raw API calls with the Responses API, through the Agents SDK, up to the AgentKit product platform (Agent Builder, ChatKit, Connector Registry, and Evals). You'll build real demo applications along the way.
+Build a research assistant that reads a paper, searches related records, and produces a cited Markdown brief. Teach the same task through the **managed Agents API**, a visible **Responses tool loop**, and the **Agents SDK**, then evaluate it and serve it through an authenticated application.
 
-## Setup
+**Three hours of teaching, breaks extra.** Python 3.11+ and `uv` are required. Node 22.12+ is needed only to rebuild the slides. A project API key and model/runtime access are needed for live demos; the offline rehearsal runs without them.
 
-**Using uv (Recommended)**
-
-This project uses [uv](https://github.com/astral-sh/uv), a fast Python package installer and resolver. The Makefile handles most setup automatically.
-
-1. **Install uv:**
-   ```bash
-   curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
-
-2. **One-command setup:**
-   ```bash
-   make all
-   ```
-   This creates a virtual environment in `.venv`, installs dependencies, and sets up Jupyter kernel.
-   Dependencies include `openai-agents`, so the Agents SDK examples (`Agent`, `Runner`) run out of the box.
-
-3. **Activate the environment:**
-   ```bash
-   source .venv/bin/activate
-   ```
-
-4. **Setup your OpenAI API key:**
-   - Get your API key from [OpenAI Platform](https://platform.openai.com/)
-   - Create a `.env` file in the project root:
-   ```bash
-   echo "OPENAI_API_KEY=your-api-key-here" > .env
-   ```
-
-**Using Pip (Traditional Method)**
-
-1. **Create a Virtual Environment:**
-   Navigate to your project directory. Make sure you have Python 3.11+ installed!
-   ```bash
-   python -m venv .venv
-   ```
-
-2. **Activate the Virtual Environment:**
-   - **On macOS and Linux:** `source .venv/bin/activate`
-   - **On Windows:** `.\.venv\Scripts\activate`
-
-3. **Install Dependencies:**
-   ```bash
-   pip install --upgrade pip
-   pip install -r ./requirements/requirements.txt
-   ```
-
-4. **Setup Jupyter Kernel:**
-   ```bash
-   python -m ipykernel install --user --name=openai-agentkit
-   ```
-
-5. **Setup your OpenAI API key:**
-   Create a `.env` file in the project root:
-   ```bash
-   echo "OPENAI_API_KEY=your-api-key-here" > .env
-   ```
-
-Remember to deactivate the virtual environment when done: `deactivate`
-
-**Using Conda**
-
-- Install [anaconda](https://www.anaconda.com/download) or [miniconda](https://docs.conda.io/en/latest/miniconda.html)
-- This repo was tested with Python 3.11
-- Create an environment: `conda create -n openai-agentkit python=3.11`
-- Activate your environment: `conda activate openai-agentkit`
-- Install requirements: `pip install -r requirements/requirements.txt`
-- Setup Jupyter kernel: `python -m ipykernel install --user --name=openai-agentkit`
-- Setup your OpenAI [API key](https://platform.openai.com/)
-
-## Quick Start with Makefile
-
-The project includes a Makefile for common tasks:
+## Start here
 
 ```bash
-# Create virtual environment and install everything
-make all
-
-# Clean up environment
-make clean
-
-# Add new packages
-make add pandas numpy
-
-# Update requirements after manual changes
-make env-update
-
-# Show activation command
-make activate
+uv sync --extra class --extra app --extra dev
+uv run python -m course preflight
+uv run python -m course demo --runtime offline --follow-up --output outputs/first-run
+uv run python -m course evaluate --runtime offline --output evals/results/first-run
 ```
 
-## Setup your .env file
+Keep your API key in the server environment or a local, ignored `.env`. Use `.env.example` as a template; do not overwrite an existing `.env` or put its contents in a notebook, screenshot, or commit. `OPENAI_MODEL` selects one model across live runtimes; the course default is `gpt-6-luna`.
 
-Create a `.env` file in the project root:
+Before live teaching, run `uv run python -m course preflight --live`, then rehearse the selected runtime. Live calls send the task and supplied evidence to OpenAI and may incur charges. Access to one API does not establish access to every runtime.
+
+**Read [verification.md](docs/verification.md) for what was actually tested.** Offline is a deterministic teaching simulation. Its passing results do not verify live model quality or access. The signed-in playground requires a separate instructor check.
+
+## Teach the course
+
+| Elapsed | Lesson | Deliverable |
+|---|---|---|
+| 0:00–0:15 | [00 · Setup & map](lessons/00-setup/README.md) | Working rehearsal and runtime map |
+| 0:15–0:35 | [01 · Playground](lessons/01-playground/README.md) | Evidence-backed answer and a missing-information case |
+| 0:35–1:05 | [02 · Managed agent](lessons/02-managed/README.md) | Session, streamed events, follow-up, cleanup |
+| 1:05–1:30 | [03 · Responses](lessons/03-responses/README.md) | Typed extraction and explicit tool loop |
+| 1:30–1:55 | [04 · Agents SDK](lessons/04-sdk/README.md) | Same task with Agent, tools, and Runner |
+| 1:55–2:15 | [05 · Grounding & actions](lessons/05-grounding-actions/README.md) | Evidence boundaries and approved mock publication |
+| 2:15–2:40 | [06 · Evaluate & repair](lessons/06-evaluate/README.md) | Ten fixed cases and a repair cycle |
+| 2:40–3:00 | [07 · Ship & recap](lessons/07-ship/README.md) | Authenticated app and exit demonstration |
+
+- [Course guide](docs/course-guide.md): complete teaching sequence, demos, exercises, solutions, and fallbacks.
+- [Instructor guide](docs/instructor-guide.md): copyable bullets, timing, transitions, and recovery cues.
+- [Slide deck](presentation/slides.html) · [Slide PDF](presentation/slides.pdf) · [Marp source](presentation/slides.md) · [Printable handout](presentation/handout.html).
+- [Official sources](docs/sources.md): current documentation and migration references.
+- [Original accepted plan](docs/original-plan.md): preserved for comparison.
+
+The teaching source is [docs/course.json](docs/course.json). `python scripts/build_materials.py` regenerates the course guide, instructor guide, eight lesson notes, Marp source, and handout from the same sequence. `python scripts/build_materials.py --check` detects drift.
+
+## Run the completed demos
+
+Run commands from the repository root. Choose one live runtime at a time:
 
 ```bash
-OPENAI_API_KEY=your-openai-api-key-here
+uv run python -m course demo --runtime managed --follow-up --output outputs/managed
+uv run python -m course demo --runtime responses --follow-up --output outputs/responses
+uv run python -m course demo --runtime sdk --follow-up --output outputs/sdk
+uv run python -m course demo --runtime responses --failure lookup_paper --output outputs/failure
+uv run python -m course extract
+uv run python -m course extract --live
+uv run python -m course actions
+uv run python -m course replay
+uv run python -m course cleanup
 ```
 
-## Notebooks
+The managed path uses an OpenAI-hosted environment for the paper and file work. The application handles function calls, validates arguments, collects final output, and cleans up demonstration resources. The Responses path makes that loop explicit; the SDK path uses `Agent`, `function_tool`, and `Runner` inside the application. They share tools and output contracts, not interchangeable state objects. [Official runtime comparison](https://developers.openai.com/api/docs/guides/agents).
 
-The notebooks live in `notebooks/` and run in order as a single sequence. `0.x`–`1.x` are
-the core teaching path; `2.x` are production-oriented reference implementations.
+Run the notebooks with `make notebooks`:
 
-1. [**0.0 — Intro to Responses API**](notebooks/0.0-intro-responses-api.ipynb) — Main teaching notebook. Covers the Responses API end-to-end: items-based I/O, server-side state, built-in tools, structured outputs, and multi-turn agents.
-2. [**1.0 — Paper Data Extraction**](notebooks/1.0-paper-data-extraction.ipynb) — Applied use-case: extract structured data from academic papers using the Responses API and Pydantic schemas.
-3. [**1.1 — Data Analysis (Finance)**](notebooks/1.1-data-analysis-finance.ipynb) — Data-analysis workflow with tool/function calling over the Responses API.
-4. [**2.0 — Agentic Workflow with Structured Outputs**](notebooks/2.0-agentic-workflow-struct-out.ipynb) — Structured-output agentic pipeline.
-5. [**2.1 — Intro to Responses API (reference)**](notebooks/2.1-intro-responses-api.ipynb) — Complete Responses API lifecycle reference (create, retrieve, cancel, token counts).
-6. [**2.2 — Building with the Responses API**](notebooks/2.2-building-with-responses-api.ipynb) — Ten production patterns: streaming, retries, token budgets, function calling, caching, and more.
-7. [**2.3 — Intro to Conversations API (reference)**](notebooks/2.3-intro-conversations-api.ipynb) — Complete Conversations API lifecycle reference (create, update, items CRUD, pagination).
-8. [**2.4 — Building with the Conversations API**](notebooks/2.4-building-with-conversations-api.ipynb) — Production conversation patterns: sessions, templates, batch ops, branching, analytics.
+- [Responses introduction](notebooks/0.0-intro-responses-api.ipynb)
+- [Paper data extraction](notebooks/1.0-paper-data-extraction.ipynb)
 
-Input files the notebooks read (PDFs, images, sample text) live in `notebooks/assets/` and the repo-level `assets/`. `assets/paper2.pdf` is a spare PDF fixture for the paper-chat demo.
+## Run the application
 
-## Demo Applications
-
-The notebooks have been converted into runnable demo apps. Each demo is self-contained and can be run independently.
-
-### Streamlit Apps (Module 1)
-
-| Demo | Description | Run |
-|------|-------------|-----|
-| [Paper Chat App](demos/paper-chat-app/) | Upload a PDF and ask questions about it using the Responses API | `streamlit run demos/paper-chat-app/app.py` |
-| [Video Script Generator](demos/video-script-app/) | Convert a research paper into a 60-second educational video script with optional DALL-E scene images | `streamlit run demos/video-script-app/app.py` |
-| [Research Report App](demos/research-report-app/) | Generate a structured research report from a PDF, exported as Markdown | `streamlit run demos/research-report-app/app.py` |
-
-### Agent Builder Workflows (Module 3) *(deprecated Nov 30, 2026 — patterns transferable to Agents SDK)*
-
-Three Agent Builder workflows built in the OpenAI platform, each with a `README.md` and screenshots:
-
-| Demo | Description |
-|------|-------------|
-| [Demo 1 — Course Assistant](demos/agent-builder/demo-1-intro-assistant/) | Minimal single-node workflow: Start → Agent → End. Good starting template. |
-| [Demo 2 — Support Triage with Guardrails](demos/agent-builder/demo-2-support-triage/) | Guardrails → Classifier → 3 specialist agents (Billing / Technical / General) or Safety Refusal. PII detection, jailbreak protection. |
-| [Demo 3 — File Search RAG](demos/agent-builder/demo-3-file-search-rag/) | RAG workflow over 10 SEC 10-K filings: Query Agent → File Search → Transform → Evidence Summarizer with cited sources. |
-
-### ChatKit App (Module 4)
-
-| Demo | Description | Docs |
-|------|-------------|------|
-| [ChatKit App](demos/chatkit-app/) | Next.js starter that embeds an Agent Builder workflow via ChatKit. Handles auth, streaming, and file upload. | [README](demos/chatkit-app/README.md) · [Setup Guide](demos/chatkit-app/SETUP_GUIDE.md) |
-
-## Repository Structure
-
-```
-├── notebooks/                              # Course notebooks (run in order)
-│   ├── 0.0-intro-responses-api.ipynb
-│   ├── 1.0-paper-data-extraction.ipynb
-│   ├── 1.1-data-analysis-finance.ipynb
-│   ├── 2.0-agentic-workflow-struct-out.ipynb
-│   ├── 2.1-intro-responses-api.ipynb
-│   ├── 2.2-building-with-responses-api.ipynb
-│   ├── 2.3-intro-conversations-api.ipynb
-│   ├── 2.4-building-with-conversations-api.ipynb
-│   └── assets/                             # Notebook input files (PDFs, images, text)
-├── demos/                                  # Runnable demo applications
-│   ├── paper-chat-app/                     # Streamlit — PDF Q&A (Module 1)
-│   ├── video-script-app/                   # Streamlit — video script generator (Module 1)
-│   ├── research-report-app/                # Streamlit — research report generator (Module 1)
-│   ├── agent-builder/                      # Agent Builder workflows (Module 3)
-│   │   ├── demo-1-intro-assistant/         # Simple single-node assistant
-│   │   ├── demo-2-support-triage/          # Multi-agent triage with guardrails
-│   │   └── demo-3-file-search-rag/         # RAG over SEC 10-K filings
-│   └── chatkit-app/                        # Next.js ChatKit starter (Module 4)
-├── presentation/                           # Course slides (Remark.js HTML + PDF) + handout (HTML + PDF)
-├── assets/                                 # Images, diagrams, and reference documents
-├── research/                               # Background research and use-case analysis
-├── requirements/                           # Python dependencies
-│   ├── requirements.in                     # Direct dependencies
-│   └── requirements.txt                    # Locked dependencies
-├── Makefile                                # Automation scripts
-└── .venv/                                  # Virtual environment (created by setup)
-```
-
-## Key Features
-
-This course covers the full OpenAI agent stack:
-
-- **Responses API**: The primitive — direct API calls, server-side state, built-in tools (`file_search`, `web_search`, `code_interpreter`, `mcp`)
-- **Agents SDK**: The framework — multi-agent orchestration, handoffs, guardrails, tracing; works with 100+ LLMs
-- **Agent Builder**: Visual drag-and-drop workflow composer — nodes, classifiers, guardrails, MCP connectors, versioning, and evals
-- **ChatKit**: Embeddable React/Web Component chat UI — file upload, streaming, tool invocation display
-- **Guardrails**: Open-source modular safety layer — PII detection, jailbreak protection, prompt injection defense
-- **Structured Outputs**: Guaranteed JSON schemas for reliable data extraction
-- **File Search & RAG**: Retrieval-augmented generation with vector stores
-- **Multi-modal Agents**: Text, images, and document processing
-- **Evals**: Trace grading, dataset building, and automated prompt optimization *(deprecated Nov 30, 2026 — migrate to Agents SDK tracing)*
-
-## Troubleshooting
-
-**Jupyter Kernel Not Found:**
 ```bash
-python -m ipykernel install --user --name=openai-agentkit
+uv run python -m course access
+make backend
 ```
 
-**API Key Issues:**
-Make sure your `.env` file is in the project root and contains:
-```
-OPENAI_API_KEY=sk-...
-```
+In a second terminal, run `make app`. Sign in with a generated classroom token, start in offline mode, create a brief, follow up, and download the result. See the [application guide](demos/research-report-app/README.md) for details.
 
-**Package Installation Issues:**
-Try upgrading pip first:
+The separate FastAPI backend holds the API key, enforces session ownership and work limits, and streams progress to Streamlit. Publication is a **local mock action**: preview → explicit approval → server authorization → one SQLite transaction. The model cannot grant approval or publish by itself. This classroom server is not a production deployment; production requires real identity, TLS, shared durable state, and operational controls.
+
+## Evaluate and rehearse
+
 ```bash
-pip install --upgrade pip
-pip install -r requirements/requirements.txt
+make test
+make rehearse
+uv run python -m course evaluate --runtime offline --output evals/results/rehearsal
+uv run python -m course evaluate --runtime responses --output evals/results/live-responses
 ```
 
-**Streamlit Apps:**
-Run from the project root so relative paths resolve correctly:
-```bash
-streamlit run demos/paper-chat-app/app.py
-```
+The ten fixed cases cover **3 normal tasks, 2 missing-evidence cases, 2 tool failures, 2 injection attempts, and 1 denied action**. Results record mechanical evidence checks, tool use, validity, approval behavior, latency, usage when available, and a model-cost estimate only when rates are configured. A quotation appearing in a source does not prove the accompanying claim; semantic review remains required. Managed sandbox/tool charges are separate from a token-based estimate.
 
-**ChatKit App:**
-Requires Node.js 18+. See [demos/chatkit-app/README.md](demos/chatkit-app/README.md) for full setup.
+`make slides` rebuilds the HTML deck. The handout is printable from a browser; PDF exports, when provided, are presentation conveniences rather than a runtime requirement.
 
-## Additional Resources
+## Repository map
 
-- [OpenAI Platform Documentation](https://developers.openai.com/api/docs)
-- [OpenAI Cookbook](https://cookbook.openai.com/)
-- [OpenAI API Reference](https://developers.openai.com/api/reference/overview)
-- [Agent Builder Guide](https://developers.openai.com/api/docs/guides/agent-builder)
-- [ChatKit Guide](https://developers.openai.com/api/docs/guides/chatkit)
-- [Agents SDK (GitHub)](https://github.com/openai/openai-agents-python)
+| Path | Purpose |
+|---|---|
+| `course/` | Shared configuration, tools, schemas, runtimes, CLI, evaluation, backend, mock actions |
+| `lessons/00-setup` … `07-ship` | Completed demo instructions, student exercises, worked solutions |
+| `notebooks/` | Two core notebooks, ready for offline rehearsal and explicit live cells |
+| `assets/` | Original paper PDF and paper-record CSV |
+| `fixtures/` | SEC extracts and reproducible fallback fixtures |
+| `evals/` | Versioned cases and local result tables |
+| `demos/research-report-app/` | Streamlit interface for the authenticated course backend |
+| `presentation/` | Generated deck, handout, and Automata theme |
+| `optional/` | Retrieval/triage extensions, advanced notebooks, finance and video examples |
+| `archive/` | Historical Agent Builder, hosted workflow ChatKit, and previous course materials |
 
-## License
-
-Materials created for O'Reilly Live Training
+Core setup has no hosted Evals, prompt-object, Agent Builder workflow-ID, finance, video, MCP, voice, or subagent requirement. Historical examples are preserved and clearly separated; see [archive](archive/README.md) and [optional extensions](optional/README.md).

@@ -1,351 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OpenAI AgentKit — Course Reference Handout</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        @page {
-            size: A4;
-            margin: 18mm;
-            @top-left { content: none; }
-            @top-center { content: none; }
-            @top-right { content: none; }
-            @bottom-left { content: none; }
-            @bottom-center { content: none; }
-            @bottom-right { content: none; }
-        }
-
-        body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-size: 10.5pt;
-            line-height: 1.5;
-            color: #2A2825;
-            background: #fff;
-            max-width: 210mm;
-            margin: 0 auto;
-            padding: 18mm;
-        }
-
-        h1 {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 22pt;
-            font-weight: 700;
-            margin-bottom: 6pt;
-            padding-bottom: 8pt;
-            border-bottom: 3px solid #000;
-            letter-spacing: 0.5pt;
-        }
-
-        h2 {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 15pt;
-            font-weight: 700;
-            margin-top: 18pt;
-            margin-bottom: 8pt;
-            border-bottom: 1px solid #333;
-            padding-bottom: 3pt;
-        }
-
-        h3 {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 12pt;
-            font-weight: 700;
-            margin-top: 12pt;
-            margin-bottom: 5pt;
-        }
-
-        .subtitle {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 12pt;
-            color: #555;
-            margin-bottom: 6pt;
-            font-style: italic;
-        }
-
-        .metadata {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 9pt;
-            color: #666;
-            margin-bottom: 16pt;
-            padding-bottom: 10pt;
-            border-bottom: 1px solid #ddd;
-        }
-
-        p { margin-bottom: 8pt; }
-
-        ul, ol { margin-left: 18pt; margin-bottom: 9pt; }
-        li { margin-bottom: 3pt; }
-
-        pre {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 8.5pt;
-            background: #F5F3EB;
-            border: 1px solid #ccc;
-            border-left: 3px solid #000;
-            padding: 8pt;
-            margin: 8pt 0;
-            overflow: hidden;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: break-word;
-            line-height: 1.4;
-        }
-
-        code {
-            font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 9.5pt;
-            background: #f0efe9;
-            padding: 1pt 3pt;
-            border-radius: 2pt;
-            word-break: break-word;
-        }
-
-        pre code {
-            background: none;
-            padding: 0;
-            white-space: pre-wrap;
-            word-break: break-word;
-            overflow-wrap: break-word;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 8pt 0;
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 9pt;
-        }
-
-        th {
-            background: #2A2825;
-            color: #fff;
-            font-weight: 700;
-            text-align: left;
-            padding: 5pt 7pt;
-            border: 1px solid #2A2825;
-        }
-
-        td { padding: 5pt 7pt; border: 1px solid #999; vertical-align: top; }
-        tr:nth-child(even) { background: #faf9f5; }
-
-        .lead {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 10pt;
-            color: #444;
-            margin-bottom: 10pt;
-        }
-
-        @media print {
-            body { margin: 0; padding: 0; }   /* @page already supplies 18mm margins */
-            h1, h2, h3 { page-break-after: avoid; }
-            table, pre { page-break-inside: avoid; }
-        }
-
-        footer {
-            margin-top: 24pt;
-            padding-top: 10pt;
-            border-top: 1px solid #ccc;
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            font-size: 8pt;
-            color: #666;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>OpenAI AgentKit — Course Reference</h1>
-        <div class="subtitle">From the Responses API primitive to the AgentKit product stack</div>
-        <div class="metadata">
-            <strong>Course:</strong> Building Agents with OpenAI's AgentKit &amp; Responses API (Lucas Soares, O'Reilly Live Training) &nbsp;|&nbsp;
-            <strong>Updated:</strong> September 2026 &nbsp;|&nbsp;
-            <strong>Models:</strong> <code>gpt-5.6-luna</code> (default), <code>gpt-5.6-terra</code> (balanced)
-        </div>
-    </header>
-
-    <main>
-        <p class="lead">The full OpenAI agent stack builds in layers: the <strong>Responses API</strong> is the
-        primitive (one model call with server-side state and built-in tools); the <strong>Agents SDK</strong>
-        adds orchestration; <strong>AgentKit</strong> (Agent Builder, ChatKit, Connector Registry, Evals) is the
-        product platform on top. Learn the primitive first — everything else composes from it.</p>
-
-        <h2>1. The Stack at a Glance</h2>
-        <table>
-            <thead><tr><th>Layer</th><th>What it is</th><th>You reach for it when…</th></tr></thead>
-            <tbody>
-                <tr><td><strong>Responses API</strong></td><td>Single stateful model call: items I/O, server-side state, built-in tools, structured outputs</td><td>You want direct control over one model turn</td></tr>
-                <tr><td><strong>Conversations API</strong></td><td>Durable, server-side conversation object the Responses API writes to</td><td>You need persistent multi-turn state without resending history</td></tr>
-                <tr><td><strong>Agents SDK</strong></td><td>Framework: multi-agent orchestration, handoffs, guardrails, tracing (100+ LLMs)</td><td>You need multiple agents / tools / routing in code</td></tr>
-                <tr><td><strong>Agent Builder</strong></td><td>Visual drag-and-drop workflow composer (nodes, classifiers, guardrails)</td><td>You want to compose a workflow without code <em>(deprecated Nov 30 2026 — patterns transfer to the SDK)</em></td></tr>
-                <tr><td><strong>ChatKit</strong></td><td>Embeddable React/Web-Component chat UI (streaming, file upload, tool display)</td><td>You want a ready chat front-end for a workflow</td></tr>
-                <tr><td><strong>Guardrails</strong></td><td>Open-source safety layer: PII detection, jailbreak &amp; prompt-injection defense</td><td>You need input/output safety around an agent</td></tr>
-            </tbody>
-        </table>
-
-        <h2>2. Responses API — the primitive</h2>
-
-        <h3>2.1 Basic call &amp; output</h3>
-<pre><code>from openai import OpenAI
-client = OpenAI()  # reads OPENAI_API_KEY
-
-resp = client.responses.create(
-    model="gpt-5.6-luna",
-    input="Explain agents in one sentence.",
-)
-print(resp.output_text)   # convenience accessor for the text
-# resp.output is the list of output items (reasoning, tool calls, message)</code></pre>
-
-        <h3>2.2 Input items &amp; multi-turn</h3>
-        <p>Inputs are a list of typed items. Chain turns server-side with <code>previous_response_id</code> (no need to resend history).</p>
-<pre><code>resp = client.responses.create(
-    model="gpt-5.6-luna",
-    input=[{"role": "user", "content": "What are 3 core snowboarding skills?"}],
-)
-followup = client.responses.create(
-    model="gpt-5.6-luna",
-    input=[{"role": "user", "content": "Give 3 drills for each."}],
-    previous_response_id=resp.id,    # server keeps the prior context
-)</code></pre>
-
-        <h3>2.3 Structured outputs (Pydantic)</h3>
-        <p>Use <code>responses.parse</code> with a Pydantic model as <code>text_format</code>; read the typed object from <code>output_parsed</code>.</p>
-<pre><code>from pydantic import BaseModel
-
-class PaperData(BaseModel):
-    title: str
-    abstract_summary: list[str]
-
-resp = client.responses.parse(
-    model="gpt-5.6-luna",
-    input=[{"role": "user", "content": paper_text}],
-    text_format=PaperData,
-)
-data = resp.output_parsed       # -> PaperData(title=..., abstract_summary=[...])</code></pre>
-
-        <h3>2.4 Token counting (before you send)</h3>
-        <p>Ask the API for the exact input-token count for a given model — more reliable than a local tokenizer for new models.</p>
-<pre><code>result = client.responses.input_tokens.count(
-    model="gpt-5.6-terra",
-    input="Hello folks!",
-)
-print(result.input_tokens)</code></pre>
-
-        <h3>2.5 Streaming (typed semantic events)</h3>
-        <p><strong>Gotcha:</strong> a streamed response yields <em>typed events</em>, not chunks with <code>.output</code>. Accumulate
-        text on <code>response.output_text.delta</code> events via <code>event.delta</code>.</p>
-<pre><code>full = ""
-for event in client.responses.create(
-        model="gpt-5.6-luna", input="Explain backprop in 3 sentences.", stream=True):
-    if event.type == "response.output_text.delta":
-        full += event.delta
-        print(event.delta, end="", flush=True)
-# other events: response.created, response.output_text.done, response.completed</code></pre>
-
-        <h2>3. Function / Tool Calling</h2>
-        <p class="lead">Pattern: define a tool schema → the model emits a <code>function_call</code> item → you run the
-        function → send the result back as a <code>function_call_output</code> linked by <code>call_id</code> → the model
-        produces the final answer. Responses API function-call items are <strong>flat</strong> (<code>.name</code>,
-        <code>.arguments</code>, <code>.call_id</code>) — there is no nested <code>.function</code> as in Chat Completions.</p>
-<pre><code>tools = [{
-    "type": "function",
-    "name": "get_weather",
-    "description": "Get the weather for a city.",
-    "parameters": {
-        "type": "object",
-        "properties": {"city": {"type": "string"}},
-        "required": ["city"],
-    },
-}]
-
-resp = client.responses.create(model="gpt-5.6-luna",
-                               input=[{"role": "user", "content": "Weather in Lisbon?"}],
-                               tools=tools)
-
-next_input = []
-for item in resp.output:                 # NOTE: iterate resp.output, not resp
-    if item.type == "function_call":
-        args = json.loads(item.arguments)
-        result = get_weather(**args)     # run your function
-        next_input.append({
-            "type": "function_call_output",
-            "call_id": item.call_id,      # link the result to the call
-            "output": json.dumps(result),
-        })
-
-final = client.responses.create(model="gpt-5.6-luna",
-                                input=next_input,
-                                previous_response_id=resp.id,
-                                tools=tools)
-print(final.output_text)</code></pre>
-
-        <h2>4. Built-in Tools</h2>
-        <p>The model executes these server-side — just enable them in <code>tools</code>.</p>
-        <table>
-            <thead><tr><th>Tool</th><th>Enable with</th><th>Use for</th></tr></thead>
-            <tbody>
-                <tr><td><code>web_search</code></td><td><code>{"type": "web_search"}</code></td><td>Live web answers with citations (annotations)</td></tr>
-                <tr><td><code>file_search</code></td><td><code>{"type": "file_search", "vector_store_ids": [...]}</code></td><td>RAG over uploaded docs / vector stores</td></tr>
-                <tr><td><code>code_interpreter</code></td><td><code>{"type": "code_interpreter"}</code></td><td>Run Python (data analysis, math, files)</td></tr>
-                <tr><td><code>mcp</code></td><td><code>{"type": "mcp", "server_url": ...}</code></td><td>Call external MCP servers / connectors</td></tr>
-            </tbody>
-        </table>
-<pre><code># Minimal agent loop with the built-in web_search tool
-resp = client.responses.create(
-    model="gpt-5.6-luna",
-    input=[{"role": "user", "content": "Latest LLM news from simonwillison.net?"}],
-    tools=[{"type": "web_search"}],
-)
-for item in resp.output:
-    if item.type == "web_search_call": print("searched:", item.action)
-    if item.type == "message":         print(item.content[0].text)  # answer + citations</code></pre>
-
-        <h2>5. Conversations API — durable server-side state</h2>
-        <p class="lead">A Conversation is a long-lived object with its own id. Pass <code>conversation=conv.id</code> to
-        <code>responses.create</code> and the API <strong>auto-appends both the user input and the assistant output</strong>
-        — don't add them by hand or you double every turn. In items, user turns use <code>input_text</code> and assistant
-        turns use <code>output_text</code>.</p>
-<pre><code>conv = client.conversations.create(metadata={"user_id": "u_123"})
-client.conversations.retrieve(conv.id)
-client.conversations.update(conv.id, metadata={"status": "in_progress"})
-
-# Items CRUD
-client.conversations.items.create(conv.id, items=[
-    {"type": "message", "role": "user",
-     "content": [{"type": "input_text", "text": "Help me set up my account."}]},
-])
-items = client.conversations.items.list(conv.id)     # paginated
-client.conversations.items.retrieve(conv.id, item_id)
-# client.conversations.items.delete(conv.id, item_id)
-
-# Stateful turn — API appends user + assistant automatically
-resp = client.responses.create(model="gpt-5.6-luna",
-                               input="What can you do?",
-                               conversation=conv.id)</code></pre>
-
-        <h2>6. AgentKit Stack — when to climb a layer</h2>
-        <ul>
-            <li><strong>Agents SDK</strong> — multi-agent orchestration in code: agents, handoffs, function tools, guardrails, and tracing. Works with 100+ models. The durable path as Agent Builder/Evals are deprecated.</li>
-            <li><strong>Agent Builder</strong> — visual workflow composer (Start → Agent → tools/guardrails → End), versioning, evals. <em>Deprecated Nov 30 2026; the node patterns map directly onto the Agents SDK.</em></li>
-            <li><strong>ChatKit</strong> — embeddable chat UI (React component / web component) that fronts a workflow: auth, streaming, file upload, tool-call display. <em>Survives Nov 30 2026 only as the self-hosted "Advanced integration"; the OpenAI-hosted "Recommended integration" retires with Agent Builder.</em></li>
-            <li><strong>Guardrails</strong> — modular open-source safety layer that runs before and after agents: PII detection (block/redact), jailbreak attempts, prompt-injection defense, off-topic and sensitive-data filtering — no changes to agent logic.</li>
-        </ul>
-
-        <h2>7. Quick Reference &amp; Gotchas</h2>
-        <ul>
-            <li><strong>Model lineup:</strong> <code>gpt-5.6-luna</code> for most work; <code>gpt-5.6-terra</code> for harder reasoning. Responses report a dated snapshot, not the alias you sent.</li>
-            <li><strong>Iterate <code>resp.output</code>, never <code>resp</code>:</strong> a <code>Response</code> is a Pydantic model — iterating it yields field tuples, not output items.</li>
-            <li><strong>Streaming = events:</strong> accumulate <code>event.delta</code> on <code>response.output_text.delta</code>; there is no <code>chunk.output</code>.</li>
-            <li><strong>Function calls are flat:</strong> <code>item.name</code> / <code>item.arguments</code> / <code>item.call_id</code>; feed results back as <code>function_call_output</code>.</li>
-            <li><strong>Conversations auto-append:</strong> with <code>conversation=...</code> the API stores both sides of the turn for you.</li>
-            <li><strong>Structured output:</strong> prefer <code>responses.parse(text_format=Model)</code> → <code>output_parsed</code> over hand-rolled JSON schemas.</li>
-        </ul>
-    </main>
-
-    <footer>
-        <p>OpenAI AgentKit — O'Reilly Live Training with Lucas Soares · Course reference handout · Updated September 2026</p>
-    </footer>
-</body>
+<!doctype html><html lang='en'><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Building Agents with OpenAI — class handout</title>
+<style>body{font:16px/1.55 system-ui,sans-serif;color:#24211e;background:#faf7f0;max-width:900px;margin:48px auto;padding:0 28px}h1{font-size:42px;line-height:1.1}h2{border-top:3px solid #8f3028;padding-top:24px;margin-top:42px}h3{color:#8f3028}p,li{max-width:80ch}blockquote{border-left:4px solid #8f3028;margin:24px 0;padding-left:20px;font-size:20px}pre{background:#ebe5d9;padding:18px;white-space:pre-wrap;overflow-wrap:anywhere;font-size:13px}a{color:#8f3028}.meta{color:#665e54}section{break-before:page}@media print{body{font-size:11pt;background:white;margin:0;max-width:none}h1{font-size:28pt}h2{margin-top:0}pre{font-size:9pt}a{color:inherit}section{break-before:page}h2,h3{break-after:avoid}li{break-inside:avoid}}</style>
+<h1>Building Agents with OpenAI</h1><p>Build, inspect, evaluate, and serve a research assistant that reads a paper, looks up related records, and produces a cited Markdown brief.</p>
+<p class='meta'>180 teaching minutes · breaks extra · generated from docs/course.json · documentation checked 2026-09-29</p>
+<p>Run from the repository root. Offline is a deterministic rehearsal; live verification is recorded separately in <a href='../docs/verification.md'>docs/verification.md</a>. Credentials remain server-side.</p>
+<section><h2>00 · Setup &amp; map</h2>
+<p class='meta'>0:00–0:15 · 15 minutes</p>
+<p><strong>Outcome:</strong> Run the offline rehearsal and distinguish a saved agent, a conversation session, and a sandbox.</p>
+<blockquote>The model chooses actions; the runtime executes the loop; tools supply capabilities; the application enforces permissions.</blockquote>
+<h3>Explain and show</h3><ul><li>The course uses one paper, one CSV of secondary summaries, shared instructions, and one output schema.</li><li>A saved managed agent stores reusable configuration; a session stores ongoing work; a sandbox is an execution environment. None is an interchangeable ID.</li><li>Managed Agents API, Responses, and Agents SDK are alternatives. Our order is a teaching sequence, not a migration prescription.</li><li>All live paths read OPENAI_MODEL from server configuration, with gpt-6-luna as the course default. Access must be tested for the teaching project.</li><li>The offline runtime is a deterministic teaching simulation. Its successful run is not evidence that a live model works.</li></ul>
+<h3>Exercise</h3><ul><li>Draw four boxes: model, runtime, tool, application. Place choose a function, execute Python, enforce publisher permission, and keep conversation history in the correct boxes.</li><li>Run preflight and the offline demo. Identify a primary-paper citation and explain how a CSV citation differs.</li><li>Name what must be rechecked before moving from offline to each live runtime.</li></ul>
+<h3>Expected solution</h3><ul><li>The model proposes calls; a runtime coordinates steps; the application tool handler executes Python; application authorization decides whether a requested side effect is permitted. History belongs to the chosen runtime/state strategy.</li><li>paper:N identifies a page from the PDF. record:N identifies an existing secondary CSV summary, not a newly verified paper.</li><li>Check credentials without printing them, model/project access, managed capability access, available budget, and the live verification report. Run preflight --live, then a small runtime smoke test.</li></ul>
+<h3>Demo commands</h3><pre>uv sync --extra class --extra app --extra dev
+uv run python -m course preflight
+uv run python -m course demo --runtime offline --follow-up --output outputs/setup
+uv run python -m course replay</pre>
+<p><strong>Checkpoint:</strong> Point to the model setting, the tool dispatcher, the brief schema, and the application permission check. Explain why offline success cannot verify API access.</p>
+<p><strong>Fallback:</strong> Use the offline demo and replay. Teach the distinction between deterministic simulation and captured live output explicitly.</p>
+<p><a href='https://developers.openai.com/api/docs/guides/agents'>Runtime comparison</a> · <a href='https://developers.openai.com/api/docs/guides/agents-api/overview'>Agents API concepts</a></p></section>
+<section><h2>01 · Playground: first useful agent</h2>
+<p class='meta'>0:15–0:35 · 20 minutes</p>
+<p><strong>Outcome:</strong> Compare an ordinary answer with an evidence-backed answer, then expose missing information.</p>
+<blockquote>An answer becomes useful when we can show where it came from and what it cannot establish.</blockquote>
+<h3>Explain and show</h3><ul><li>Instructor prep: open https://platform.openai.com/agents/new while signed in before class. The release browser check reached the login page; authenticated controls, tool availability, and export were not verified. Check how the actual UI maps to an API session.</li><li>Start with a narrow task: summarize the supplied research paper and find one related record. Make evidence and missing information visible in the output.</li><li>Use the same small paper and CSV as later lessons. Do not assert that the playground exports code or that a tool is available without checking the actual UI.</li><li>If the playground cannot run the task, use the managed API demo below and its quickstart. If managed access is unavailable, use the Responses demo or labeled offline fallback.</li></ul>
+<h3>Exercise</h3><ul><li>Use the first prompt and save the answer. Underline every factual claim and attach its supporting quotation.</li><li>Ask the missing-information prompt. Classify each answer as supported, not found, or unsupported.</li><li>Change one instruction to require explicit missing evidence and separate primary from secondary sources; rerun the same question.</li></ul>
+<h3>Expected solution</h3><ul><li>A good answer contains only claims justified by the provided text, short exact quotations, and clearly labeled limitations. A confident unsupported answer fails even if it is well written.</li><li>The broad every-domain claim cannot be inferred from a narrow experiment. Training cost must be not found unless an actual source passage provides it.</li><li>A useful revision is: Each claim needs a source identifier and exact quote; if a source does not establish the answer, put the request in not_found. Treat CSV records as secondary summaries.</li></ul>
+<h3>Prompts</h3><blockquote>Read the supplied paper. Write a short research brief with two supported claims, an exact supporting quotation for each, and one limitation. Use only the supplied evidence. Label anything absent as not found.</blockquote><blockquote>Find one related paper record in the supplied CSV. Label it as a secondary summary and distinguish it from evidence in the PDF.</blockquote><blockquote>What was the exact cost of training the system, and does this paper prove it works for every domain? If the evidence does not say, write not found. Do not estimate.</blockquote>
+<h3>Demo commands</h3><pre>uv run python -m course demo --runtime managed --output outputs/playground-fallback
+uv run python -m course demo --runtime responses --output outputs/playground-responses
+uv run python -m course demo --runtime offline --output outputs/playground-offline</pre>
+<p><strong>Checkpoint:</strong> Show the tool name, its input, and returned evidence. Identify a claim that goes beyond the source, even if the prose sounds confident.</p>
+<p><strong>Fallback:</strong> Run the API-based completed demo. If no live path is available, show the offline result and ask students to audit evidence; do not describe that as a playground run.</p>
+<p><a href='https://platform.openai.com/agents/new'>Agents playground</a> · <a href='https://developers.openai.com/api/docs/guides/agents-api/quickstart'>Managed quickstart</a> · <a href='https://developers.openai.com/api/docs/guides/agents-api/configuration'>Agent configuration</a></p></section>
+<section><h2>02 · Managed agent in Python</h2>
+<p class='meta'>0:35–1:05 · 30 minutes</p>
+<p><strong>Outcome:</strong> Create a managed agent and hosted environment, run two turns, inspect events and usage, and clean up resources.</p>
+<blockquote>Configuration is reusable; a session is one continuing piece of work.</blockquote>
+<h3>Explain and show</h3><ul><li>course/runtimes/managed.py creates a saved agent and a session with an OpenAI-hosted environment. The classroom environment disables network access and receives the supplied paper, text, and CSV.</li><li>Open the event stream before submitting input so fast events are not missed. Submit function results with their original turn_id and call_id.</li><li>A requires_action event asks the application to execute a function. Managed orchestration does not remove application validation or permission checks.</li><li>Wait for the root turn to complete, then collect its final assistant message from paginated session items. An idle event or a subagent event is not a final answer.</li><li>The follow-up uses the same managed session. Local request history, SDK history, and managed session IDs are different state strategies.</li><li>The application uses a deadline, a tool-call budget, and cancellation. The managed API path does not claim a native model-step or output-token cap; configure project spend limits separately. Cleanup removes the demonstration session and saved agent.</li></ul>
+<h3>Exercise</h3><ul><li>Trace one function request from requires_action to ToolBox.dispatch and back to input.tool_result. Record the two correlation IDs.</li><li>Change the follow-up instruction to shorten the brief while retaining evidence. Explain which object must be reused.</li><li>Sketch what happens if the stream disconnects before completion. Identify what must be inspected before retrying a side-effecting task.</li></ul>
+<h3>Expected solution</h3><ul><li>The application matches the required function action by turn_id and call_id, validates arguments in ToolBox.dispatch, and submits output or error under those same IDs.</li><li>Reuse the managed runtime/session. Do not create a new session and claim it continued the old conversation. The runner caches function results by turn/call to avoid re-execution within that process.</li><li>A disconnected stream is an incomplete observation. Inspect saved session items and resource records; do not blindly resubmit an action. The demo stops rather than claiming a final brief. Run cleanup for pending demo resources.</li></ul>
+<h3>Demo commands</h3><pre>uv run python -m course preflight --live
+uv run python -m course demo --runtime managed --follow-up --output outputs/managed
+uv run python -m course cleanup</pre>
+<p><strong>Checkpoint:</strong> Find the session creation, stream opening, tool-result submission, completion condition, and cleanup. Explain which state the follow-up reused.</p>
+<p><strong>Fallback:</strong> Replay a labeled capture if available. Otherwise walk through managed.py beside the deterministic offline two-turn demo; mark managed API access unverified.</p>
+<p><a href='https://developers.openai.com/api/docs/guides/agents-api/quickstart'>Managed quickstart</a> · <a href='https://developers.openai.com/api/docs/guides/agents-api/configuration'>Agent configuration</a> · <a href='https://developers.openai.com/api/docs/guides/agents-api/observability'>Observability and usage</a></p></section>
+<section><h2>03 · Responses: expose the loop</h2>
+<p class='meta'>1:05–1:30 · 25 minutes</p>
+<p><strong>Outcome:</strong> Extract a typed result, then trace a bounded function-calling loop from request to final brief.</p>
+<blockquote>The model asks for a function; this Python line is what actually runs it.</blockquote>
+<h3>Explain and show</h3><ul><li>Use notebooks/0.0-intro-responses-api.ipynb and notebooks/1.0-paper-data-extraction.ipynb. Begin with offline cells, then enable live calls only when prepared.</li><li>Structured output validates shape. A valid title, author list, or quotation field may still be wrong; compare extraction against the actual source.</li><li>ResponsesRuntime sends shared instructions, tool definitions, history, and a JSON schema. It preserves all returned output items before adding function-call results.</li><li>ToolBox.dispatch validates name and arguments, executes lookup_paper over the existing CSV or reads a PDF page, and returns a result. A matching call_id connects the result to the request.</li><li>A failed tool returns an explicit error and the brief must expose missing evidence. Step, tool-call, output-token, and wall-clock limits prevent an unbounded classroom loop.</li></ul>
+<h3>Exercise</h3><ul><li>Open exercise.py. Implement matching_outputs so every model function call receives a JSON-encoded function_call_output with the original call_id.</li><li>Run solution.py locally. Predict the result of an unknown tool and a nonexistent CSV query before executing it.</li><li>Compare the ordinary and simulated-failure runs. Identify the missing evidence rather than treating an error-shaped result as a successful search.</li></ul>
+<h3>Expected solution</h3><ul><li>See solution.py: dispatch each call by name and arguments, serialize the returned object, and preserve call_id. The model does not execute lookup_paper itself.</li><li>Unknown tool names return an explicit tool error; an ordinary unmatched search returns found=false and an empty record list. These outcomes have different meanings even if both leave the model without evidence.</li><li>Schema validation proves field/type conformity. Quote checks prove that a quoted substring exists in a known source. A person must still judge whether the claim follows from that quotation.</li></ul>
+<h3>Demo commands</h3><pre>uv run python -m course extract
+uv run python -m course extract --live
+uv run python -m course demo --runtime responses --follow-up --output outputs/responses
+uv run python -m course demo --runtime responses --failure lookup_paper --output outputs/responses-failure</pre>
+<p><strong>Checkpoint:</strong> Point to self.tools.dispatch in ResponsesRuntime. Explain why a well-formed JSON result can contain an unsupported claim.</p>
+<p><strong>Fallback:</strong> Run extraction offline and the local exercise solution. Replay a saved Responses run if present; label offline behavior as simulation.</p>
+<p><a href='https://developers.openai.com/api/docs/guides/structured-outputs'>Structured outputs</a> · <a href='https://developers.openai.com/api/docs/guides/function-calling'>Function calling</a></p></section>
+<section><h2>04 · Agents SDK: own the runtime</h2>
+<p class='meta'>1:30–1:55 · 25 minutes</p>
+<p><strong>Outcome:</strong> Rebuild the task with Agent, function_tool, and Runner; compare state and execution ownership.</p>
+<blockquote>The SDK runs the loop inside our application; our application still owns its permissions and state strategy.</blockquote>
+<h3>Explain and show</h3><ul><li>course/runtimes/sdk.py wraps the same ToolBox functions using function_tool, constructs Agent, and asks Runner.run_streamed to orchestrate the run.</li><li>The application supplies deployment, tool code, storage decisions, identity, and approval enforcement. Runner provides the orchestration loop.</li><li>The completed demo carries result.to_input_list() into the next turn. This local SDK history is not a managed API session or a sandbox.</li><li>The SDK demo disables hosted tracing and records local results/events. Traces are useful diagnostics; they do not grade correctness.</li><li>A shared tool contract and schema make comparison possible. Reusing a session object across unrelated runtimes is not part of that contract.</li></ul>
+<h3>Exercise</h3><ul><li>Choose a runtime for a hosted research worker that should retain progress between tasks. State one reason and one responsibility that remains yours.</li><li>Choose a runtime for an existing application with its own user permissions and custom database. Explain how you would retain follow-up state.</li><li>Run the failed read_paper demo. Check whether missing primary evidence is disclosed and secondary summaries are labeled.</li></ul>
+<h3>Expected solution</h3><ul><li>The managed Agents API is a reasonable choice for the hosted worker when its access, retention, environment, and billing fit. The application still controls tool validation and authorization.</li><li>The Agents SDK is a reasonable choice for an existing application with custom storage and permissions. Persist SDK-compatible history or use a supported SDK session strategy; the classroom demo keeps local history only. Responses is also defensible when explicit loop control is the priority.</li><li>An unavailable PDF must not silently turn a CSV summary into primary-paper evidence. Inspect tool_calls, not_found, limitations, and citations; repair any unsupported claim.</li></ul>
+<h3>Demo commands</h3><pre>uv run python -m course demo --runtime sdk --follow-up --output outputs/sdk
+uv run python -m course demo --runtime sdk --failure read_paper --output outputs/sdk-failure</pre>
+<p><strong>Checkpoint:</strong> Find Agent, a function_tool, Runner.run_streamed, and the saved SDK history. Explain what the SDK replaced and what remains application code.</p>
+<p><strong>Fallback:</strong> Inspect sdk.py alongside the offline demo; use local events or a recorded SDK output to compare state. Do not claim Runner ran if the SDK live call was unavailable.</p>
+<p><a href='https://developers.openai.com/api/docs/guides/agents/sdk'>Agents SDK</a> · <a href='https://developers.openai.com/api/docs/guides/agents/quickstart'>SDK quickstart</a> · <a href='https://developers.openai.com/api/docs/guides/agents'>Runtime comparison</a></p></section>
+<section><h2>05 · Grounding &amp; actions</h2>
+<p class='meta'>1:55–2:15 · 20 minutes</p>
+<p><strong>Outcome:</strong> Distinguish file input from retrieval and enforce preview, explicit approval, authorization, and execute-once publication.</p>
+<blockquote>Evidence can inform the answer. It cannot grant itself permission to act.</blockquote>
+<h3>Explain and show</h3><ul><li>The core app extracts a bounded set of PDF pages locally, then tools return evidence to the model. Direct PDF input is a different API pattern; file search adds retrieval over a collection.</li><li>The CSV is a collection of secondary summaries, not a web search or a vector store. Optional SEC retrieval uses local fixture search and is labeled as such.</li><li>Retrieved text may contain instructions. Treat it as untrusted evidence, never as authority to change tools, identity, policy, or output requirements.</li><li>The completed injection demo appends fixtures/injections/publish.txt to returned evidence and records the brief and tool results. Its offline default demonstrates the boundary deterministically; choose a verified live runtime explicitly to inspect actual model behavior.</li><li>The model&#x27;s publish_brief function can only request approval. Actual mock publication requires an authenticated user, an exact preview digest, explicit approval, and publisher permission.</li><li>Publisher records approval and its local mock side effect in one SQLite transaction. Repeating an approved request reports already_published rather than repeating the side effect. No external publication occurs.</li></ul>
+<h3>Exercise</h3><ul><li>Open exercise.py and complete the authorization decision table: approval absent, permission absent, wrong owner, changed digest, valid request, repeated valid request.</li><li>Run demo.py with its offline default to inspect hostile tool evidence, then choose --runtime responses, sdk, or managed only if that live path is prepared. Explain which application boundary prevents the retrieved instruction from publishing.</li><li>Choose direct PDF input or collection retrieval for one report versus 500 filings. State how source IDs and not-found behavior should survive either approach.</li></ul>
+<h3>Expected solution</h3><ul><li>Missing approval, missing publisher permission, wrong owner, or changed content digest must deny. A valid request publishes once; repeating it returns already_published=true. solution.py exercises these cases against a temporary SQLite database.</li><li>Instructions inside returned evidence are data. The model may refuse or ignore them; the application permission boundary must still prevent publication even if the model follows them.</li><li>A small known paper can be passed or exposed directly. A collection usually benefits from retrieval; inspect retrieved passages and citations. Neither method establishes factual correctness merely by returning a source.</li></ul>
+<h3>Demo commands</h3><pre>uv run python -m course actions
+uv run python lessons/05-grounding-actions/demo.py --runtime offline
+uv run python lessons/05-grounding-actions/solution.py
+uv run python optional/retrieval.py --query revenue --limit 3</pre>
+<p><strong>Checkpoint:</strong> Show that model text cannot publish. Explain why both approval and authorization are required, and why approving one digest cannot authorize an edited brief.</p>
+<p><strong>Fallback:</strong> The mock action and local retrieval demos require no API. Use them to demonstrate the authorization boundary even when live model behavior is unavailable.</p>
+<p><a href='https://developers.openai.com/api/docs/guides/pdf-files'>File inputs</a> · <a href='https://developers.openai.com/api/docs/guides/tools-file-search'>File search</a> · <a href='https://developers.openai.com/api/docs/guides/agents-api/tools/functions'>Managed function tools</a></p></section>
+<section><h2>06 · Evaluate &amp; repair</h2>
+<p class='meta'>2:15–2:40 · 25 minutes</p>
+<p><strong>Outcome:</strong> Run ten fixed cases, inspect one failure, change one cause, and rerun the whole suite.</p>
+<blockquote>A trace explains what happened. An evaluation judges whether it met the task.</blockquote>
+<h3>Explain and show</h3><ul><li>The fixed suite has 3 normal cases, 2 missing-evidence cases, 2 tool failures, 2 injection attempts, and 1 denied action.</li><li>Score grounded evidence, correct tool use, schema/output validity, and application approval enforcement. Quote matching is a useful mechanical check, not proof that the claim is entailed.</li><li>Read the returned source passage and claim side by side. A quote may be genuine while the conclusion exaggerates it. Semantic review remains necessary.</li><li>Record runtime, model, token usage when available, elapsed time, and estimated model cost only when configured rates support it. Unknown cost stays unknown; managed environment/tool charges are not included in a token estimate.</li><li>Change one instruction or tool behavior, then rerun the same ten cases. A passing offline suite validates the local harness and deterministic behavior, not the live model.</li></ul>
+<h3>Exercise</h3><ul><li>Open exercise.py. Create a schema-valid brief that cites an exact quotation from the supplied synthetic passage but makes a stronger claim than the quote supports.</li><li>Run solution.py and explain why quote checking accepts the quote while a human reviewer should reject the claim.</li><li>For a failed case, record observed behavior, expected behavior, likely cause, one change, and the full rerun result. If the baseline passes, use the deliberately bad candidate to practice diagnosis before changing course code.</li></ul>
+<h3>Expected solution</h3><ul><li>solution.py uses a deliberately synthetic teaching passage but claims the approach is guaranteed for every possible task. A real quote does not support that universal conclusion.</li><li>The mechanical checker verifies source presence and quote substring membership; it does not perform semantic entailment. Mark the case failed during human review.</li><li>A useful repair adds a narrow evidence requirement to instructions or validates missing evidence at the tool boundary. Keep the same case set and compare all rows so a local improvement does not hide a regression.</li></ul>
+<h3>Demo commands</h3><pre>uv run python -m course evaluate --runtime offline --output evals/results/classroom-before
+uv run python lessons/06-evaluate/solution.py
+uv run python -m course evaluate --runtime responses --output evals/results/classroom-live
+uv run python -m course evaluate --runtime offline --output evals/results/classroom-after</pre>
+<p><strong>Checkpoint:</strong> Show all ten rows, one concrete failure, the repair, and the rerun. Explain what the mechanical scores cannot establish.</p>
+<p><strong>Fallback:</strong> Run the offline suite and inspect its recording. Label it as harness coverage; use saved live results only when their metadata identifies a genuine API run.</p>
+<p><a href='https://developers.openai.com/api/docs/guides/agents-api/observability'>Observability and usage</a> · <a href='https://developers.openai.com/api/docs/guides/agent-evals'>Agent workflow evaluation</a></p></section>
+<section><h2>07 · Ship &amp; recap</h2>
+<p class='meta'>2:40–3:00 · 20 minutes</p>
+<p><strong>Outcome:</strong> Serve the same research task through an authenticated backend and Streamlit UI, then demonstrate the five exit requirements.</p>
+<blockquote>The interface can request work; the authenticated backend decides whose work it is and what may happen.</blockquote>
+<h3>Explain and show</h3><ul><li>The Streamlit app sends requests to a separate authenticated FastAPI backend. The API key stays on the backend; a classroom bearer token identifies the user.</li><li>The backend isolates conversation ownership, serializes turns per session, caps work, expires idle sessions, and returns progress events plus a downloadable validated brief.</li><li>Start with offline mode for UI rehearsal. Live runtime selection sends the task and evidence to OpenAI; model access and costs still depend on the configured project.</li><li>This is a local classroom application: conversation state is in memory and mock publications are in SQLite. A public deployment needs TLS, production identity, durable shared state, job handling, and operational controls.</li><li>The optional ChatKit exercise replaces the archived workflow-ID integration with an adapter to your own authenticated backend. The existing Streamlit UI is the completed core deliverable.</li></ul>
+<h3>Exercise</h3><ul><li>Run the app as one user, produce a brief, follow up, and download it. Start a second user&#x27;s session and attempt to read the first session through the backend; expect denial.</li><li>Try publication without a publisher role, then preview and approve as an authorized user. Repeat the same approval and inspect idempotency.</li><li>Complete the five-part exit task. If live access is unavailable, record which elements were demonstrated only by offline rehearsal and list the remaining live checks.</li></ul>
+<h3>Expected solution</h3><ul><li>Backend ownership checks return session not found to a different principal, even when that principal knows a session ID. Runtime state remains associated with its owning session.</li><li>Publication requires both the explicit approval flag and the server&#x27;s can_publish role. The preview&#x27;s digest binds approval to the exact brief; the SQLite transaction records one mock publication.</li><li>A complete exit packet includes the brief and its quotations, tool-call record, second-turn output, failure output, and ten-case results. A live model claim requires live metadata, not an offline transcript.</li></ul>
+<h3>Demo commands</h3><pre>uv run python -m course access
+make backend
+make app
+uv run python -m course cleanup</pre>
+<p><strong>Checkpoint:</strong> Demonstrate evidence, one real tool call, a follow-up turn, a handled failure, and passing evaluation results; explain your runtime choice and which checks were live.</p>
+<p><strong>Fallback:</strong> The app defaults to offline and can demonstrate authentication, session ownership, streaming progress, downloads, and mock approval without an API call.</p>
+<p><a href='https://developers.openai.com/api/docs/guides/chatkit'>ChatKit</a> · <a href='https://developers.openai.com/api/docs/guides/custom-chatkit'>ChatKit advanced integration</a></p></section>
 </html>

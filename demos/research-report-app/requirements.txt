@@ -1,4 +1,3 @@
-streamlit
-openai
-pypdf
-pydantic
+# Install from repository root with: python -m pip install -e '.[app]'
+# Or from this directory:
+-e ../..[app]
